@@ -1,63 +1,52 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   bultin_utils.c                                     :+:      :+:    :+:   */
+/*   builtin_utils.c                                     :+:      :+:    :+:  */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lsoulier <lsoulier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/22 22:56:47 by lsoulier          #+#    #+#             */
-/*   Updated: 2020/12/22 22:57:21 by louise           ###   ########.fr       */
+/*   Updated: 2020/12/24 16:17:29 by louise           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char *get_param(char *cmd, char *bultin_name)
+char	*get_param(char *cmd, char *builtin_name)
 {
-	char *param;
-	int bultin_len;
+	char	*param;
+	int		builtin_len;
 
-	bultin_len = ft_strlen(bultin_name) + 1; //to trim space
-	param = ft_substr(cmd, bultin_len, ft_strlen(cmd) - bultin_len - 1); //to trim \n
+	builtin_len = ft_strlen(builtin_name) + 1;
+	param = ft_substr(cmd, builtin_len, ft_strlen(cmd) - builtin_len - 1);
 	return (param);
 }
 
-int	exec_export(char *cmd, t_data *mshl_data)
-{
-	char *param;
-	t_list_env *el;
-
-	param = get_param(cmd, "export");
-	if (!param)
-		return (0);
-	el = set_envlist_var(param);
-	free(param);
-	if (!el)
-		return (0);
-	env_add_back(&mshl_data->begin_env, el);
-	return (1);
-}
-
-int exec_pwd(char *cmd, t_data *mshl_data)
-{
-	ft_putendl_fd(get_env_value(mshl_data->begin_env, "PWD"), 1);
-	return (1);
-}
-
-int exec_cd(char *cmd, t_data *mshl_data)
+int		exec_cd(char *cmd, t_data *msh_data)
 {
 	ft_putstr("cd is not implemented yet\n");
 	return (1);
 }
 
-int exec_echo(char *cmd, t_data *mshl_data)
+int		exec_echo(char *cmd, t_data *msh_data)
 {
-	char *param;
+	char	*param;
+	char	*new_str;
+	int		n_option;
+	int 	param_offset;
 
 	param = get_param(cmd, "echo");
 	if (!param)
 		return (0);
-	ft_putendl_fd(param, 1);
+	n_option = ft_strnstr(param, "-n ", 3) != NULL;
+	param_offset = 0;
+	if (n_option)
+		param_offset = 3;
+	new_str = process_echo(param + param_offset, msh_data);
 	free(param);
+	if (!new_str)
+		return (0);
+	n_option ? ft_putstr_fd(new_str, 1) : ft_putendl_fd(new_str, 1);
+	free(new_str);
 	return (1);
 }

@@ -56,6 +56,7 @@ char			*ft_strjoin(const char *s1, const char *s2);
 char			*ft_strtrim(const char *s1, const char *set);
 char			**ft_split(const char *s, char c);
 char			*ft_itoa(int n);
+int				itoa_count_char(int n);
 char			*ft_strmapi(const char *s, char (*f)(unsigned int, char));
 void			ft_putchar_fd(char c, int fd);
 void			ft_putstr_fd(char *s, int fd);
@@ -95,10 +96,6 @@ char			*ft_strstr(const char *haystack, const char *needle);
 void			ft_swap_int(int *a, int *b);
 void			ft_swap_ptr(void **a, void **b);
 char			*ft_itoa_base(long long n, char *base);
-void			ft_putfloat(float nb);
-char			*ft_ftoa(float nb);
-char			*ft_addsuffix(char *str_to_free, char *str_to_add);
-char			*ft_addprefix(char *str_to_add, char *str_to_free);
 
 t_list			*ft_lstnew(void *content);
 void			ft_lstadd_front(t_list **alst, t_list *new);

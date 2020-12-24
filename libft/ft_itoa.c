@@ -6,13 +6,13 @@
 /*   By: louise <lsoulier@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/21 18:32:26 by louise            #+#    #+#             */
-/*   Updated: 2020/09/24 15:17:31 by louise           ###   ########.fr       */
+/*   Updated: 2020/12/23 21:47:08 by louise           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-static int	count_char(int n)
+int	itoa_count_char(int n)
 {
 	int		nb_char;
 	long	nb;
@@ -33,7 +33,7 @@ char		*ft_itoa(int n)
 	int		nb_char;
 	long	abs_n;
 
-	nb_char = count_char(n);
+	nb_char = itoa_count_char(n);
 	abs_n = n < 0 ? -(long)n : n;
 	if (!(str = (char*)malloc(sizeof(char) * (nb_char + 1))))
 		return (NULL);

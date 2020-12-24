@@ -6,79 +6,70 @@
 /*   By: lsoulier <lsoulier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/22 14:34:46 by lsoulier          #+#    #+#             */
-/*   Updated: 2020/12/22 14:34:48 by lsoulier         ###   ########.fr       */
+/*   Updated: 2020/12/24 14:48:15 by louise           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_list_env	*set_envlist(char *envp[])
+t_list	*set_env(char *envp[])
 {
 	int i;
-	t_list_env	*new_var;
-	t_list_env	*begin;
+	t_list	*begin_env;
 
 	i = -1;
-	begin = NULL;
+	begin_env = NULL;
 	while (envp[++i])
 	{
-		new_var = set_envlist_var(envp[i]);
-		if (!new_var)
+		if (!set_env_var(&begin_env, envp[i]))
 		{
-			env_clear(&begin);
+			ft_lstclear(&begin_env, &del_var);
 			break;
 		}
-		env_add_back(&begin, new_var);
 	}
-	return (begin);
+	return (begin_env);
 }
 
-t_list_env	*set_envlist_var(char *env_var)
+t_var	*get_env_var(t_list *begin_env, char *key)
 {
-	char		*key;
-	char		*value;
-	int			key_len;
-	int 		value_len;
-	t_list_env	*new;
+	t_var		*found_var;
+	t_var		*var_cast;
 
-	key_len = 0;
-	while (env_var[key_len] && env_var[key_len] != '=')
-		key_len++;
-	key = (char*)malloc(sizeof(char) * (key_len + 1));
-	if (!key)
-		return (NULL);
-	ft_strlcpy(key, env_var, key_len + 1);
-	value_len = ft_strlen(env_var) - key_len - 1;
-	value = (char*)malloc(sizeof(char) * (value_len + 1));
-	if (!value)
-		return (NULL);
-	ft_strlcpy(value, env_var + key_len + 1, value_len + 1);
-	new = env_new_var(key, value);
-	return (new);
-}
-
-char		*get_env_value(t_list_env *begin, char *key)
-{
-	char		*value;
-
-	value = NULL;
-	while (begin && !value)
+	found_var = NULL;
+	while (begin_env && !found_var)
 	{
-		if (ft_strcmp(key, begin->key) == 0)
-			value = begin->value;
-		begin = begin->next;
+		var_cast = (t_var*)begin_env->content;
+		if (ft_strcmp(key, var_cast->key) == 0)
+			found_var = var_cast;
+		begin_env = begin_env->next;
 	}
-	return (value);
+	return (found_var);
 }
 
-void 	print_env(t_list_env *begin)
+int		set_env_var(t_list **begin_env, char *unparsed)
 {
-	while (begin)
+	t_var	*new_var;
+	t_list	*el;
+
+	new_var = parse_var(unparsed);
+	el = ft_lstnew(new_var);
+	if (!el)
+		return (0);
+	ft_lstadd_back(begin_env, el);
+	return (1);
+}
+
+void 	print_env(t_list *begin_env)
+{
+	t_var *cast;
+
+	while (begin_env)
 	{
-		ft_putstr(begin->key);
+		cast = (t_var*)begin_env->content;
+		ft_putstr(cast->key);
 		ft_putstr("=");
-		ft_putstr(begin->value);
+		ft_putstr(cast->value);
 		ft_putstr("\n");
-		begin = begin->next;
+		begin_env = begin_env->next;
 	}
 }
