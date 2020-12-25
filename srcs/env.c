@@ -6,7 +6,7 @@
 /*   By: lsoulier <lsoulier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/22 14:34:46 by lsoulier          #+#    #+#             */
-/*   Updated: 2020/12/24 14:48:15 by louise           ###   ########.fr       */
+/*   Updated: 2020/12/24 15:13:22 by louise           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 t_list	*set_env(char *envp[])
 {
-	int i;
+	int		i;
 	t_list	*begin_env;
 
 	i = -1;
