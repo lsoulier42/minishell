@@ -6,26 +6,24 @@
 /*   By: lsoulier <lsoulier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/24 16:03:01 by lsoulier          #+#    #+#             */
-/*   Updated: 2020/12/24 16:04:18 by louise           ###   ########.fr       */
+/*   Updated: 2020/12/25 22:15:10 by louise           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int		exec_export(char *cmd, t_data *msh_data)
+int		exec_export(t_data *msh_data, t_cmd *cmd)
 {
-	char	*param;
 	int		r_cmd;
+	int 	i;
 
-	param = get_param(cmd, "export");
-	if (!param)
-		return (0);
-	r_cmd = set_env_var(&msh_data->begin_env, param);
-	free(param);
+	i = -1;
+	while (cmd->params[++i])
+		r_cmd = set_env_var(&msh_data->begin_env, cmd->params[i]);
 	return (r_cmd);
 }
 
-int		exec_pwd(char *cmd, t_data *msh_data)
+int		exec_pwd(t_data *msh_data, t_cmd *cmd)
 {
 	t_var	*pwd;
 
@@ -36,22 +34,24 @@ int		exec_pwd(char *cmd, t_data *msh_data)
 	return (1);
 }
 
-int exec_env(char *cmd, t_data *msh_data)
+int exec_env(t_data *msh_data, t_cmd *cmd)
 {
 	print_env(msh_data->begin_env);
 	return (1);
 }
 
-int	exec_unset(char *cmd, t_data *msh_data)
+int	exec_unset(t_data *msh_data, t_cmd *cmd)
 {
-	char	*param;
-	t_var	param_var;
+	int		i;
+	t_var	*current;
 
-	param = get_param(cmd, "unset");
-	if (!param)
-		return (0);
-	set_var(&param_var, param, NULL);
-	free(param);
-	ft_lstrm_if(&msh_data->begin_env, &param_var, &cmp_key_var, &del_var);
+	i = -1;
+	while (cmd->params[++i])
+	{
+		current = get_env_var(msh_data->begin_env, cmd->params[i]);
+		if (current)
+			ft_lstrm_if(&msh_data->begin_env, &current,
+			   &cmp_key_var, &del_var);
+	}
 	return (1);
 }

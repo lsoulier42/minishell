@@ -1,47 +1,39 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipe.c                                             :+:      :+:    :+:   */
+/*   instructions_utils.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lsoulier <lsoulier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/12/24 18:05:05 by lsoulier          #+#    #+#             */
-/*   Updated: 2020/12/24 19:51:24 by louise           ###   ########.fr       */
+/*   Created: 2020/12/26 00:27:11 by lsoulier          #+#    #+#             */
+/*   Updated: 2020/12/27 14:21:59 by louise           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.c"
 
-t_list	*set_pipes(char *input)
+t_instruction	*create_instruction(char *str, int is_quote)
 {
-	t_list	*begin;
-	char 	**pipes;
-	int 	i;
+	t_instruction *new;
 
-	begin = NULL;
-	i = -1;
-	pipes = ft_split(input, '|');
-
-}
-
-t_list	*set_cmds(char *input)
-{
-	t_list	*begin;
-	char 	**cmds;
-	int 	i;
-
-	begin = NULL;
-	i = -1;
-	cmds = ft_split(input, ';');
-	if (cmds)
+	new = (t_instruction*)malloc(sizeof(t_instruction));
+	if (!new)
+		return (NULL);
+	new->value = ft_strdup(str);
+	if (!new->value)
 	{
-		while (cmds[++i])
-		{
-			if (!parse_cmd(&begin, cmds[i]))
-				return (NULL);
-		}
+		free(new);
+		return (NULL);
 	}
-	return (begin);
+	new->is_quote = is_quote;
+	return (new);
 }
 
+void 	del_instruction(void *del_void)
+{
+	t_instruction *del;
 
+	del = (t_instruction*)del_void;
+	free(del->value);
+	free(del);
+}

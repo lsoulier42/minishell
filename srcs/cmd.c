@@ -6,102 +6,101 @@
 /*   By: lsoulier <lsoulier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/24 18:04:49 by lsoulier          #+#    #+#             */
-/*   Updated: 2020/12/24 19:48:48 by louise           ###   ########.fr       */
+/*   Updated: 2020/12/26 02:39:44 by louise           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.c"
+#include "minishell.h"
 
-void 	set_cmd(t_cmd *cmd, char *name, char **options, char **params)
+int 		is_semicolon(t_instruction *it)
 {
-	cmd->name = name;
-	cmd->options = options;
-	cmd->params = params;
+	if (!it)
+		return (0);
+	return(ft_strcmp(it->value, ";") == 0 && !it->is_quote);
 }
 
-char		**get_cmd_options(char **words)
+int 		add_param(t_list **begin, char *str)
 {
-	int		i;
-	int 	j;
-	int 	option_index;
-	char	**options;
-	int 	nb_options;
+	char	*param_str;
+	t_list	*param_el;
 
-	i = -1;
-	j = -1;
-	option_index = 0;
-	nb_options = 0;
-	while (words[++i])
-		if (words[i][0] == '-')
-			nb_options++;
-	options = (char**)malloc(sizeof(char*) * (nb_options + 1));
-	if (options)
-	{
-		while (words[++j])
-		{
-			if (words[j][0] == '-')
-				if (!(options[option_index++] = ft_substr(words[j],
-														  1, ft_strlen(words[j] - 1))))
-					return (free_double_tab(options));
-		}
-		options[option_index] = NULL;
-	}
-	return (options);
-}
-
-char 		**get_cmd_params(char **words)
-{
-	int		i;
-	int 	j;
-	int 	param_index;
-	char	**params;
-	int 	nb_params;
-
-	i = -1;
-	j = -1;
-	param_index = 0;
-	nb_params = 0;
-	while (words[++i])
-		if (words[i][0] != '-')
-			nb_params++;
-	params = (char**)malloc(sizeof(char*) * (nb_params + 1));
-	if (params)
-	{
-		while (words[++j])
-		{
-			if (words[j][0] != '-')
-				if (!(params[param_index++] = ft_strdup(words[j])))
-					return (free_double_tab(params));
-		}
-		params[param_index] = NULL;
-	}
-	return (params);
-}
-
-int 		parse_cmd(t_list **begin_cmds, char *unparsed)
-{
-	char	**words;
-	t_cmd	*cmd;
-	t_list	*el;
-
-	words = ft_split_charset(unparsed, " \t\n\r\v\f");
-	if (!words)
+	param_str = ft_strdup(str);
+	if (!param_str)
 		return (0);
-	cmd = (t_cmd*)malloc(sizeof(t_cmd));
-	if (!cmd)
+	param_el = ft_lstnew(param_str);
+	if (!param_el)
 		return (0);
-	cmd->name = words[0];
-	cmd->options = NULL;
-	cmd->params = NULL;
-	if (*(words + 1) != NULL)
-	{
-		cmd->options = get_cmd_options(words + 1);
-		cmd->params = get_cmd_params(words + 1);
-	}
-	set_return(cmd->out, NULL, 0);
-	el = ft_lstnew(cmd);
-	if (!el)
-		return (0);
-	ft_lstadd_back(begin_cmds, el);
+	ft_lstadd_back(begin, param_el);
 	return (1);
 }
+
+t_list		*create_cmd(t_list *instruct)
+{
+	t_cmd			*cmd;
+	t_instruction	*current;
+	int 			index;
+
+	cmd = (t_cmd*)malloc(sizeof(t_cmd));
+	if (!cmd)
+		return (NULL);
+	index = 0;
+	cmd->params = NULL;
+	while (instruct)
+	{
+		current = (t_instruction*)instruct->content;
+		if (is_semicolon(current))
+			break ;
+		if (index++ == 0)
+		{
+			if (!(cmd->name = ft_strdup(current->value)))
+				return (NULL);
+		}
+		else
+			if (!add_param(&cmd->params, current->value))
+				return (NULL);
+		instruct = instruct->next;
+	}
+	return (ft_lstnew(cmd));
+}
+
+int 	recreate_cmds(t_list **begin_cmds)
+{
+	t_instruction	*current;
+	t_instruction	*previous;
+	t_list			*track;
+	t_list			*begin;
+	t_list			*el;
+
+	begin = NULL;
+	previous = NULL;
+	track = *begin_cmds;
+	while (track)
+	{
+		current = (t_instruction*)track->content;
+		if ((previous == NULL || is_semicolon(previous)) && !is_semicolon(current))
+		{
+			if(!(el = create_cmd(track)))
+				return (0);
+			ft_lstadd_back(&begin, el);
+		}
+		track = track->next;
+	}
+	ft_lstclear(begin_cmds, &del_instruction);
+	*begin_cmds = begin;
+	return (1);
+}
+
+int 	split_cmds(t_list *pipes)
+{
+	t_pipe			*current;
+
+	while (pipes)
+	{
+		current = (t_pipe*)pipes->content;
+		if(!recreate_cmds(&current->begin_cmd))
+			return (0);
+		pipes = pipes->next;
+	}
+	return (1);
+}
+

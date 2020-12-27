@@ -6,13 +6,13 @@
 /*   By: lsoulier <lsoulier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/22 22:10:20 by lsoulier          #+#    #+#             */
-/*   Updated: 2020/12/24 16:29:37 by louise           ###   ########.fr       */
+/*   Updated: 2020/12/25 22:05:44 by louise           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int search_cmd(char *cmd, t_data *msh_data)
+int search_builtin(t_data *msh_data, t_cmd *cmd)
 {
 	int		i;
 	char	**builtins;
@@ -21,14 +21,14 @@ int search_cmd(char *cmd, t_data *msh_data)
 	builtins = (char *[TOTAL_BUILTINS]){"echo", "cd", "pwd",
 		"export", "unset", "env", "exit"};
 	while (++i < TOTAL_BUILTINS)
-		if (ft_strstr(cmd, builtins[i]) != NULL)
+		if (ft_strstr(cmd->name, builtins[i]) != NULL)
 			return (1);
 	return (0);
 }
 
-int execute_cmd(char *cmd, t_data *msh_data)
+int execute_builtin(t_data *msh_data, t_cmd *cmd)
 {
-	int		(*builtin_fct[TOTAL_BUILTINS])(char *cmd, t_data *msh_data);
+	int		(*builtin_fct[TOTAL_BUILTINS])(t_data *msh_data, t_cmd *cmd);
 	char	**builtins;
 	int 	i;
 
@@ -44,16 +44,16 @@ int execute_cmd(char *cmd, t_data *msh_data)
 	builtin_fct[EXIT] = &exec_exit;
 	while (++i < TOTAL_BUILTINS)
 	{
-		if (ft_strstr(cmd, builtins[i]) != NULL)
+		if (ft_strstr(cmd->name, builtins[i]) != NULL)
 		{
-			msh_data->last_return = (*builtin_fct[i])(cmd, msh_data);
-			return msh_data->last_return;
+			msh_data->last_return = (*builtin_fct[i])(msh_data, cmd);
+			return (msh_data->last_return);
 		}
 	}
 	return (0);
 }
 
-int exec_exit(char *cmd, t_data *msh_data)
+int exec_exit(t_data *msh_data, t_cmd *cmd)
 {
 	msh_data->exit_msh = 1;
 	return (1);

@@ -6,7 +6,7 @@
 /*   By: lsoulier <lsoulier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/22 14:30:08 by lsoulier          #+#    #+#             */
-/*   Updated: 2020/12/24 16:22:15 by louise           ###   ########.fr       */
+/*   Updated: 2020/12/25 21:59:56 by louise           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,11 +27,8 @@ int main(int argc, char *argv[], char *envp[])
 		while ((read_return = read(0, buffer, BUFFER_SIZE)) != 0)
 		{
 			buffer[read_return] = '\0';
-			msh_data.user_input = buffer;
-			if (search_cmd(buffer, &msh_data))
-				execute_cmd(buffer, &msh_data);
-			else
-				ft_putstr("Command not found.\n");
+			msh_data.parsed_input = parse_input(&msh_data, buffer);
+			execute_cmd(msh_data, msh_data.parsed_input);
 			if (buffer[read_return - 1] == '\n')
 				break ;
 		}

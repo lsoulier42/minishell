@@ -6,7 +6,7 @@
 /*   By: lsoulier <lsoulier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/24 15:32:19 by lsoulier          #+#    #+#             */
-/*   Updated: 2020/12/24 18:06:44 by louise           ###   ########.fr       */
+/*   Updated: 2020/12/25 22:22:46 by louise           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,4 +43,31 @@ void 		*free_double_tab(char **tab)
 		free(tab[i]);
 	free(tab);
 	return (NULL);
+}
+
+int		doubletab_len(char **tab)
+{
+	int i;
+
+	i = 0;
+	while (tab[i])
+		i++;
+	return (i);
+}
+
+char	*ft_strndup(char *str, int n)
+{
+	int		i;
+	int		len;
+	char	*new;
+
+	if (n > ft_strlen(str))
+		len = ft_strlen(str);
+	else
+		len = n;
+	new = (char*)malloc(sizeof(char) * (len + 1));
+	if (!new)
+		return (NULL);
+	ft_strlcpy(new, str, len + 1);
+	return (new);
 }
