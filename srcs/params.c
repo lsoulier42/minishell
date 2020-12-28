@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 
 #include "minishell.h"
-
+/*
 int		parse_params(t_data *msh_data, t_list *params)
 {
 	t_list *env;
@@ -98,3 +98,4 @@ int		sub_var(t_data *msh_data, t_list *params)
 	}
 	return (1);
 }
+*/

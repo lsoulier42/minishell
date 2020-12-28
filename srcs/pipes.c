@@ -10,66 +10,79 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.c"
+#include "minishell.h"
 
-int 		is_pipe(t_instruction *it)
+t_pipe	*new_pipe(t_list *begin_cmds, int exit_status)
 {
-	if (!it)
-		return (0);
-	return(ft_strcmp(it->value, "|") == 0 && !it->is_quote);
-}
-
-t_pipe		*create_pipe(t_list *begin)
-{
-	t_instruction	*current;
-	t_pipe			*new;
-	t_list			*el;
+	t_pipe *new;
 
 	new = (t_pipe*)malloc(sizeof(t_pipe));
 	if (!new)
 		return (NULL);
-	new->begin_cmd = NULL;
-	while (begin)
-	{
-		current = (t_instruction*)begin->content;
-		if (is_pipe(current))
-			break ;
-		el = ft_lstnew(current);
-		if (!el)
-			return (NULL);
-		ft_lstadd_back(&new->begin_cmd, el);
-		begin = begin->next;
-	}
+	new->begin_cmds = begin_cmds;
+	new->exit_status = exit_status;
 	return (new);
 }
 
-t_list		*split_pipes(t_list *instructions)
+t_list	*new_pipe_el(t_list *begin_cmds, int exit_status)
 {
-	t_list			*begin;
-	t_list			*el;
-	t_pipe			*new_pipe;
-	t_instruction	*current;
-	t_instruction	*previous;
+	t_pipe	*new;
+	t_list	*el;
 
-	begin = NULL;
-	previous = NULL;
-	while (instructions)
-	{
-		current = (t_instruction*)instructions->content;
-		if ((previous == NULL || is_pipe(previous)) && !is_pipe(current))
-		{
-			new_pipe = create_pipe(instructions);
-			if (!new_pipe)
-				return (NULL);
-			el = ft_lstnew(new_pipe);
-			if (!el)
-				return (NULL);
-			ft_lstadd_back(&begin, el);
-		}
-		previous = current;
-		instructions = instructions->next;
-	}
-	return (begin);
+	new = new_pipe(begin_cmds, exit_status);
+	if (!new)
+		return (NULL);
+	el = ft_lstnew(new);
+	return (el);
 }
 
+void	del_pipe(void *pipe_void)
+{
+	t_pipe *pipe;
 
+	pipe = (t_pipe*)pipe_void;
+	ft_lstclear(&pipe->begin_cmds, &del_cmd);
+}
+
+int 	add_pipe(t_list **begin_pipes, t_list *begin_cmds_unparsed)
+{
+	t_list	*el_pipe;
+	t_list	*begin_cmds;
+
+	begin_cmds = parse_cmds(begin_cmds_unparsed);
+	if (!begin_cmds)
+		return (0);
+	el_pipe = new_pipe_el(begin_cmds, 0);
+	if (!el_pipe)
+		return (0);
+	ft_lstadd_back(begin_pipes, el_pipe);
+	return (1);
+}
+
+t_list	*parse_pipes(t_list *tokens)
+{
+	t_list	*previous;
+	t_list	*begin_pipes;
+	t_list	*begin_cmds;
+
+	begin_pipes = NULL;
+	begin_cmds = tokens;
+	previous = NULL;
+	while (tokens)
+	{
+		if (token_is_pipe(tokens) && previous)
+		{
+			add_pipe(&begin_pipes, begin_cmds);
+			begin_cmds = tokens->next;
+			previous->next = NULL;
+			del_token_el(tokens);
+			tokens = begin_cmds;
+		}
+		else
+		{
+			previous = tokens;
+			tokens = tokens->next;
+		}
+	}
+	return (begin_pipes);
+}

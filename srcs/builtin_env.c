@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 
 #include "minishell.h"
-
+/*
 int		exec_export(t_data *msh_data, t_cmd *cmd)
 {
 	int		r_cmd;
@@ -54,4 +54,4 @@ int	exec_unset(t_data *msh_data, t_cmd *cmd)
 			   &cmp_key_var, &del_var);
 	}
 	return (1);
-}
+}*/

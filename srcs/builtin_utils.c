@@ -17,7 +17,7 @@ int		exec_cd(t_data *msh_data, t_cmd *cmd)
 	ft_putstr("cd is not implemented yet\n");
 	return (1);
 }
-
+/*
 int 	exec_echo(t_data *msh_data, t_cmd *cmd)
 {
 	int		n_option;
@@ -42,4 +42,4 @@ int 	exec_echo(t_data *msh_data, t_cmd *cmd)
 	if (cmd->out->ouput)
 		ft_putstr(cmd->out->ouput);
 	return (cmd->out->exit_status);
-}
+}*/

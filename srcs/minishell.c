@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include <stdio.h>
 
 int main(int argc, char *argv[], char *envp[])
 {
@@ -27,8 +26,10 @@ int main(int argc, char *argv[], char *envp[])
 		while ((read_return = read(0, buffer, BUFFER_SIZE)) != 0)
 		{
 			buffer[read_return] = '\0';
-			msh_data.parsed_input = parse_input(&msh_data, buffer);
-			execute_cmd(msh_data, msh_data.parsed_input);
+			msh_data.parsed_input = parse_input(buffer);
+			/* reduce_quote(msh_data.parsed_input);
+			 * expand_var(msh_data.begin_env, msh_data.parsed_input);
+			execute_cmd(msh_data, msh_data.parsed_input);*/
 			if (buffer[read_return - 1] == '\n')
 				break ;
 		}

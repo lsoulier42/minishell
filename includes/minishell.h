@@ -53,41 +53,45 @@ typedef struct 	s_var
 	char *value;
 }				t_var;
 
-typedef struct	s_cmd
-{
-	char		*name;
-	int 		exit_status;
-	t_list		*params;
-}				t_cmd;
-
-typedef struct	s_pipe
-{
-	t_list		*begin_cmd;
-	int 		exit_status;
-}				t_pipe;
-
 typedef struct	s_redirection
 {
 	char	*input;
-	char 	*output;
 	char 	*filename;
 	int 	fd;
 	int 	direction;
 	int 	append;
 }				t_redirection;
 
+typedef struct	s_cmd
+{
+	char			*name;
+	char 			**args;
+	t_redirection	*redir;
+	int 			exit_status;
+}				t_cmd;
+
+typedef struct	s_pipe
+{
+	t_list		*begin_cmds;
+	int 		exit_status;
+}				t_pipe;
+
 typedef struct	s_instruction
 {
-	char *value;
-	int is_quote;
+	t_list	*begin_pipes;
+	int 	exit_status;
 }				t_instruction;
+
+typedef struct	s_token
+{
+	char	*value;
+	int 	is_operator;
+}				t_token;
 
 typedef struct	s_user_input
 {
 	char		*input;
 	t_list		*begin_instructions;
-	t_list		*begin_pipes;
-	t_list		*begin_redirections;
 	int 		exit_status;
 }				t_user_input;
 
@@ -129,34 +133,43 @@ int				exec_pwd(t_data *msh_data, t_cmd *cmd);
 int				exec_cd(t_data *msh_data, t_cmd *cmd);
 int 			exec_echo(t_data *msh_data, t_cmd *cmd);
 
-
-int 			split_cmds(t_list *pipes);
-int 			recreate_cmds(t_list **begin_cmds);
-t_list			*create_cmd(t_list *instruct);
-int 			is_semicolon(t_instruction *it);
-int 			add_param(t_list **begin, char *str);
-
-int 			quote_char(char c);
-int				count_quote_len(char *str, char quote_c);
-int				add_instruct_quote(t_list **begin, char **str);
-
 int				sub_var(t_data *msh_data, t_list *params);
 int 			check_key(t_list *env, char *param);
 int				parse_params(t_data *msh_data, t_list *params);
 int 			sub_interrogation(t_data *msh_data, t_list *params);
 int 			sub_absent_key(t_list *params);
 
-int 			is_pipe(t_instruction *it);
-t_pipe			*create_pipe(t_list *begin);
-t_list			*split_pipes(t_list *instructions);
+t_user_input	*parse_input(char *buffer);
+void 			*error_input(t_user_input *new);
+void 			*error_tokens(t_user_input *new);
+void 			*error_instructions(t_user_input *new, t_list **tokens);
+void			del_user_input(void *input_void);
 
-t_user_input 	*parse_input(t_data *msh_data, char *buffer);
+t_token			*new_token(char *value, int is_operator);
+void 			del_token(void *token_void);
+t_list			*new_token_el(char *value, int is_operator);
+int 			add_token(t_list **begin, char **input);
+int 			ft_isseparator(char c);
+int 			ft_isoperator(char c);
+t_list			*split_tokens(char *buffer);
+char			*get_token_value(t_list *el);
+int 			token_is_operator(t_list *el);
+int 			token_len(char *input);
+int 			token_len_operator(char *input);
+void			del_token_el(t_list *token_el);
+int 			token_is_pipe(t_list *el);
+int 			token_is_semicolon(t_list *el);
 
-t_list			*create_instruction_el(char *str, int is_quote);
-int				create_instruct_std(t_list **begin, char *buffer, int *i);
-t_list			*split_instructions(char *buffer);
-void 			del_instruction(void *del_void);
-int				instruction_len(char *str);
-t_instruction	*create_instruction(char *str, int is_quote);
+void			del_instruction(void *instruction_void);
+t_instruction	*new_instruction(t_list *begin_pipes, int exit_status);
+t_list			*new_instruction_el(t_list *begin_pipes, int exit_status);
+t_list			*parse_instructions(t_list *tokens);
+int 			add_instruction(t_list **begin_instructions, t_list *begin_pipes_unparsed);
+
+t_pipe			*new_pipe(t_list *begin_cmds, int exit_status);
+t_list			*new_pipe_el(t_list *begin_cmds, int exit_status);
+void			del_pipe(void *pipe_void);
+int 			add_pipe(t_list **begin_pipes, t_list *begin_cmds_unparsed);
+t_list			*parse_pipes(t_list *tokens);
 
 #endif
