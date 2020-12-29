@@ -1,7 +1,7 @@
 NAME=	minishell
 SRCS=	minishell.c env.c var.c builtin.c builtin_utils.c utils.c builtin_env.c \
-		cmd.c data.c pipes.c redirections.c user_input.c params.c \
-		tokens.c tokens_utils.c tokens_utils2.c instructions.c
+		cmd.c data.c pipes.c redirections.c user_input.c params.c tokens.c \
+		tokens_utils.c tokens_utils2.c instructions.c instructions_utils.c test.c pipes_utils.c
 OBJS=	$(addprefix srcs/, $(SRCS:.c=.o))
 CC=		gcc
 CFLAGS=

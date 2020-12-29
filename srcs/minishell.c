@@ -31,7 +31,10 @@ int main(int argc, char *argv[], char *envp[])
 			 * expand_var(msh_data.begin_env, msh_data.parsed_input);
 			execute_cmd(msh_data, msh_data.parsed_input);*/
 			if (buffer[read_return - 1] == '\n')
-				break ;
+			{
+				//del_user_input(msh_data.parsed_input);
+				break;
+			}
 		}
 	}
 	ft_lstclear(&msh_data.begin_env, &del_var);

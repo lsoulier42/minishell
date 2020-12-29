@@ -30,6 +30,12 @@ void 			*error_instructions(t_user_input *new, t_list **tokens)
 	return(error_tokens(new));
 }
 
+void 			*error_pipes(t_user_input *new, t_list **tokens)
+{
+	ft_lstclear(&(new->begin_instructions), &del_token);
+	return(error_instructions(new, tokens));
+}
+
 t_user_input	*parse_input(char *buffer)
 {
 	t_user_input	*new;
@@ -47,10 +53,13 @@ t_user_input	*parse_input(char *buffer)
 	new->begin_instructions = parse_instructions(begin_tokens);
 	if (!new->begin_instructions)
 		return (error_instructions(new, &begin_tokens));
+	if (!parse_pipes(new->begin_instructions))
+		return (error_pipes(new, &begin_tokens));
+	print_instructions_list(new->begin_instructions);
 	return (new);
 }
 
-void del_user_input(void *input_void)
+void			del_user_input(void *input_void)
 {
 	t_user_input	*input;
 

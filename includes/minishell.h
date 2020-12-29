@@ -78,8 +78,8 @@ typedef struct	s_pipe
 
 typedef struct	s_instruction
 {
-	t_list	*begin_pipes;
-	int 	exit_status;
+	t_list		*begin_pipes;
+	int 		exit_status;
 }				t_instruction;
 
 typedef struct	s_token
@@ -164,12 +164,18 @@ void			del_instruction(void *instruction_void);
 t_instruction	*new_instruction(t_list *begin_pipes, int exit_status);
 t_list			*new_instruction_el(t_list *begin_pipes, int exit_status);
 t_list			*parse_instructions(t_list *tokens);
-int 			add_instruction(t_list **begin_instructions, t_list *begin_pipes_unparsed);
+int 			add_instruction(t_list **begin_instructions, t_list *begin_pipes);
+t_list			*get_instruction_pipes(t_list *instruction_el);
 
 t_pipe			*new_pipe(t_list *begin_cmds, int exit_status);
 t_list			*new_pipe_el(t_list *begin_cmds, int exit_status);
 void			del_pipe(void *pipe_void);
-int 			add_pipe(t_list **begin_pipes, t_list *begin_cmds_unparsed);
-t_list			*parse_pipes(t_list *tokens);
+int 			add_pipe(t_list **begin_pipes, t_list *begin_cmds);
+int				parse_pipes(t_list *instructions);
+t_list			*get_pipes_cmds(t_list *pipes_el);
 
+
+//test functions
+void 			print_token_list(t_list *begin);
+void 			print_instructions_list(t_list *instructions);
 #endif

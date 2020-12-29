@@ -11,47 +11,12 @@
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include <stdio.h>
 
-t_pipe	*new_pipe(t_list *begin_cmds, int exit_status)
-{
-	t_pipe *new;
-
-	new = (t_pipe*)malloc(sizeof(t_pipe));
-	if (!new)
-		return (NULL);
-	new->begin_cmds = begin_cmds;
-	new->exit_status = exit_status;
-	return (new);
-}
-
-t_list	*new_pipe_el(t_list *begin_cmds, int exit_status)
-{
-	t_pipe	*new;
-	t_list	*el;
-
-	new = new_pipe(begin_cmds, exit_status);
-	if (!new)
-		return (NULL);
-	el = ft_lstnew(new);
-	return (el);
-}
-
-void	del_pipe(void *pipe_void)
-{
-	t_pipe *pipe;
-
-	pipe = (t_pipe*)pipe_void;
-	ft_lstclear(&pipe->begin_cmds, &del_cmd);
-}
-
-int 	add_pipe(t_list **begin_pipes, t_list *begin_cmds_unparsed)
+int			add_pipe(t_list **begin_pipes, t_list *begin_cmds)
 {
 	t_list	*el_pipe;
-	t_list	*begin_cmds;
 
-	begin_cmds = parse_cmds(begin_cmds_unparsed);
-	if (!begin_cmds)
-		return (0);
 	el_pipe = new_pipe_el(begin_cmds, 0);
 	if (!el_pipe)
 		return (0);
@@ -59,23 +24,21 @@ int 	add_pipe(t_list **begin_pipes, t_list *begin_cmds_unparsed)
 	return (1);
 }
 
-t_list	*parse_pipes(t_list *tokens)
+static int	parse_one_instruction_pipes(t_list *tokens, t_list **begin_pipes,
+	t_list *previous, t_list *begin_cmds)
 {
-	t_list	*previous;
-	t_list	*begin_pipes;
-	t_list	*begin_cmds;
-
-	begin_pipes = NULL;
-	begin_cmds = tokens;
-	previous = NULL;
 	while (tokens)
 	{
-		if (token_is_pipe(tokens) && previous)
+		if ((token_is_pipe(tokens) || !tokens->next) && previous)
 		{
-			add_pipe(&begin_pipes, begin_cmds);
+			if (!add_pipe(begin_pipes, begin_cmds))
+				return (0);
 			begin_cmds = tokens->next;
-			previous->next = NULL;
-			del_token_el(tokens);
+			if (tokens->next)
+			{
+				previous->next = NULL;
+				del_token_el(tokens);
+			}
 			tokens = begin_cmds;
 		}
 		else
@@ -84,5 +47,29 @@ t_list	*parse_pipes(t_list *tokens)
 			tokens = tokens->next;
 		}
 	}
-	return (begin_pipes);
+	return (1);
 }
+
+int			parse_pipes(t_list *instructions)
+{
+	t_list	*tokens;
+	t_list	**begin_pipes;
+	t_list	*begin_cmds;
+	t_list	*previous;
+
+	while (instructions)
+	{
+		tokens = get_instruction_pipes(instructions);
+		begin_pipes = &((t_instruction*)instructions->content)->begin_pipes;
+		*begin_pipes = NULL;
+		begin_cmds = tokens;
+		previous = NULL;
+		if (!parse_one_instruction_pipes(tokens, begin_pipes,
+			previous, begin_cmds))
+			return (0);
+		instructions = instructions->next;
+	}
+	return (1);
+}
+
+
