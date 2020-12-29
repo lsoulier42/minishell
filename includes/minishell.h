@@ -66,7 +66,7 @@ typedef struct	s_cmd
 {
 	char			*name;
 	char 			**args;
-	t_redirection	*redir;
+	t_redirection	*redirection;
 	int 			exit_status;
 }				t_cmd;
 
@@ -110,6 +110,9 @@ void			print_color(char *str, char color);
 void 			*free_double_tab(char **tab);
 int				doubletab_len(char **tab);
 char			*ft_strndup(char *str, int n);
+int				free_str_return_int(char *str);
+void			*free_str_return_null(char *str);
+int 			free_cmd_tabs(char *name, char **args);
 
 void			init_data(t_data *msh_data, char *envp[]);
 
@@ -133,16 +136,12 @@ int				exec_pwd(t_data *msh_data, t_cmd *cmd);
 int				exec_cd(t_data *msh_data, t_cmd *cmd);
 int 			exec_echo(t_data *msh_data, t_cmd *cmd);
 
-int				sub_var(t_data *msh_data, t_list *params);
-int 			check_key(t_list *env, char *param);
-int				parse_params(t_data *msh_data, t_list *params);
-int 			sub_interrogation(t_data *msh_data, t_list *params);
-int 			sub_absent_key(t_list *params);
-
 t_user_input	*parse_input(char *buffer);
 void 			*error_input(t_user_input *new);
 void 			*error_tokens(t_user_input *new);
 void 			*error_instructions(t_user_input *new, t_list **tokens);
+void 			*error_pipes(t_user_input *new, t_list **tokens);
+void 			*error_cmds(t_user_input *new, t_list **tokens);
 void			del_user_input(void *input_void);
 
 t_token			*new_token(char *value, int is_operator);
@@ -159,21 +158,40 @@ int 			token_len_operator(char *input);
 void			del_token_el(t_list *token_el);
 int 			token_is_pipe(t_list *el);
 int 			token_is_semicolon(t_list *el);
+void			*free_token_struct(t_list **begin, char *tmp);
+
+int				ft_isquote(char c);
+char 			*sub_quote(char *str);
 
 void			del_instruction(void *instruction_void);
-t_instruction	*new_instruction(t_list *begin_pipes, int exit_status);
-t_list			*new_instruction_el(t_list *begin_pipes, int exit_status);
+t_instruction	*new_instruction(t_list *begin_pipes);
+t_list			*new_instruction_el(t_list *begin_pipes);
 t_list			*parse_instructions(t_list *tokens);
 int 			add_instruction(t_list **begin_instructions, t_list *begin_pipes);
 t_list			*get_instruction_pipes(t_list *instruction_el);
+void 			*del_instruction_list(t_list **begin_instructions);
 
-t_pipe			*new_pipe(t_list *begin_cmds, int exit_status);
-t_list			*new_pipe_el(t_list *begin_cmds, int exit_status);
+t_pipe			*new_pipe(t_list *begin_cmds);
+t_list			*new_pipe_el(t_list *begin_cmds);
 void			del_pipe(void *pipe_void);
 int 			add_pipe(t_list **begin_pipes, t_list *begin_cmds);
 int				parse_pipes(t_list *instructions);
 t_list			*get_pipes_cmds(t_list *pipes_el);
+int 			del_pipe_list(t_list **begin_pipes);
 
+int				error_operator_is_last_token(void);
+int				check_token_list(t_list *tokens);
+int 			error_quote_is_not_closed(void);
+
+t_cmd			*new_cmd(char *name, char **args);
+t_list			*new_cmd_el(char *name, char **args);
+void			del_cmd(void *cmd_void);
+int 			parse_cmds(t_list *instructions);
+int 			create_args_tab(char ***args, t_list *tokens);
+int 			parse_one_pipe_cmds(t_list **tokens);
+int 			free_cmd_tabs(char *name, char **args);
+
+void			del_redirection(void *redirection_void);
 
 //test functions
 void 			print_token_list(t_list *begin);

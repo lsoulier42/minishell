@@ -16,7 +16,7 @@ int 	add_instruction(t_list **begin_instructions, t_list *begin_pipes)
 {
 	t_list	*el_instruction;
 
-	el_instruction = new_instruction_el(begin_pipes, 0);
+	el_instruction = new_instruction_el(begin_pipes);
 	if (!el_instruction)
 		return (0);
 	ft_lstadd_back(begin_instructions, el_instruction);
@@ -26,12 +26,12 @@ int 	add_instruction(t_list **begin_instructions, t_list *begin_pipes)
 static int 	parse_instructions_loop(t_list **tokens,
 	t_list **previous, t_list **begin_instructions, t_list **begin_pipes)
 {
-	if ((token_is_semicolon(*tokens) || !(*tokens)->next) && *previous)
+	if (token_is_semicolon(*tokens) || !(*tokens)->next)
 	{
 		if(!add_instruction(begin_instructions, *begin_pipes))
 			return (0);
 		*begin_pipes = (*tokens)->next;
-		if ((*tokens)->next)
+		if (token_is_semicolon(*tokens))
 		{
 			(*previous)->next = NULL;
 			del_token_el(*tokens);
@@ -46,6 +46,13 @@ static int 	parse_instructions_loop(t_list **tokens,
 	return (1);
 }
 
+void 	*del_instruction_list(t_list **begin_instructions)
+{
+	if (*begin_instructions)
+		ft_lstclear(begin_instructions, &del_instruction);
+	return (NULL);
+}
+
 t_list	*parse_instructions(t_list *tokens)
 {
 	t_list	*previous;
@@ -56,7 +63,8 @@ t_list	*parse_instructions(t_list *tokens)
 	begin_instructions = NULL;
 	previous = NULL;
 	while (tokens)
-		if (!parse_instructions_loop(&tokens, &previous, &begin_instructions, &begin_pipes))
-			return (NULL);
+		if (!parse_instructions_loop(&tokens, &previous,
+			&begin_instructions, &begin_pipes))
+			return (del_instruction_list(&begin_instructions));
 	return (begin_instructions);
 }

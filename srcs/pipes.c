@@ -17,7 +17,7 @@ int			add_pipe(t_list **begin_pipes, t_list *begin_cmds)
 {
 	t_list	*el_pipe;
 
-	el_pipe = new_pipe_el(begin_cmds, 0);
+	el_pipe = new_pipe_el(begin_cmds);
 	if (!el_pipe)
 		return (0);
 	ft_lstadd_back(begin_pipes, el_pipe);
@@ -29,12 +29,12 @@ static int	parse_one_instruction_pipes(t_list *tokens, t_list **begin_pipes,
 {
 	while (tokens)
 	{
-		if ((token_is_pipe(tokens) || !tokens->next) && previous)
+		if (token_is_pipe(tokens) || !tokens->next)
 		{
 			if (!add_pipe(begin_pipes, begin_cmds))
 				return (0);
 			begin_cmds = tokens->next;
-			if (tokens->next)
+			if (token_is_pipe(tokens))
 			{
 				previous->next = NULL;
 				del_token_el(tokens);
@@ -48,6 +48,13 @@ static int	parse_one_instruction_pipes(t_list *tokens, t_list **begin_pipes,
 		}
 	}
 	return (1);
+}
+
+int 		del_pipe_list(t_list **begin_pipes)
+{
+	if (*begin_pipes)
+		ft_lstclear(begin_pipes, &del_pipe);
+	return (0);
 }
 
 int			parse_pipes(t_list *instructions)
@@ -66,7 +73,7 @@ int			parse_pipes(t_list *instructions)
 		previous = NULL;
 		if (!parse_one_instruction_pipes(tokens, begin_pipes,
 			previous, begin_cmds))
-			return (0);
+			return (del_pipe_list(begin_pipes));
 		instructions = instructions->next;
 	}
 	return (1);

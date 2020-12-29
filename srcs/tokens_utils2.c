@@ -28,15 +28,14 @@ t_list	*split_tokens(char *user_input)
 		if (!ft_isspace(*input))
 		{
 			if (!add_token(&begin, &input))
-			{
-				ft_lstclear(&begin, &del_token);
-				break;
-			}
+				return (free_token_struct(&begin, tmp));
 		}
 		else
 			input += 1;
 	}
 	free(tmp);
+	if (!check_token_list(begin))
+		return (NULL);
 	return (begin);
 }
 

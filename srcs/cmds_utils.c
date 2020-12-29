@@ -1,55 +1,56 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipes_utils.c                                      :+:      :+:    :+:   */
+/*   cmds_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lsoulier <lsoulier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/12/29 01:10:21 by lsoulier          #+#    #+#             */
-/*   Updated: 2020/12/29 01:10:31 by lsoulier         ###   ########.fr       */
+/*   Created: 2020/12/29 02:56:32 by lsoulier          #+#    #+#             */
+/*   Updated: 2020/12/29 02:56:44 by lsoulier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_pipe	*new_pipe(t_list *begin_cmds)
+t_cmd	*new_cmd(char *name, char **args)
 {
-	t_pipe *new;
+	t_cmd	*new;
 
-	new = (t_pipe*)malloc(sizeof(t_pipe));
+	new = (t_cmd*)malloc(sizeof(t_cmd));
 	if (!new)
 		return (NULL);
-	new->begin_cmds = begin_cmds;
+	new->name = name;
+	new->args = args;
 	new->exit_status = 0;
+	new->redirection = NULL;
 	return (new);
 }
 
-t_list	*new_pipe_el(t_list *begin_cmds)
+t_list	*new_cmd_el(char *name, char **args)
 {
-	t_pipe	*new;
 	t_list	*el;
+	t_cmd	*cmd;
 
-	new = new_pipe(begin_cmds);
-	if (!new)
+	cmd = new_cmd(name, args);
+	if (!cmd)
 		return (NULL);
-	el = ft_lstnew(new);
+	el = ft_lstnew(cmd);
 	return (el);
 }
 
-void	del_pipe(void *pipe_void)
+void 	del_cmd(void *cmd_void)
 {
-	t_pipe *pipe;
+	t_cmd *cmd;
 
-	pipe = (t_pipe*)pipe_void;
-	ft_lstclear(&pipe->begin_cmds, &del_cmd);
+	cmd = (t_cmd*)cmd_void;
+	free(cmd->name);
+	free_double_tab(cmd->args);
+	del_redirection(cmd->redirection);
 }
 
-t_list	*get_pipes_cmds(t_list *pipes_el)
+int 	free_cmd_tabs(char *name, char **args)
 {
-	t_list	*el;
-	t_pipe	*pipe;
-
-	pipe = (t_pipe*)pipes_el->content;
-	el = (t_list*)pipe->begin_cmds;
-	return (el);
+	free(name);
+	free_double_tab(args);
+	return (0);
 }

@@ -12,3 +12,11 @@
 
 #include "minishell.h"
 
+void 	del_redirection(void *redirection_void)
+{
+	t_redirection *redirection;
+
+	redirection = (t_redirection*)redirection_void;
+	free(redirection->input);
+	free(redirection->filename);
+}

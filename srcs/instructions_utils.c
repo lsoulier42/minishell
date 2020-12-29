@@ -20,7 +20,7 @@ void			del_instruction(void *instruction_void)
 	ft_lstclear(&instruction->begin_pipes, &del_pipe);
 }
 
-t_instruction	*new_instruction(t_list *begin_pipes, int exit_status)
+t_instruction	*new_instruction(t_list *begin_pipes)
 {
 	t_instruction *new;
 
@@ -28,16 +28,16 @@ t_instruction	*new_instruction(t_list *begin_pipes, int exit_status)
 	if (!new)
 		return (NULL);
 	new->begin_pipes = begin_pipes;
-	new->exit_status = exit_status;
+	new->exit_status = 0;
 	return (new);
 }
 
-t_list			*new_instruction_el(t_list *begin_pipes, int exit_status)
+t_list			*new_instruction_el(t_list *begin_pipes)
 {
 	t_list			*el;
 	t_instruction	*new;
 
-	new = new_instruction(begin_pipes, exit_status);
+	new = new_instruction(begin_pipes);
 	if (!new)
 		return (NULL);
 	el = ft_lstnew(new);

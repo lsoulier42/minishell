@@ -55,3 +55,10 @@ int 	token_len(char *input)
 		return (-1);
 	return (len);
 }
+
+void *free_token_struct(t_list **begin, char *tmp)
+{
+	ft_lstclear(begin, &del_token);
+	free(tmp);
+	return (NULL);
+}

@@ -15,24 +15,29 @@ void 		print_token_list(t_list *begin)
 
 void 			print_instructions_list(t_list *instructions)
 {
-	t_list	*begins_pipes;
-	t_pipe 	*pipe;
-	t_token *token;
+	t_list	*begin_pipes;
+	t_list 	*cmds;
+	t_cmd	*cmd;
 	int 	i;
 	int 	j;
+	int 	k;
 
 	i = 1;
 	while (instructions)
 	{
-		begins_pipes = get_instruction_pipes(instructions);
+		begin_pipes = get_instruction_pipes(instructions);
 		printf("instruction %d :\n", i++);
 		j = 1;
-		while (begins_pipes)
+		while (begin_pipes)
 		{
-			pipe = (t_pipe*)begins_pipes->content;
+			k = -1;
+			cmds = get_pipes_cmds(begin_pipes);
+			cmd = (t_cmd*)cmds->content;
 			printf("pipe %d :\n", j++);
-			print_token_list(pipe->begin_cmds);
-			begins_pipes = begins_pipes->next;
+			printf("cmd name : %s\n", cmd->name);
+			while(cmd->args[++k])
+				printf("argument %d : %s\n", k, cmd->args[k]);
+			begin_pipes = begin_pipes->next;
 		}
 		instructions = instructions->next;
 	}

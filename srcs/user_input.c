@@ -12,30 +12,6 @@
 
 #include "minishell.h"
 
-void 			*error_input(t_user_input *new)
-{
-	free(new);
-	return (NULL);
-}
-
-void 			*error_tokens(t_user_input *new)
-{
-	free(new->input);
-	return (error_input(new));
-}
-
-void 			*error_instructions(t_user_input *new, t_list **tokens)
-{
-	ft_lstclear(tokens, &del_token);
-	return(error_tokens(new));
-}
-
-void 			*error_pipes(t_user_input *new, t_list **tokens)
-{
-	ft_lstclear(&(new->begin_instructions), &del_token);
-	return(error_instructions(new, tokens));
-}
-
 t_user_input	*parse_input(char *buffer)
 {
 	t_user_input	*new;
@@ -55,7 +31,10 @@ t_user_input	*parse_input(char *buffer)
 		return (error_instructions(new, &begin_tokens));
 	if (!parse_pipes(new->begin_instructions))
 		return (error_pipes(new, &begin_tokens));
+	if (!parse_cmds(new->begin_instructions))
+		return (error_cmds(new, &begin_tokens));
 	print_instructions_list(new->begin_instructions);
+	ft_lstclear(&begin_tokens, &del_token);
 	return (new);
 }
 
