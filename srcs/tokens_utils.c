@@ -29,6 +29,8 @@ int 	token_len_operator(char *input)
 	len = 1;
 	if (*input == '>' && *(input + 1) == '>')
 		len = 2;
+	else if (ft_isoperator(*(input + 1)))
+		return (-1);
 	return (len);
 }
 

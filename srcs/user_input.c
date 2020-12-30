@@ -33,17 +33,13 @@ t_user_input	*parse_input(char *buffer)
 		return (error_pipes(new, &begin_tokens));
 	if (!parse_cmds(new->begin_instructions))
 		return (error_cmds(new, &begin_tokens));
-	print_instructions_list(new->begin_instructions);
 	ft_lstclear(&begin_tokens, &del_token);
 	return (new);
 }
 
-void			del_user_input(void *input_void)
+void 	del_user_input(t_user_input *input)
 {
-	t_user_input	*input;
-
-	input = (t_user_input*)input_void;
+	ft_lstclear(&(input->begin_instructions), &del_instruction);
 	free(input->input);
-	ft_lstclear(&input->begin_instructions, &del_instruction);
-	free(input_void);
+	free(input);
 }

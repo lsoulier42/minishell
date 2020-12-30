@@ -20,8 +20,22 @@ int 	error_operator_is_last_token(void)
 
 int 	error_quote_is_not_closed(void)
 {
-	ft_putstr("syntax error quote is not closed\n");
+	ft_putstr("syntax error : quote is not closed\n");
 	return (0);
+}
+
+int 	error_operator_defined(void)
+{
+	ft_putstr("syntax error : operator is not defined\n");
+	return (0);
+}
+
+int		error_lexer(char c)
+{
+	if (ft_isoperator(c))
+		return (error_operator_defined());
+	else
+		return (error_quote_is_not_closed());
 }
 
 int		check_token_list(t_list *tokens)
@@ -32,9 +46,9 @@ int		check_token_list(t_list *tokens)
 	{
 		value = get_token_value(tokens);
 		if (token_is_operator(tokens) && (ft_strcmp(value, "|") == 0
-										  || ft_strcmp(value, ">") == 0
-										  || ft_strcmp(value, "<") == 0
-										  || ft_strcmp(value, ">>") == 0))
+			|| ft_strcmp(value, ">") == 0
+			|| ft_strcmp(value, "<") == 0
+			|| ft_strcmp(value, ">>") == 0))
 		{
 			if (!tokens->next)
 				return (error_operator_is_last_token());

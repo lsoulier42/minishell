@@ -20,7 +20,6 @@ t_pipe	*new_pipe(t_list *begin_cmds)
 	if (!new)
 		return (NULL);
 	new->begin_cmds = begin_cmds;
-	new->exit_status = 0;
 	return (new);
 }
 
@@ -42,6 +41,7 @@ void	del_pipe(void *pipe_void)
 
 	pipe = (t_pipe*)pipe_void;
 	ft_lstclear(&pipe->begin_cmds, &del_cmd);
+	free(pipe_void);
 }
 
 t_list	*get_pipes_cmds(t_list *pipes_el)

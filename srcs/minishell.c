@@ -27,14 +27,13 @@ int main(int argc, char *argv[], char *envp[])
 		{
 			buffer[read_return] = '\0';
 			msh_data.parsed_input = parse_input(buffer);
-			/* reduce_quote(msh_data.parsed_input);
-			 * expand_var(msh_data.begin_env, msh_data.parsed_input);
-			execute_cmd(msh_data, msh_data.parsed_input);*/
+			print_instructions_list(msh_data.parsed_input->begin_instructions);
+			//expand_var(msh_data.begin_env, msh_data.parsed_input);
+			//execute_cmd(msh_data, msh_data.parsed_input);
+			del_user_input(msh_data.parsed_input);
+			msh_data.exit_msh = 1;
 			if (buffer[read_return - 1] == '\n')
-			{
-				//del_user_input(msh_data.parsed_input);
 				break;
-			}
 		}
 	}
 	ft_lstclear(&msh_data.begin_env, &del_var);

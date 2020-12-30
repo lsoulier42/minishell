@@ -55,10 +55,9 @@ typedef struct 	s_var
 
 typedef struct	s_redirection
 {
-	char	*input;
 	char 	*filename;
 	int 	fd;
-	int 	direction;
+	int 	direction_right;
 	int 	append;
 }				t_redirection;
 
@@ -67,19 +66,16 @@ typedef struct	s_cmd
 	char			*name;
 	char 			**args;
 	t_redirection	*redirection;
-	int 			exit_status;
 }				t_cmd;
 
 typedef struct	s_pipe
 {
 	t_list		*begin_cmds;
-	int 		exit_status;
 }				t_pipe;
 
 typedef struct	s_instruction
 {
 	t_list		*begin_pipes;
-	int 		exit_status;
 }				t_instruction;
 
 typedef struct	s_token
@@ -92,7 +88,6 @@ typedef struct	s_user_input
 {
 	char		*input;
 	t_list		*begin_instructions;
-	int 		exit_status;
 }				t_user_input;
 
 typedef struct	s_data
@@ -142,7 +137,7 @@ void 			*error_tokens(t_user_input *new);
 void 			*error_instructions(t_user_input *new, t_list **tokens);
 void 			*error_pipes(t_user_input *new, t_list **tokens);
 void 			*error_cmds(t_user_input *new, t_list **tokens);
-void			del_user_input(void *input_void);
+void			del_user_input(t_user_input *input);
 
 t_token			*new_token(char *value, int is_operator);
 void 			del_token(void *token_void);
@@ -182,16 +177,24 @@ int 			del_pipe_list(t_list **begin_pipes);
 int				error_operator_is_last_token(void);
 int				check_token_list(t_list *tokens);
 int 			error_quote_is_not_closed(void);
+int 			error_operator_defined(void);
+int 			error_lexer(char c);
 
-t_cmd			*new_cmd(char *name, char **args);
-t_list			*new_cmd_el(char *name, char **args);
+t_cmd			*new_cmd(char *name, char **args, t_redirection *redirection);
+t_list			*new_cmd_el(char *name, char **args, t_redirection *redirection);
 void			del_cmd(void *cmd_void);
 int 			parse_cmds(t_list *instructions);
 int 			create_args_tab(char ***args, t_list *tokens);
-int 			parse_one_pipe_cmds(t_list **tokens);
-int 			free_cmd_tabs(char *name, char **args);
+int 			parse_one_pipe_cmds(t_list **tokens, t_redirection *redirection);
 
 void			del_redirection(void *redirection_void);
+t_redirection	*new_redirection(char *filename, int direction_right, int append);
+int 			token_is_redirection(t_list *token_el);
+t_redirection	*parse_redirections(t_list *tokens);
+int 			create_empty_file_redirection(char *filename, int append);
+int 			redirection_is_not_last(t_list *token_el);
+int 			parse_one_redirection(t_list *tokens, t_redirection **redirection);
+void 			delete_redirection_tokens(t_list **begin, t_list **tokens, t_list **previous);
 
 //test functions
 void 			print_token_list(t_list *begin);

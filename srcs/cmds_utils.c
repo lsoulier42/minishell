@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-t_cmd	*new_cmd(char *name, char **args)
+t_cmd	*new_cmd(char *name, char **args, t_redirection *redirection)
 {
 	t_cmd	*new;
 
@@ -21,17 +21,16 @@ t_cmd	*new_cmd(char *name, char **args)
 		return (NULL);
 	new->name = name;
 	new->args = args;
-	new->exit_status = 0;
-	new->redirection = NULL;
+	new->redirection = redirection;
 	return (new);
 }
 
-t_list	*new_cmd_el(char *name, char **args)
+t_list	*new_cmd_el(char *name, char **args, t_redirection *redirection)
 {
 	t_list	*el;
 	t_cmd	*cmd;
 
-	cmd = new_cmd(name, args);
+	cmd = new_cmd(name, args, redirection);
 	if (!cmd)
 		return (NULL);
 	el = ft_lstnew(cmd);
@@ -46,6 +45,7 @@ void 	del_cmd(void *cmd_void)
 	free(cmd->name);
 	free_double_tab(cmd->args);
 	del_redirection(cmd->redirection);
+	free(cmd_void);
 }
 
 int 	free_cmd_tabs(char *name, char **args)

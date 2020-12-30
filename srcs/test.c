@@ -37,6 +37,8 @@ void 			print_instructions_list(t_list *instructions)
 			printf("cmd name : %s\n", cmd->name);
 			while(cmd->args[++k])
 				printf("argument %d : %s\n", k, cmd->args[k]);
+			printf("redirection: name: %s, direction_right: %d, append: %d\n",
+		  		cmd->redirection->filename, cmd->redirection->direction_right, cmd->redirection->append);
 			begin_pipes = begin_pipes->next;
 		}
 		instructions = instructions->next;

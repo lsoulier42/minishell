@@ -69,7 +69,7 @@ int 	add_token(t_list **begin, char **input)
 	else
 		len = token_len(*input);
 	if (len == -1)
-		return (error_quote_is_not_closed());
+		return (error_lexer(**input));
 	value = ft_strndup(*input, len);
 	if (!value)
 		return (0);
