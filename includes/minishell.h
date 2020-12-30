@@ -57,7 +57,7 @@ typedef struct	s_redirection
 {
 	char 	*filename;
 	int 	fd;
-	int 	direction_right;
+	int 	export;
 	int 	append;
 }				t_redirection;
 
@@ -188,13 +188,13 @@ int 			parse_one_pipe_cmds(t_list **tokens, t_redirection *redirection);
 t_cmd			*get_cmd(t_list *pipe_el);
 
 void			del_redirection(void *redirection_void);
-t_redirection	*new_redirection(char *filename, int direction_right, int append);
+t_redirection	*new_redirection(char *filename, int export, int append);
 int 			token_is_redirection(t_list *token_el);
 t_redirection	*parse_redirections(t_list *tokens);
 int 			create_empty_file_redirection(char *filename, int append);
 int 			redirection_is_not_last(t_list *token_el);
 int 			parse_one_redirection(t_list *tokens, t_redirection **redirection);
-void 			delete_redirection_tokens(t_list **begin, t_list **tokens, t_list **previous);
+void 			delete_redirection_tokens(t_list **tokens, t_list **previous);
 
 int				expand_vars(t_list *env, t_user_input *parsed_input);
 char			*get_cmd_next_value(t_list *env, char *str, int *len);

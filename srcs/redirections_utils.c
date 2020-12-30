@@ -21,7 +21,7 @@ void 			del_redirection(void *redirection_void)
 	free(redirection_void);
 }
 
-t_redirection	*new_redirection(char *filename, int direction_right, int append)
+t_redirection	*new_redirection(char *filename, int export, int append)
 {
 	t_redirection *new;
 
@@ -29,7 +29,8 @@ t_redirection	*new_redirection(char *filename, int direction_right, int append)
 	if (!new)
 		return (NULL);
 	new->filename = filename;
-	new->direction_right = direction_right;
+	new->fd = 0;
+	new->export = export;
 	new->append = append;
 	return (new);
 }

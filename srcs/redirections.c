@@ -34,29 +34,29 @@ int 			parse_one_redirection(t_list *tokens, t_redirection **redirection)
 	char 			*value;
 	char 			*filename;
 	int 			append;
-	int 			direction_right;
+	int 			export;
 
 	value = get_token_value(tokens);
 	filename = sub_quote(get_token_value(tokens->next));
 	if (!filename)
 		return (0);
 	append = ft_strcmp(value, ">>") == 0;
-	direction_right = ft_strcmp(value, ">") == 0 || append;
-	if (redirection_is_not_last(tokens) && direction_right)
+	export = ft_strcmp(value, ">") == 0 || append;
+	if (redirection_is_not_last(tokens) && export)
 	{
 		if (!create_empty_file_redirection(filename, append))
 			return(free_str_return_int(filename));
 	}
 	else
 	{
-		*redirection = new_redirection(filename, direction_right, append);
+		*redirection = new_redirection(filename, export, append);
 		if (!(*redirection))
 			return(free_str_return_int(filename));
 	}
 	return (1);
 }
 
-void 			delete_redirection_tokens(t_list **begin, t_list **tokens, t_list **previous)
+void 			delete_redirection_tokens(t_list **tokens, t_list **previous)
 {
 	t_list 			*jump_token;
 
@@ -71,18 +71,16 @@ t_redirection	*parse_redirections(t_list *tokens)
 {
 	t_redirection	*redirection;
 	t_list 			*previous;
-	t_list 			**begin;
 
 	redirection = NULL;
 	previous = NULL;
-	begin = &tokens;
 	while (tokens)
 	{
 		if (token_is_redirection(tokens))
 		{
 			if (!parse_one_redirection(tokens, &redirection))
 				return (NULL);
-			delete_redirection_tokens(begin, &tokens, &previous);
+			delete_redirection_tokens(&tokens, &previous);
 		}
 		else
 		{

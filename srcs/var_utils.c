@@ -24,7 +24,7 @@ char	*get_cmd_next_value(t_list *env, char *str, int *len)
 		return (ft_strdup(""));
 	}
 	else
-		while (str[*len] && !ft_isspace(str[*len]) && str[*len] != '$')
+		while (str[*len] && (ft_isalnum(str[*len]) || str[*len] == '_'))
 			*len += 1;
 	key = ft_strndup(str, *len);
 	if (!key)
@@ -69,7 +69,8 @@ int expand_one_arg_vars(t_list *env, char **cur_arg)
 	i = 0;
 	while ((*cur_arg)[i])
 	{
-		if ((*cur_arg)[i] == '$')
+		if ((*cur_arg)[i] == '$' && (*cur_arg)[i + 1] != '\0'
+			&& !ft_isspace((*cur_arg)[i + 1]) && (*cur_arg)[i + 1] != '$')
 		{
 			if (!expand_one_var(env, cur_arg, &i))
 				return (0);
