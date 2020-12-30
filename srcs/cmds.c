@@ -49,6 +49,7 @@ int 	parse_one_pipe_cmds(t_list **tokens, t_redirection *redirection)
 	cmd_el = new_cmd_el(name, args, redirection);
 	if (!cmd_el)
 		return (free_cmd_tabs(name, args));
+	ft_lstclear(tokens, &del_token);
 	*tokens = cmd_el;
 	return (1);
 }
@@ -75,4 +76,14 @@ int 	parse_cmds(t_list *instructions)
 		instructions = instructions->next;
 	}
 	return (1);
+}
+
+t_cmd	*get_cmd(t_list *pipe_el)
+{
+	t_list	*cmds;
+	t_cmd	*cmd;
+
+	cmds = get_pipes_cmds(pipe_el);
+	cmd = (t_cmd*)cmds->content;
+	return (cmd);
 }

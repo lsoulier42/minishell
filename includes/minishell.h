@@ -150,7 +150,6 @@ char			*get_token_value(t_list *el);
 int 			token_is_operator(t_list *el);
 int 			token_len(char *input);
 int 			token_len_operator(char *input);
-void			del_token_el(t_list *token_el);
 int 			token_is_pipe(t_list *el);
 int 			token_is_semicolon(t_list *el);
 void			*free_token_struct(t_list **begin, char *tmp);
@@ -186,6 +185,7 @@ void			del_cmd(void *cmd_void);
 int 			parse_cmds(t_list *instructions);
 int 			create_args_tab(char ***args, t_list *tokens);
 int 			parse_one_pipe_cmds(t_list **tokens, t_redirection *redirection);
+t_cmd			*get_cmd(t_list *pipe_el);
 
 void			del_redirection(void *redirection_void);
 t_redirection	*new_redirection(char *filename, int direction_right, int append);
@@ -195,6 +195,12 @@ int 			create_empty_file_redirection(char *filename, int append);
 int 			redirection_is_not_last(t_list *token_el);
 int 			parse_one_redirection(t_list *tokens, t_redirection **redirection);
 void 			delete_redirection_tokens(t_list **begin, t_list **tokens, t_list **previous);
+
+int				expand_vars(t_list *env, t_user_input *parsed_input);
+char			*get_cmd_next_value(t_list *env, char *str, int *len);
+int				expand_one_var(t_list *env, char **cur_arg, int *index);
+int				expand_one_arg_vars(t_list *env, char **cur_arg);
+int				expand_one_cmd_vars(t_list *env, t_cmd *cmd);
 
 //test functions
 void 			print_token_list(t_list *begin);

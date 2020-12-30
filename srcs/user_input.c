@@ -33,7 +33,6 @@ t_user_input	*parse_input(char *buffer)
 		return (error_pipes(new, &begin_tokens));
 	if (!parse_cmds(new->begin_instructions))
 		return (error_cmds(new, &begin_tokens));
-	ft_lstclear(&begin_tokens, &del_token);
 	return (new);
 }
 

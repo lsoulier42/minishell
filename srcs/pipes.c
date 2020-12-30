@@ -37,7 +37,7 @@ static int	parse_one_instruction_pipes(t_list *tokens, t_list **begin_pipes,
 			if (token_is_pipe(tokens))
 			{
 				previous->next = NULL;
-				del_token_el(tokens);
+				ft_lstdelone(tokens, &del_token);
 			}
 			tokens = begin_cmds;
 		}

@@ -33,9 +33,9 @@ t_list	*split_tokens(char *user_input)
 		else
 			input += 1;
 	}
-	free(tmp);
 	if (!check_token_list(begin))
-		return (NULL);
+		return (free_token_struct(&begin, tmp));
+	free(tmp);
 	return (begin);
 }
 

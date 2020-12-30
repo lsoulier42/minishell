@@ -25,6 +25,7 @@ void 		del_var(void *var)
 	var_cast = (t_var*)var;
 	free(var_cast->key);
 	free(var_cast->value);
+	free(var);
 }
 
 t_var		*parse_var(char *str)
@@ -54,3 +55,5 @@ int cmp_key_var(t_var *var1, t_var *var2)
 {
 	return (ft_strcmp(var1->key, var2->key));
 }
+
+

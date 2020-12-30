@@ -30,15 +30,7 @@ void 	del_token(void *token_void)
 
 	token = (t_token *) token_void;
 	free(token->value);
-}
-
-void del_token_el(t_list *token_el)
-{
-	t_token	*token;
-
-	token = (t_token*)token_el;
-	del_token(token);
-	free(token_el);
+	free(token_void);
 }
 
 t_list	*new_token_el(char *value, int is_operator)
