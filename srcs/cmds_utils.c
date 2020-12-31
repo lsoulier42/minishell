@@ -39,7 +39,7 @@ t_list	*new_cmd_el(char *name, char **args, t_redirection *redirection)
 
 void 	del_cmd(void *cmd_void)
 {
-	t_cmd *cmd;
+	t_cmd	*cmd;
 
 	cmd = (t_cmd*)cmd_void;
 	free(cmd->name);

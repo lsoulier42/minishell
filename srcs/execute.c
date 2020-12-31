@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-int execute_all_cmds(t_data *msh_data)
+int	execute_all_cmds(t_data *msh_data)
 {
 	t_list	*instructions;
 	t_list	*pipes;

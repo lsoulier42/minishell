@@ -14,7 +14,7 @@
 
 t_error	*new_error(char *str_error, char *process, char *arg, int code)
 {
-	t_error *new;
+	t_error	*new;
 
 	new = (t_error*)malloc(sizeof(t_error));
 	if (!new)

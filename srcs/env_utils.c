@@ -33,8 +33,8 @@ char	**serialize_env(void)
 {
 	int		len;
 	char	**envp;
-	t_list 	*env;
-	int 	var_nb;
+	t_list	*env;
+	int		var_nb;
 
 	env = g_env_list_begin;
 	len = ft_lstsize(env);

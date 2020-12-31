@@ -14,7 +14,7 @@
 
 int 	create_args_tab(char ***args, t_list *tokens)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (tokens)
@@ -57,7 +57,7 @@ int 	parse_one_pipe_cmds(t_list **tokens, t_redirection *redirection)
 int 	parse_cmds(t_list *instructions)
 {
 	t_list			*pipes;
-	t_list 			**begin_cmds;
+	t_list			**begin_cmds;
 	t_redirection	*redirection;
 
 	while (instructions)
@@ -69,7 +69,7 @@ int 	parse_cmds(t_list *instructions)
 			redirection = parse_redirections(*begin_cmds);
 			if (!redirection)
 				return (0);
-			if(!parse_one_pipe_cmds(begin_cmds, redirection))
+			if (!parse_one_pipe_cmds(begin_cmds, redirection))
 				return (0);
 			pipes = pipes->next;
 		}

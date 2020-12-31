@@ -12,9 +12,9 @@
 
 #include "minishell.h"
 
-int expand_one_arg_vars(t_data msh_data, char **cur_arg)
+int	expand_one_arg_vars(t_data msh_data, char **cur_arg)
 {
-	int 	i;
+	int	i;
 
 	i = 0;
 	while ((*cur_arg)[i])
@@ -37,7 +37,7 @@ int expand_one_arg_vars(t_data msh_data, char **cur_arg)
 	return (1);
 }
 
-int expand_one_cmd_vars(t_data msh_data, t_cmd *cmd)
+int	expand_one_cmd_vars(t_data msh_data, t_cmd *cmd)
 {
 	int		i;
 
@@ -51,7 +51,7 @@ int expand_one_cmd_vars(t_data msh_data, t_cmd *cmd)
 	return (1);
 }
 
-int expand_vars(t_data msh_data)
+int	expand_vars(t_data msh_data)
 {
 	t_list	*instructions;
 	t_list	*pipes;

@@ -36,7 +36,7 @@ t_var	*get_env_var(char *key)
 {
 	t_var		*found_var;
 	t_var		*var_cast;
-	t_list 		*env;
+	t_list		*env;
 
 	found_var = NULL;
 	env = g_env_list_begin;
@@ -50,7 +50,7 @@ t_var	*get_env_var(char *key)
 	return (found_var);
 }
 
-int		set_env_var(t_list **begin_env, char *unparsed)
+int	set_env_var(t_list **begin_env, char *unparsed)
 {
 	t_var	*new_var;
 	t_list	*el;
@@ -84,5 +84,3 @@ void 	print_env(void)
 		env = env->next;
 	}
 }
-
-

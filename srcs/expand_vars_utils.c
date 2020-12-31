@@ -12,11 +12,11 @@
 
 #include "minishell.h"
 
-char 	*get_cmd_next_value(char *str, int *len)
+char	*get_cmd_next_value(char *str, int *len)
 {
 	char	*key;
 	t_var	*var;
-	char 	*value;
+	char	*value;
 
 	if (ft_isdigit(str[0]))
 	{
@@ -38,18 +38,18 @@ char 	*get_cmd_next_value(char *str, int *len)
 	return (value);
 }
 
-int		expand_one_var(char **cur_arg, int *index)
+int	expand_one_var(char **cur_arg, int *index)
 {
-	int 	key_len;
+	int		key_len;
 	char	*var_value;
-	char 	*new_cur_arg;
+	char	*new_cur_arg;
 
 	key_len = 0;
 	var_value = get_cmd_next_value(*cur_arg + *index + 1, &key_len);
 	if (!var_value)
 		return (0);
 	new_cur_arg = (char*)ft_calloc(ft_strlen(*cur_arg)
-								   - key_len + ft_strlen(var_value), sizeof(char));
+			- key_len + ft_strlen(var_value), sizeof(char));
 	if (!new_cur_arg)
 		return (free_return_int(var_value));
 	ft_strlcpy(new_cur_arg, *cur_arg, *index + 1);
@@ -62,17 +62,18 @@ int		expand_one_var(char **cur_arg, int *index)
 	return (1);
 }
 
-int		expand_last_return(t_data msh_data, char **cur_arg, int *index)
+int	expand_last_return(t_data msh_data, char **cur_arg, int *index)
 {
 	char	*itoa_value;
-	int 	itoa_len;
-	char 	*new_cur_arg;
+	int		itoa_len;
+	char	*new_cur_arg;
 
 	itoa_value = ft_itoa(msh_data.last_return);
 	if (!itoa_value)
 		return (0);
 	itoa_len = ft_strlen(itoa_value);
-	new_cur_arg = (char*)ft_calloc(ft_strlen(*cur_arg) + itoa_len - 1, sizeof(char));
+	new_cur_arg = (char*)ft_calloc(ft_strlen(*cur_arg)
+			+ itoa_len - 1, sizeof(char));
 	if (!new_cur_arg)
 		return (free_return_int(itoa_value));
 	ft_strlcpy(new_cur_arg, *cur_arg, *index + 1);
