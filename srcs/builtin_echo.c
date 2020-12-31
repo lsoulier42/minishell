@@ -14,7 +14,7 @@
 
 int 	is_legit_n_option(char *str)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	if (str[0] != '-')
@@ -27,8 +27,8 @@ int 	is_legit_n_option(char *str)
 
 int 	nb_n_options(char **args)
 {
-	int i;
-	int nb;
+	int	i;
+	int	nb;
 
 	i = -1;
 	nb = 0;
@@ -41,13 +41,13 @@ int 	nb_n_options(char **args)
 int 	remove_n_options(char ***args, int nb_options)
 {
 	char	**new_args;
-	int 	i;
-	int 	arg_nb;
+	int		i;
+	int		arg_nb;
 
 	i = -1;
 	arg_nb = 0;
 	new_args = (char**)malloc(sizeof(char*)
-		* (doubletab_len(*args) + 1 - nb_options));
+			* (doubletab_len(*args) + 1 - nb_options));
 	if (!new_args)
 		return (0);
 	while ((*args)[++i])

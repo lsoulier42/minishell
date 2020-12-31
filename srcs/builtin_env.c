@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-int		exec_pwd(t_data *msh_data, t_cmd *cmd)
+int	exec_pwd(t_data *msh_data, t_cmd *cmd)
 {
 	t_var	*pwd;
 
@@ -23,7 +23,7 @@ int		exec_pwd(t_data *msh_data, t_cmd *cmd)
 	return (0);
 }
 
-int exec_env(t_data *msh_data, t_cmd *cmd)
+int	exec_env(t_data *msh_data, t_cmd *cmd)
 {
 	print_env();
 	return (0);

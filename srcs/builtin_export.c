@@ -12,9 +12,9 @@
 
 #include "minishell.h"
 
-int 	export_arg_is_legit(char *str)
+int	export_arg_is_legit(char *str)
 {
-	int len_to_equal;
+	int	len_to_equal;
 
 	len_to_equal = 0;
 	if (ft_isdigit(str[0]) || str[0] == '=')
@@ -30,7 +30,7 @@ int 	export_arg_is_legit(char *str)
 	return (1);
 }
 
-int 	export_key_already_exist(char *key)
+int	export_key_already_exist(char *key)
 {
 	t_list	*env;
 	t_var	*var;
@@ -46,9 +46,9 @@ int 	export_key_already_exist(char *key)
 	return (0);
 }
 
-int		export_change_value(char *unparsed, char *key)
+int	export_change_value(char *unparsed, char *key)
 {
-	char 	*value;
+	char	*value;
 
 	value = parse_var_value(unparsed);
 	if (!value)
@@ -58,11 +58,11 @@ int		export_change_value(char *unparsed, char *key)
 	return (1);
 }
 
-int		exec_export(t_data *msh_data, t_cmd *cmd)
+int	exec_export(t_data *msh_data, t_cmd *cmd)
 {
-	int 	i;
-	char 	*key;
-	int 	error_occurred;
+	int		i;
+	char	*key;
+	int		error_occurred;
 
 	i = -1;
 	while (cmd->args[++i])
