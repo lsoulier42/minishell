@@ -12,26 +12,25 @@
 
 #include "libft.h"
 
-void	ft_lstrm_if(t_list **begin, void *content_ref,
-		int (*cmp)(), void (*free_fct)(void *))
+void	ft_lstrm_if(t_list **b, void *cr, int (*cmp)(), void (*ffct)())
 {
-	t_list *previous;
-	t_list *current;
-	t_list *next;
+	t_list	*previous;
+	t_list	*current;
+	t_list	*next;
 
-	current = *begin;
+	current = *b;
 	previous = NULL;
 	while (current)
 	{
 		next = current->next;
-		if (!((*cmp)(current->content, content_ref)))
+		if (!((*cmp)(current->content, cr)))
 		{
-			(*free_fct)(current->content);
+			(*ffct)(current->content);
 			free(current);
 			if (previous)
 				previous->next = next;
 			else if (next)
-				*begin = next;
+				*b = next;
 		}
 		else
 			previous = current;

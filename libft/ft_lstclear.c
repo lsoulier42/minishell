@@ -14,8 +14,8 @@
 
 void	ft_lstclear(t_list **lst, void (*del)(void*))
 {
-	t_list *track;
-	t_list *next;
+	t_list	*track;
+	t_list	*next;
 
 	track = *lst;
 	while (track)

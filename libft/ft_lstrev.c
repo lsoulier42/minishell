@@ -14,9 +14,9 @@
 
 void	ft_lstrev(t_list **begin_list)
 {
-	t_list *next;
-	t_list *current;
-	t_list *previous;
+	t_list	*next;
+	t_list	*current;
+	t_list	*previous;
 
 	current = *begin_list;
 	previous = NULL;

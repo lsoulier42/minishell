@@ -20,7 +20,7 @@
 #  define BUFFER_SIZE 100
 # endif
 
-typedef struct	s_list
+typedef struct s_list
 {
 	void			*content;
 	struct s_list	*next;
@@ -46,8 +46,7 @@ int				ft_isascii(int c);
 int				ft_isprint(int c);
 size_t			ft_strlcpy(char *dst, const char *src, size_t dstsize);
 int				ft_atoi(const char *str);
-char			*ft_strnstr(const char *haystack,
-		const char *needle, size_t len);
+char			*ft_strnstr(const char *hay, const char *need, size_t len);
 size_t			ft_strlcat(char *dst, const char *src, size_t dstsize);
 void			*ft_calloc(size_t count, size_t size);
 char			*ft_strdup(const char *s1);
@@ -66,7 +65,6 @@ void			ft_putnbr_fd(int n, int fd);
 long			ft_abs(int n);
 int				ft_atoi_base(char *str, char *base);
 int				ft_check_base(char *base);
-char			*ft_convert_base(char *nbr, char *base_from, char *base_to);
 int				ft_factorial(int nb);
 int				ft_fibonacci(int index);
 int				ft_find_next_prime(int nb);
@@ -105,15 +103,13 @@ void			ft_lstadd_back(t_list **alst, t_list *new);
 void			ft_lstdelone(t_list *lst, void (*del)(void*));
 void			ft_lstclear(t_list **lst, void (*del)(void*));
 void			ft_lstiter(t_list *lst, void (*f)(void *));
-t_list			*ft_lstmap(t_list *lst, void *(*f)(void *),
-		void (*del)(void *));
+t_list			*ft_lstmap(t_list *l, void *(*f)(void *), void (*del)(void *));
 
 void			ft_lstrev(t_list **begin_list);
 void			ft_lstmerge(t_list **begin_list1, t_list *begin_list2);
 t_list			*ft_lstfind(t_list *begin, void *content_ref, int (*cmp)());
-void			ft_lstrm_if(t_list **begin, void *content_ref,
-		int (*cmp)(), void (*free_fct)(void *));
-void			ft_list_sort(t_list **begin, int (*cmp)());
+void			ft_lstrm_if(t_list **b, void *cr, int (*cmp)(), void (*ffct)());
+void			ft_lstsort(t_list **begin, int (*cmp)());
 t_list			*ft_lstat(t_list *begin, unsigned int nbr);
 t_list			*ft_lstadd_strs(int size, char **strs);
 
@@ -121,4 +117,5 @@ int				get_next_line(int fd, char **line);
 int				begin_line(char **line, char *buffer, int *offset);
 int				fill_line(char **line, char *buffer, int *offset);
 int				ft_strcmp(const char *s1, const char *s2);
+void			*free_double_tab(char **tab);
 #endif

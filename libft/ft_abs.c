@@ -14,8 +14,11 @@
 
 long	ft_abs(int n)
 {
-	long nb;
+	long	nb;
 
-	nb = n < 0 ? -(long)n : n;
+	if (n < 0)
+		nb = - (long)n;
+	else
+		nb = n;
 	return (nb);
 }

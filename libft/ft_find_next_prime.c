@@ -14,5 +14,8 @@
 
 int	ft_find_next_prime(int nb)
 {
-	return (ft_is_prime(nb) ? nb : ft_find_next_prime(nb + 1));
+	if (ft_is_prime(nb))
+		return (nb);
+	else
+		return (ft_find_next_prime(nb + 1));
 }

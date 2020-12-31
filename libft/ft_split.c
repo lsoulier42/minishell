@@ -41,7 +41,8 @@ static char	*set_wd(const char *s, char c, int start_index)
 	wd_len = 0;
 	while (s[start_index + wd_len] && s[start_index + wd_len] != c)
 		wd_len++;
-	if (!(wd = (char*)malloc(sizeof(char) * (wd_len + 1))))
+	wd = (char*)malloc(sizeof(char) * (wd_len + 1));
+	if (!wd)
 		return (NULL);
 	while (++i < wd_len)
 		wd[i] = s[start_index + i];
@@ -49,7 +50,7 @@ static char	*set_wd(const char *s, char c, int start_index)
 	return (wd);
 }
 
-char		**ft_split(const char *s, char c)
+char	**ft_split(const char *s, char c)
 {
 	char	**wd_tab;
 	char	p_char;
@@ -59,13 +60,16 @@ char		**ft_split(const char *s, char c)
 	i = 0;
 	wd_index = 0;
 	p_char = -1;
-	if (!(wd_tab = (char**)malloc(sizeof(char*) * (count_wd(s, c) + 1))))
+	wd_tab = (char**)malloc(sizeof(char*) * (count_wd(s, c) + 1));
+	if (!wd_tab)
 		return (NULL);
 	while (s && s[i])
 	{
 		if ((p_char == -1 || p_char == c) && s[i] != c)
 		{
 			wd_tab[wd_index] = set_wd(s, c, i);
+			if (!wd_tab[wd_index])
+				return (ft_free_double_tab(wd_tab));
 			wd_index++;
 		}
 		p_char = s[i];

@@ -14,7 +14,7 @@
 
 static int	base_index(char *base, char c)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (base[i])
@@ -26,7 +26,7 @@ static int	base_index(char *base, char c)
 	return (-1);
 }
 
-int			ft_atoi_base(char *str, char *base)
+int	ft_atoi_base(char *str, char *base)
 {
 	long	r_nb;
 	int		sign;
@@ -42,10 +42,8 @@ int			ft_atoi_base(char *str, char *base)
 		while (ft_isspace(str[i]))
 			i++;
 		while (str[i] == '-' || str[i] == '+')
-		{
-			sign *= str[i] == '-' ? -1 : 1;
-			i++;
-		}
+			if (str[i++] == '-')
+				sign *= -1;
 		while (base_index(base, str[i]) != -1)
 		{
 			r_nb = r_nb * base_len + base_index(base, str[i]);

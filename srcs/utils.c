@@ -34,17 +34,6 @@ void	print_color(char *str, char color)
 	ft_putstr("\x1b[0m");
 }
 
-void 		*free_double_tab(char **tab)
-{
-	int i;
-
-	i = -1;
-	while (tab[++i])
-		free(tab[i]);
-	free(tab);
-	return (NULL);
-}
-
 int		doubletab_len(char **tab)
 {
 	int i;

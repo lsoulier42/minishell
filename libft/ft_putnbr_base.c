@@ -12,9 +12,9 @@
 
 #include "libft.h"
 
-static void		putnbr_rec(unsigned long nb, char *base, int base_len)
+static void	putnbr_rec(unsigned long nb, char *base, int base_len)
 {
-	char digit;
+	char	digit;
 
 	if (nb >= (unsigned long)base_len)
 		putnbr_rec(nb / (base_len), base, base_len);
@@ -22,7 +22,7 @@ static void		putnbr_rec(unsigned long nb, char *base, int base_len)
 	write(1, &digit, 1);
 }
 
-void			ft_putnbr_base(long nbr, char *base)
+void	ft_putnbr_base(long nbr, char *base)
 {
 	int				base_len;
 	unsigned long	nb;
@@ -33,7 +33,7 @@ void			ft_putnbr_base(long nbr, char *base)
 		if (nbr < 0)
 		{
 			write(1, "-", 1);
-			nb = -(unsigned long)nbr;
+			nb = - (unsigned long) nbr;
 		}
 		else
 			nb = nbr;

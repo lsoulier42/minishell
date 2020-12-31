@@ -117,7 +117,6 @@ extern t_list	*g_env_list_begin;
 
 void 			format_prompt(void);
 void			print_color(char *str, char color);
-void 			*free_double_tab(char **tab);
 int				doubletab_len(char **tab);
 char			*ft_strndup(char *str, int n);
 int				free_return_int(void *ptr);

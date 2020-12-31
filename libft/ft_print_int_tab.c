@@ -14,7 +14,7 @@
 
 void	ft_print_int_tab(int *tab, int size)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	write(1, "[", 1);

@@ -12,14 +12,21 @@
 
 #include "libft.h"
 
+static int	get_len(char *str)
+{
+	if (str)
+		return (ft_strlen(str));
+	else
+		return (0);
+}
+
 int	fill_line(char **line, char *buffer, int *offset)
 {
 	int		to_endl;
 	char	*new_line;
 	int		line_len;
 
-	line_len = *line ? ft_strlen(*line) : 0;
-	to_endl = 0;
+	line_len = get_len(*line);
 	while (buffer[to_endl] && buffer[to_endl] != '\n')
 		to_endl++;
 	new_line = (char*)ft_calloc(line_len + to_endl + 1, sizeof(char));
@@ -43,7 +50,7 @@ int	fill_line(char **line, char *buffer, int *offset)
 
 int	begin_line(char **line, char *buffer, int *offset)
 {
-	int to_endl;
+	int	to_endl;
 
 	to_endl = 0;
 	while (buffer[*offset + to_endl] && buffer[*offset + to_endl] != '\n')

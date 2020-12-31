@@ -14,8 +14,8 @@
 
 int	ft_check_base(char *base)
 {
-	int i;
-	int j;
+	int	i;
+	int	j;
 
 	if (!base[0] || !base[1])
 		return (0);

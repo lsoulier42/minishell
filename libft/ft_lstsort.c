@@ -14,17 +14,17 @@
 
 static void	ft_swap_content(t_list *a, t_list *b)
 {
-	void *tmp;
+	void	*tmp;
 
 	tmp = a->content;
 	a->content = b->content;
 	b->content = tmp;
 }
 
-void		ft_list_sort(t_list **begin, int (*cmp)())
+void	ft_lstsort(t_list **begin, int (*cmp)())
 {
-	t_list *current;
-	t_list *next;
+	t_list	*current;
+	t_list	*next;
 
 	current = *begin;
 	while (current)

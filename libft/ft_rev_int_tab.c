@@ -14,7 +14,7 @@
 
 void	ft_rev_int_tab(int *tab, int size)
 {
-	int i;
+	int	i;
 
 	i = -1;
 	while (++i < (size / 2))

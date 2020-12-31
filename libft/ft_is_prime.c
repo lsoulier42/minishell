@@ -14,8 +14,8 @@
 
 int	ft_is_prime(int nb)
 {
-	int nb_div;
-	int i;
+	int	nb_div;
+	int	i;
 
 	nb_div = 2;
 	i = 2;

@@ -14,7 +14,7 @@
 
 static int	is_charset(char c, const char *set)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (set[i])
@@ -51,7 +51,7 @@ static int	char_to_rmv(const char *s1, const char *set, size_t len)
 	return (nb);
 }
 
-char		*ft_strtrim(const char *s1, const char *set)
+char	*ft_strtrim(const char *s1, const char *set)
 {
 	char	*new;
 	size_t	i;
@@ -61,11 +61,13 @@ char		*ft_strtrim(const char *s1, const char *set)
 
 	i = -1;
 	start_index = 0;
+	new = NULL;
 	if (s1)
 	{
 		len = ft_strlen(s1);
 		char_to_copy = len - char_to_rmv(s1, set, len);
-		if (!(new = (char*)malloc(sizeof(char) * (char_to_copy + 1))))
+		new = (char*)malloc(sizeof(char) * (char_to_copy + 1));
+		if (!new)
 			return (NULL);
 		while (s1[start_index] && is_charset(s1[start_index], set))
 			start_index++;
@@ -73,7 +75,5 @@ char		*ft_strtrim(const char *s1, const char *set)
 			new[i] = s1[start_index + i];
 		new[i] = '\0';
 	}
-	else
-		new = NULL;
 	return (new);
 }

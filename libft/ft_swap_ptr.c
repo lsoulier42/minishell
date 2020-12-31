@@ -14,7 +14,7 @@
 
 void	ft_swap_ptr(void **a, void **b)
 {
-	void *tmp;
+	void	*tmp;
 
 	tmp = *a;
 	*a = *b;

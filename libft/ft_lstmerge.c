@@ -14,7 +14,7 @@
 
 void	ft_lstmerge(t_list **begin_list1, t_list *begin_list2)
 {
-	t_list *current;
+	t_list	*current;
 
 	current = *begin_list1;
 	if (current)

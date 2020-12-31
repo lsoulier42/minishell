@@ -20,16 +20,16 @@ char	*ft_strmapi(const char *s, char (*f)(unsigned int, char))
 
 	s_len = 0;
 	i = -1;
+	result = NULL;
 	if (s)
 	{
 		s_len = ft_strlen(s);
-		if (!(result = (char*)malloc(sizeof(char) * (s_len + 1))))
+		result = (char*)malloc(sizeof(char) * (s_len + 1));
+		if (!result)
 			return (NULL);
 		while (++i < s_len)
 			result[i] = (*f)(i, s[i]);
 		result[i] = '\0';
 	}
-	else
-		result = NULL;
 	return (result);
 }

@@ -14,7 +14,7 @@
 
 static int	is_charset(char c, char *charset)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (charset[i])
@@ -38,7 +38,7 @@ static int	ft_nb_words(char *str, char *charset)
 	while (str[i])
 	{
 		if ((p_char == -1 || is_charset(p_char, charset))
-				&& !is_charset(str[i], charset))
+			&& !is_charset(str[i], charset))
 			nb_words++;
 		p_char = str[i];
 		i++;
@@ -48,7 +48,7 @@ static int	ft_nb_words(char *str, char *charset)
 
 static int	ft_word_len(char *str, char *charset)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (str[i] && !is_charset(str[i], charset))
@@ -62,7 +62,9 @@ static char	*set_new_word(char *str, char *charset, int word_len)
 	char	*word;
 
 	i = 0;
-	word = malloc((word_len + 1) * sizeof(char));
+	word = malloc(sizeof(char) * (word_len + 1));
+	if (!word)
+		return (NULL);
 	while (str[i] && !is_charset(str[i], charset))
 	{
 		word[i] = str[i];
@@ -72,30 +74,30 @@ static char	*set_new_word(char *str, char *charset, int word_len)
 	return (word);
 }
 
-char		**ft_split_charset(char *str, char *charset)
+char	**ft_split_charset(char *str, char *charset)
 {
 	int		p_char;
-	int		nb_words;
 	char	**words_tab;
 	int		word_nb;
 	int		word_len;
 
 	p_char = -1;
 	word_nb = 0;
-	nb_words = ft_nb_words(str, charset);
-	words_tab = malloc((nb_words + 1) * sizeof(char*));
+	words_tab = malloc(sizeof(char*) * (ft_nb_words(str, charset) + 1));
+	if (!words_tab)
+		return (NULL);
 	while (*str)
 	{
 		if ((p_char == -1 || is_charset(p_char, charset))
-				&& !is_charset(*str, charset))
+			&& !is_charset(*str, charset))
 		{
 			word_len = ft_word_len(str, charset);
 			words_tab[word_nb] = set_new_word(str, charset, word_len);
-			word_nb++;
+			if (!words_tab[word_nb++])
+				return (free_double_tab(words_tab));
 		}
-		p_char = *str;
-		str++;
+		p_char = *str++;
 	}
-	words_tab[nb_words] = 0;
+	words_tab[word_nb] = NULL;
 	return (words_tab);
 }

@@ -19,7 +19,9 @@ void	ft_putnbr(int n)
 
 	if (n < 0)
 		write(1, "-", 1);
-	nb = n < 0 ? -(long)n : n;
+	nb = n;
+	if (n < 0)
+		nb = - (long) n;
 	if (nb >= 10)
 		ft_putnbr(nb / 10);
 	digit = (nb % 10) + '0';
