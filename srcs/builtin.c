@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-int search_builtin(t_data *msh_data, t_cmd *cmd)
+int search_builtin(t_cmd *cmd)
 {
 	int		i;
 	char	**builtins;
@@ -25,7 +25,7 @@ int search_builtin(t_data *msh_data, t_cmd *cmd)
 			return (1);
 	return (0);
 }
-/*
+
 int execute_builtin(t_data *msh_data, t_cmd *cmd)
 {
 	int		(*builtin_fct[TOTAL_BUILTINS])(t_data *msh_data, t_cmd *cmd);
@@ -51,7 +51,7 @@ int execute_builtin(t_data *msh_data, t_cmd *cmd)
 		}
 	}
 	return (0);
-}*/
+}
 
 int exec_exit(t_data *msh_data, t_cmd *cmd)
 {

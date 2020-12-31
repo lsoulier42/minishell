@@ -45,13 +45,13 @@ int 			parse_one_redirection(t_list *tokens, t_redirection **redirection)
 	if (redirection_is_not_last(tokens) && export)
 	{
 		if (!create_empty_file_redirection(filename, append))
-			return(free_str_return_int(filename));
+			return(free_return_int(filename));
 	}
 	else
 	{
 		*redirection = new_redirection(filename, export, append);
 		if (!(*redirection))
-			return(free_str_return_int(filename));
+			return(free_return_int(filename));
 	}
 	return (1);
 }

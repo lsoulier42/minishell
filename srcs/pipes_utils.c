@@ -32,6 +32,11 @@ t_list	*new_pipe_el(t_list *begin_cmds)
 	if (!new)
 		return (NULL);
 	el = ft_lstnew(new);
+	if (!el)
+	{
+		free(new);
+		return (NULL);
+	}
 	return (el);
 }
 

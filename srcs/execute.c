@@ -1,23 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   data.c                                             :+:      :+:    :+:   */
+/*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lsoulier <lsoulier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/12/24 18:05:58 by lsoulier          #+#    #+#             */
-/*   Updated: 2020/12/24 18:06:44 by louise           ###   ########.fr       */
+/*   Created: 2020/12/31 03:45:00 by lsoulier          #+#    #+#             */
+/*   Updated: 2020/12/31 03:45:08 by lsoulier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void 	init_data(t_data *msh_data)
+int execute_all_cmds(t_data *msh_data)
 {
-	msh_data->exit_msh = 0;
-	msh_data->last_return = 0;
-	msh_data->level = 1;
-	msh_data->parsed_input = NULL;
-	msh_data->begin_errors = NULL;
-	msh_data->begin_history = NULL;
+	t_list	*instructions;
+	t_list	*pipes;
+	t_cmd	*cmd;
+
+	instructions = msh_data->parsed_input->begin_instructions;
+	while (instructions)
+	{
+		pipes = get_instruction_pipes(instructions);
+		while (pipes)
+		{
+			cmd = get_cmd(pipes);
+			if (search_builtin(cmd))
+				execute_builtin(msh_data, cmd);
+			pipes = pipes->next;
+		}
+		instructions = instructions->next;
+	}
+	return (1);
 }

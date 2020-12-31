@@ -37,6 +37,11 @@ typedef enum	e_builtins
 	TOTAL_BUILTINS
 }				t_builtins;
 
+typedef enum 	e_error_builtins
+{
+	EXPORT_INVALID_IDENTIFIER
+}				t_error_builtins;
+
 typedef enum 	e_ansi_color
 {
 	RED = '1',
@@ -90,49 +95,64 @@ typedef struct	s_user_input
 	t_list		*begin_instructions;
 }				t_user_input;
 
+typedef struct	s_error
+{
+	char	*str_error;
+	char 	*process;
+	char 	*arg;
+	int		code;
+}				t_error;
+
 typedef struct	s_data
 {
-	t_list			*begin_env;
 	t_user_input	*parsed_input;
 	int				level;
 	int 			last_return;
+	t_list			*begin_errors;
 	t_list 			*begin_history;
 	int 			exit_msh;
 }				t_data;
 
-void 			format_prompt(t_list *track_env);
+extern t_list	*g_env_list_begin;
+
+void 			format_prompt(void);
 void			print_color(char *str, char color);
 void 			*free_double_tab(char **tab);
 int				doubletab_len(char **tab);
 char			*ft_strndup(char *str, int n);
-int				free_str_return_int(char *str);
-void			*free_str_return_null(char *str);
+int				free_return_int(void *ptr);
+void			*free_return_null(void *ptr);
 int 			free_cmd_tabs(char *name, char **args);
 
-void			init_data(t_data *msh_data, char *envp[]);
+void 			init_data(t_data *msh_data);
 
-void 			set_var(t_var *new_var, char *key, char *value);
 void 			del_var(void *var);
-t_var			*parse_var(char *str);
-int 			cmp_key_var(t_var *var1, t_var *var2);
+t_var			*parse_var(char *unparsed);
+char 			*parse_var_key(char *unparsed);
+char 			*parse_var_value(char *unparsed);
+int				cmp_key_var(void *var1_void, void *var2_void);
+int				change_env_var_value(char *key, char *new_value);
 
 t_list			*set_env(char *envp[]);
 int				set_env_var(t_list **begin_env, char *unparsed);
-t_var			*get_env_var(t_list *begin_env, char *key);
-void			print_env(t_list *begin);
+t_var			*get_env_var(char *key);
+void			print_env(void);
+char 			*serialize_one_env_var(t_list *env_el);
+char			**serialize_env(void);
 
 int 			execute_builtin(t_data *msh_data, t_cmd *cmd);
-int 			search_builtin(t_data *msh_data, t_cmd *cmd);
+int 			search_builtin(t_cmd *cmd);
 int 			exec_exit(t_data *msh_data, t_cmd *cmd);
 int 			exec_env(t_data *msh_data, t_cmd *cmd);
 int				exec_unset(t_data *msh_data, t_cmd *cmd);
 int				exec_export(t_data *msh_data, t_cmd *cmd);
+int 			export_arg_is_legit(char *str);
+int 			export_key_already_exist(char *key);
 int				exec_pwd(t_data *msh_data, t_cmd *cmd);
 int				exec_cd(t_data *msh_data, t_cmd *cmd);
 int 			exec_echo(t_data *msh_data, t_cmd *cmd);
 
 t_user_input	*parse_input(char *buffer);
-void 			*error_input(t_user_input *new);
 void 			*error_tokens(t_user_input *new);
 void 			*error_instructions(t_user_input *new, t_list **tokens);
 void 			*error_pipes(t_user_input *new, t_list **tokens);
@@ -196,11 +216,16 @@ int 			redirection_is_not_last(t_list *token_el);
 int 			parse_one_redirection(t_list *tokens, t_redirection **redirection);
 void 			delete_redirection_tokens(t_list **tokens, t_list **previous);
 
-int				expand_vars(t_list *env, t_user_input *parsed_input);
-char			*get_cmd_next_value(t_list *env, char *str, int *len);
-int				expand_one_var(t_list *env, char **cur_arg, int *index);
-int				expand_one_arg_vars(t_list *env, char **cur_arg);
-int				expand_one_cmd_vars(t_list *env, t_cmd *cmd);
+int				expand_vars(t_data msh_data);
+char			*get_cmd_next_value(char *str, int *len);
+int				expand_one_var(char **cur_arg, int *index);
+int				expand_one_arg_vars(t_data msh_data, char **cur_arg);
+int				expand_one_cmd_vars(t_data msh_data, t_cmd *cmd);
+int				expand_last_return(t_data msh_data, char **cur_arg, int *index);
+
+int 			execute_all_cmds(t_data *msh_data);
+
+t_error			*new_error(char *str_error, char *process, char *arg, int code);
 
 //test functions
 void 			print_token_list(t_list *begin);

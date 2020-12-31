@@ -43,7 +43,7 @@ int 	parse_one_pipe_cmds(t_list **tokens, t_redirection *redirection)
 	track = track->next;
 	args = (char**)malloc(sizeof(char*) * (ft_lstsize(track) + 1));
 	if (!args)
-		return (free_str_return_int(name));
+		return (free_return_int(name));
 	if (!create_args_tab(&args, track))
 		return (free_cmd_tabs(name, args));
 	cmd_el = new_cmd_el(name, args, redirection);

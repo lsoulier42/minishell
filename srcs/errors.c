@@ -1,23 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   data.c                                             :+:      :+:    :+:   */
+/*   errors.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lsoulier <lsoulier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/12/24 18:05:58 by lsoulier          #+#    #+#             */
-/*   Updated: 2020/12/24 18:06:44 by louise           ###   ########.fr       */
+/*   Created: 2020/12/31 01:10:50 by lsoulier          #+#    #+#             */
+/*   Updated: 2020/12/31 01:10:59 by lsoulier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void 	init_data(t_data *msh_data)
+t_error	*new_error(char *str_error, char *process, char *arg, int code)
 {
-	msh_data->exit_msh = 0;
-	msh_data->last_return = 0;
-	msh_data->level = 1;
-	msh_data->parsed_input = NULL;
-	msh_data->begin_errors = NULL;
-	msh_data->begin_history = NULL;
+	t_error *new;
+
+	new = (t_error*)malloc(sizeof(t_error));
+	if (!new)
+		return (NULL);
+	new->str_error = str_error;
+	new->process = process;
+	new->arg = arg;
+	new->code = code;
+	return (new);
 }

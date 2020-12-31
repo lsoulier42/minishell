@@ -41,6 +41,8 @@ t_list			*new_instruction_el(t_list *begin_pipes)
 	if (!new)
 		return (NULL);
 	el = ft_lstnew(new);
+	if (!el)
+		return(free_return_null(new));
 	return (el);
 }
 

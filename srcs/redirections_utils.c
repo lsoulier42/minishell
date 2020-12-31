@@ -29,7 +29,7 @@ t_redirection	*new_redirection(char *filename, int export, int append)
 	if (!new)
 		return (NULL);
 	new->filename = filename;
-	new->fd = 0;
+	new->fd = 1;
 	new->export = export;
 	new->append = append;
 	return (new);

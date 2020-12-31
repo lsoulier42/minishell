@@ -18,10 +18,11 @@ int main(int argc, char *argv[], char *envp[])
 	char 		buffer[BUFFER_SIZE + 1];
 	int 		read_return;
 
-	init_data(&msh_data, envp);
+	g_env_list_begin = set_env(envp);
+	init_data(&msh_data);
 	while(!msh_data.exit_msh)
 	{
-		format_prompt(msh_data.begin_env);
+		format_prompt();
 		ft_bzero(buffer, BUFFER_SIZE + 1);
 		while ((read_return = read(0, buffer, BUFFER_SIZE)) != 0)
 		{
@@ -29,17 +30,17 @@ int main(int argc, char *argv[], char *envp[])
 			msh_data.parsed_input = parse_input(buffer);
 			if (msh_data.parsed_input)
 			{
-				expand_vars(msh_data.begin_env, msh_data.parsed_input);
-				print_instructions_list(msh_data.parsed_input->begin_instructions);
+				if (expand_vars(msh_data))
+				{
+					//print_instructions_list(msh_data.parsed_input->begin_instructions);
+					execute_all_cmds(&msh_data);
+				}
 				del_user_input(msh_data.parsed_input);
 			}
-			//
-			//execute_cmd(msh_data, msh_data.parsed_input);
-			msh_data.exit_msh = 1;
 			if (buffer[read_return - 1] == '\n')
 				break;
 		}
 	}
-	ft_lstclear(&msh_data.begin_env, &del_var);
+	ft_lstclear(&g_env_list_begin, &del_var);
 	return (0);
 }

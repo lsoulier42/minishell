@@ -22,7 +22,7 @@ t_user_input	*parse_input(char *buffer)
 		return (NULL);
 	new->input = ft_strdup(buffer);
 	if (!new->input)
-		return (error_input(new));
+		return (free_return_null(new));
 	begin_tokens = split_tokens(new->input);
 	if (!begin_tokens)
 		return (error_tokens(new));

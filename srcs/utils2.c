@@ -12,14 +12,14 @@
 
 #include "minishell.h"
 
-int		free_str_return_int(char *str)
+int		free_return_int(void *ptr)
 {
-	free(str);
+	free(ptr);
 	return (0);
 }
 
-void	*free_str_return_null(char *str)
+void	*free_return_null(void *ptr)
 {
-	free(str);
+	free(ptr);
 	return (NULL);
 }

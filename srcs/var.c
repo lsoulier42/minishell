@@ -12,12 +12,6 @@
 
 #include "minishell.h"
 
-void 		set_var(t_var *new_var, char *key, char *value)
-{
-	new_var->key = key;
-	new_var->value = value;
-}
-
 void 		del_var(void *var)
 {
 	t_var *var_cast;
@@ -28,31 +22,69 @@ void 		del_var(void *var)
 	free(var);
 }
 
-t_var		*parse_var(char *str)
+char 		*parse_var_key(char *unparsed)
+{
+	char	*key;
+	int 	i;
+
+	i = 0;
+	while (unparsed[i] && unparsed[i] != '=')
+		i++;
+	if (unparsed[i] != '=')
+		return (NULL);
+	key = (char*)malloc(sizeof(char) * (i + 1));
+	if (!key)
+		return (NULL);
+	ft_strlcpy(key, unparsed, i + 1);
+	return (key);
+}
+
+char 		*parse_var_value(char *unparsed)
+{
+	char	*value;
+	int		i;
+	int 	len;
+
+	i = 0;
+	while (unparsed[i] && unparsed[i] != '=')
+		i++;
+	if (unparsed[i] != '=')
+		return (NULL);
+	len = ft_strlen(unparsed) - i - 1;
+	value = (char*)malloc(sizeof(char) * (len + 1));
+	if (!value)
+		return (NULL);
+	ft_strlcpy(value, unparsed + i + 1, len + 1);
+	return (value);
+}
+
+t_var		*parse_var(char *unparsed)
 {
 	t_var	*new_var;
-	int 	index;
-	int 	str_len;
 
-	index = 0;
-	str_len = ft_strlen(str);
 	new_var = (t_var*)malloc(sizeof(t_var));
 	if (new_var)
 	{
-		while (str[index] && str[index] != '=')
-			index++;
-		new_var->key = (char*)malloc(sizeof(char) * (index + 1));
-		new_var->value = (char*)malloc(sizeof(char) * (str_len - index));
-		if (!new_var->key || !new_var->value)
-			return (NULL);
-		ft_strlcpy(new_var->key, str, index + 1);
-		ft_strlcpy(new_var->value, str + index + 1, str_len - index);
+		new_var->key = parse_var_key(unparsed);
+		if (!new_var->key)
+			return (free_return_null(new_var));
+		new_var->value = parse_var_value(unparsed);
+		if (!new_var->value)
+		{
+			free(new_var->key);
+			return (free_return_null(new_var));
+		}
 	}
 	return (new_var);
 }
 
-int cmp_key_var(t_var *var1, t_var *var2)
+int cmp_key_var(void *var1_void, void *var2_void)
 {
+	t_var	*var1;
+	t_var	*var2;
+
+	var1 = (t_var*)var1_void;
+	var2 = (t_var*)var2_void;
 	return (ft_strcmp(var1->key, var2->key));
 }
 

@@ -67,10 +67,7 @@ int 	add_token(t_list **begin, char **input)
 		return (0);
 	el = new_token_el(value, ft_isoperator(**input));
 	if (!el)
-	{
-		free(value);
-		return (0);
-	}
+		return(free_return_int(value));
 	ft_lstadd_back(begin, el);
 	*input += len;
 	return (1);

@@ -12,16 +12,11 @@
 
 #include "minishell.h"
 
-void 			*error_input(t_user_input *new)
-{
-	free(new);
-	return (NULL);
-}
-
 void 			*error_tokens(t_user_input *new)
 {
 	free(new->input);
-	return (error_input(new));
+	free(new);
+	return (NULL);
 }
 
 void 			*error_instructions(t_user_input *new, t_list **tokens)
