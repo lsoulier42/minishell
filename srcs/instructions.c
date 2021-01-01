@@ -23,25 +23,24 @@ int 	add_instruction(t_list **begin_instructions, t_list *begin_pipes)
 	return (1);
 }
 
-static int 	parse_instructions_loop(t_list **tokens,
-	t_list **previous, t_list **begin_instructions, t_list **begin_pipes)
+static int	pi_loop(t_list **to, t_list **pr, t_list **bi, t_list **bp)
 {
-	if (token_is_semicolon(*tokens) || !(*tokens)->next)
+	if (token_is_semicolon(*to) || !(*to)->next)
 	{
-		if(!add_instruction(begin_instructions, *begin_pipes))
+		if (!add_instruction(bi, *bp))
 			return (0);
-		*begin_pipes = (*tokens)->next;
-		if (token_is_semicolon(*tokens))
+		*bp = (*to)->next;
+		if (token_is_semicolon(*to))
 		{
-			(*previous)->next = NULL;
-			ft_lstdelone(*tokens, &del_token);
+			(*pr)->next = NULL;
+			ft_lstdelone(*to, &del_token);
 		}
-		*tokens = *begin_pipes;
+		*to = *bp;
 	}
 	else
 	{
-		*previous = *tokens;
-		*tokens = (*tokens)->next;
+		*pr = *to;
+		*to = (*to)->next;
 	}
 	return (1);
 }
@@ -63,8 +62,8 @@ t_list	*parse_instructions(t_list *tokens)
 	begin_instructions = NULL;
 	previous = NULL;
 	while (tokens)
-		if (!parse_instructions_loop(&tokens, &previous,
-			&begin_instructions, &begin_pipes))
+		if (!pi_loop(&tokens, &previous,
+				&begin_instructions, &begin_pipes))
 			return (del_instruction_list(&begin_instructions));
 	return (begin_instructions);
 }

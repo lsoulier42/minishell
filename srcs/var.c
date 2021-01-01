@@ -12,9 +12,9 @@
 
 #include "minishell.h"
 
-void 		del_var(void *var)
+void	del_var(void *var)
 {
-	t_var *var_cast;
+	t_var	*var_cast;
 
 	var_cast = (t_var*)var;
 	free(var_cast->key);
@@ -22,10 +22,10 @@ void 		del_var(void *var)
 	free(var);
 }
 
-char 		*parse_var_key(char *unparsed)
+char	*parse_var_key(char *unparsed)
 {
 	char	*key;
-	int 	i;
+	int		i;
 
 	i = 0;
 	while (unparsed[i] && unparsed[i] != '=')
@@ -39,11 +39,11 @@ char 		*parse_var_key(char *unparsed)
 	return (key);
 }
 
-char 		*parse_var_value(char *unparsed)
+char	*parse_var_value(char *unparsed)
 {
 	char	*value;
 	int		i;
-	int 	len;
+	int		len;
 
 	i = 0;
 	while (unparsed[i] && unparsed[i] != '=')
@@ -58,7 +58,7 @@ char 		*parse_var_value(char *unparsed)
 	return (value);
 }
 
-t_var		*parse_var(char *unparsed)
+t_var	*parse_var(char *unparsed)
 {
 	t_var	*new_var;
 
@@ -78,7 +78,7 @@ t_var		*parse_var(char *unparsed)
 	return (new_var);
 }
 
-int cmp_key_var(void *var1_void, void *var2_void)
+int	cmp_key_var(void *var1_void, void *var2_void)
 {
 	t_var	*var1;
 	t_var	*var2;
@@ -87,5 +87,3 @@ int cmp_key_var(void *var1_void, void *var2_void)
 	var2 = (t_var*)var2_void;
 	return (ft_strcmp(var1->key, var2->key));
 }
-
-

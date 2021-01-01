@@ -13,7 +13,7 @@
 #include "minishell.h"
 #include <stdio.h>
 
-int			add_pipe(t_list **begin_pipes, t_list *begin_cmds)
+int	add_pipe(t_list **begin_pipes, t_list *begin_cmds)
 {
 	t_list	*el_pipe;
 
@@ -24,40 +24,39 @@ int			add_pipe(t_list **begin_pipes, t_list *begin_cmds)
 	return (1);
 }
 
-static int	parse_one_instruction_pipes(t_list *tokens, t_list **begin_pipes,
-	t_list *previous, t_list *begin_cmds)
+static int	poip(t_list *to, t_list **bp, t_list *pr, t_list *bc)
 {
-	while (tokens)
+	while (to)
 	{
-		if (token_is_pipe(tokens) || !tokens->next)
+		if (token_is_pipe(to) || !to->next)
 		{
-			if (!add_pipe(begin_pipes, begin_cmds))
+			if (!add_pipe(bp, bc))
 				return (0);
-			begin_cmds = tokens->next;
-			if (token_is_pipe(tokens))
+			bc = to->next;
+			if (token_is_pipe(to))
 			{
-				previous->next = NULL;
-				ft_lstdelone(tokens, &del_token);
+				pr->next = NULL;
+				ft_lstdelone(to, &del_token);
 			}
-			tokens = begin_cmds;
+			to = bc;
 		}
 		else
 		{
-			previous = tokens;
-			tokens = tokens->next;
+			pr = to;
+			to = to->next;
 		}
 	}
 	return (1);
 }
 
-int 		del_pipe_list(t_list **begin_pipes)
+int	del_pipe_list(t_list **begin_pipes)
 {
 	if (*begin_pipes)
 		ft_lstclear(begin_pipes, &del_pipe);
 	return (0);
 }
 
-int			parse_pipes(t_list *instructions)
+int	parse_pipes(t_list *instructions)
 {
 	t_list	*tokens;
 	t_list	**begin_pipes;
@@ -71,12 +70,10 @@ int			parse_pipes(t_list *instructions)
 		*begin_pipes = NULL;
 		begin_cmds = tokens;
 		previous = NULL;
-		if (!parse_one_instruction_pipes(tokens, begin_pipes,
-			previous, begin_cmds))
+		if (!poip(tokens, begin_pipes,
+				previous, begin_cmds))
 			return (del_pipe_list(begin_pipes));
 		instructions = instructions->next;
 	}
 	return (1);
 }
-
-

@@ -15,7 +15,7 @@
 int	change_env_var_value(char *key, char *new_value)
 {
 	t_var	*var;
-	char 	**value_ref;
+	char	**value_ref;
 
 	var = get_env_var(key);
 	if (!var)

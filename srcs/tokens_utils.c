@@ -12,19 +12,19 @@
 
 #include "minishell.h"
 
-int 	ft_isoperator(char c)
+int	ft_isoperator(char c)
 {
 	return (c == '|' || c == ';' || c == '>' || c == '<');
 }
 
-int 	ft_isseparator(char c)
+int	ft_isseparator(char c)
 {
 	return (ft_isspace(c) || ft_isoperator(c));
 }
 
-int 	token_len_operator(char *input)
+int	token_len_operator(char *input)
 {
-	int len;
+	int	len;
 
 	len = 1;
 	if (*input == '>' && *(input + 1) == '>')
@@ -34,7 +34,7 @@ int 	token_len_operator(char *input)
 	return (len);
 }
 
-int 	token_len(char *input)
+int	token_len(char *input)
 {
 	int		len;
 	int		open;
@@ -58,7 +58,7 @@ int 	token_len(char *input)
 	return (len);
 }
 
-void *free_token_struct(t_list **begin, char *tmp)
+void	*free_token_struct(t_list **begin, char *tmp)
 {
 	ft_lstclear(begin, &del_token);
 	free(tmp);

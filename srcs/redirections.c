@@ -12,10 +12,10 @@
 
 #include "minishell.h"
 
-int 			create_empty_file_redirection(char *filename, int append)
+int	create_empty_file_redirection(char *filename, int append)
 {
-	int		fd;
-	int 	close_return;
+	int	fd;
+	int	close_return;
 
 	if (append)
 		fd = open(filename, O_RDWR | O_CREAT | O_APPEND, 0664);
@@ -29,12 +29,12 @@ int 			create_empty_file_redirection(char *filename, int append)
 	return (1);
 }
 
-int 			parse_one_redirection(t_list *tokens, t_redirection **redirection)
+int	parse_one_redirection(t_list *tokens, t_redirection **redirection)
 {
-	char 			*value;
-	char 			*filename;
-	int 			append;
-	int 			export;
+	char	*value;
+	char	*filename;
+	int		append;
+	int		export;
 
 	value = get_token_value(tokens);
 	filename = sub_quote(get_token_value(tokens->next));
@@ -45,20 +45,20 @@ int 			parse_one_redirection(t_list *tokens, t_redirection **redirection)
 	if (redirection_is_not_last(tokens) && export)
 	{
 		if (!create_empty_file_redirection(filename, append))
-			return(free_return_int(filename));
+			return (free_return_int(filename));
 	}
 	else
 	{
 		*redirection = new_redirection(filename, export, append);
 		if (!(*redirection))
-			return(free_return_int(filename));
+			return (free_return_int(filename));
 	}
 	return (1);
 }
 
-void 			delete_redirection_tokens(t_list **tokens, t_list **previous)
+void	delete_redirection_tokens(t_list **tokens, t_list **previous)
 {
-	t_list 			*jump_token;
+	t_list	*jump_token;
 
 	jump_token = (*tokens)->next->next;
 	ft_lstdelone((*tokens)->next, &del_token);
@@ -70,7 +70,7 @@ void 			delete_redirection_tokens(t_list **tokens, t_list **previous)
 t_redirection	*parse_redirections(t_list *tokens)
 {
 	t_redirection	*redirection;
-	t_list 			*previous;
+	t_list			*previous;
 
 	redirection = NULL;
 	previous = NULL;

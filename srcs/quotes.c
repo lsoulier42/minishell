@@ -12,16 +12,16 @@
 
 #include "minishell.h"
 
-int 	ft_isquote(char c)
+int	ft_isquote(char c)
 {
 	return (c == '"' || c == '\'');
 }
 
-char 	*sub_quote(char *str)
+char	*sub_quote(char *str)
 {
-	int 	first_quote;
-	int 	second_quote;
-	char 	*new_str;
+	int		first_quote;
+	int		second_quote;
+	char	*new_str;
 
 	first_quote = 0;
 	second_quote = 1;
@@ -36,8 +36,10 @@ char 	*sub_quote(char *str)
 	if (new_str)
 	{
 		ft_strlcpy(new_str, str, first_quote + 1);
-		ft_strlcat(new_str,str + first_quote + 1, first_quote + second_quote);
-		ft_strlcat(new_str,str + first_quote + second_quote + 1, ft_strlen(str) - 1);
+		ft_strlcat(new_str,
+			 str + first_quote + 1, first_quote + second_quote);
+		ft_strlcat(new_str,
+			 str + first_quote + second_quote + 1, ft_strlen(str) - 1);
 	}
 	return (new_str);
 }

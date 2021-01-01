@@ -14,7 +14,7 @@
 
 t_pipe	*new_pipe(t_list *begin_cmds)
 {
-	t_pipe *new;
+	t_pipe	*new;
 
 	new = (t_pipe*)malloc(sizeof(t_pipe));
 	if (!new)
@@ -42,7 +42,7 @@ t_list	*new_pipe_el(t_list *begin_cmds)
 
 void	del_pipe(void *pipe_void)
 {
-	t_pipe *pipe;
+	t_pipe	*pipe;
 
 	pipe = (t_pipe*)pipe_void;
 	ft_lstclear(&pipe->begin_cmds, &del_cmd);

@@ -12,29 +12,29 @@
 
 #include "minishell.h"
 
-void 			*error_tokens(t_user_input *new)
+void	*error_tokens(t_user_input *new)
 {
 	free(new->input);
 	free(new);
 	return (NULL);
 }
 
-void 			*error_instructions(t_user_input *new, t_list **tokens)
+void	*error_instructions(t_user_input *new, t_list **tokens)
 {
 	ft_lstclear(tokens, &del_token);
-	return(error_tokens(new));
+	return (error_tokens(new));
 }
 
-void 			*error_pipes(t_user_input *new, t_list **tokens)
+void	*error_pipes(t_user_input *new, t_list **tokens)
 {
 	del_instruction_list(&(new->begin_instructions));
-	return(error_instructions(new, tokens));
+	return (error_instructions(new, tokens));
 }
 
-void 			*error_cmds(t_user_input *new, t_list **tokens)
+void	*error_cmds(t_user_input *new, t_list **tokens)
 {
-	t_list *el;
-	t_list *pipes;
+	t_list	*el;
+	t_list	*pipes;
 
 	el = new->begin_instructions;
 	while (el)
@@ -43,5 +43,5 @@ void 			*error_cmds(t_user_input *new, t_list **tokens)
 		ft_lstclear(&pipes, &del_pipe);
 		el = el->next;
 	}
-	return(error_pipes(new, tokens));
+	return (error_pipes(new, tokens));
 }

@@ -15,7 +15,7 @@
 t_list	*split_tokens(char *user_input)
 {
 	t_list	*begin;
-	char 	*input;
+	char	*input;
 	char	*tmp;
 
 	begin = NULL;
@@ -41,31 +41,31 @@ t_list	*split_tokens(char *user_input)
 
 char	*get_token_value(t_list *el)
 {
-	t_token *token;
+	t_token	*token;
 
 	token = (t_token*)el->content;
 	return (token->value);
 }
 
-int 	token_is_operator(t_list *el)
+int	token_is_operator(t_list *el)
 {
-	t_token *token;
+	t_token	*token;
 
 	token = (t_token*)el->content;
 	return (token->is_operator);
 }
 
-int 	token_is_pipe(t_list *el)
+int	token_is_pipe(t_list *el)
 {
-	t_token *token;
+	t_token	*token;
 
 	token = (t_token*)el->content;
 	return (token->is_operator && ft_strcmp("|", token->value) == 0);
 }
 
-int 	token_is_semicolon(t_list *el)
+int	token_is_semicolon(t_list *el)
 {
-	t_token *token;
+	t_token	*token;
 
 	token = (t_token*)el->content;
 	return (token->is_operator && ft_strcmp(";", token->value) == 0);

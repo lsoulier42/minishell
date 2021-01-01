@@ -25,7 +25,7 @@ void	format_prompt(void)
 
 void	print_color(char *str, char color)
 {
-	char ansi_color[6];
+	char	ansi_color[6];
 
 	ft_strcpy(ansi_color, "\x1b[3xm");
 	ansi_color[3] = color;
@@ -34,9 +34,9 @@ void	print_color(char *str, char color)
 	ft_putstr("\x1b[0m");
 }
 
-int		doubletab_len(char **tab)
+int	doubletab_len(char **tab)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (tab[i])

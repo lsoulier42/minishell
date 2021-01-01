@@ -12,9 +12,9 @@
 
 #include "minishell.h"
 
-void			del_instruction(void *instruction_void)
+void	del_instruction(void *instruction_void)
 {
-	t_instruction *instruction;
+	t_instruction	*instruction;
 
 	instruction = (t_instruction*)instruction_void;
 	ft_lstclear(&instruction->begin_pipes, &del_pipe);
@@ -23,7 +23,7 @@ void			del_instruction(void *instruction_void)
 
 t_instruction	*new_instruction(t_list *begin_pipes)
 {
-	t_instruction *new;
+	t_instruction	*new;
 
 	new = (t_instruction*)malloc(sizeof(t_instruction));
 	if (!new)
@@ -32,7 +32,7 @@ t_instruction	*new_instruction(t_list *begin_pipes)
 	return (new);
 }
 
-t_list			*new_instruction_el(t_list *begin_pipes)
+t_list	*new_instruction_el(t_list *begin_pipes)
 {
 	t_list			*el;
 	t_instruction	*new;
@@ -42,14 +42,14 @@ t_list			*new_instruction_el(t_list *begin_pipes)
 		return (NULL);
 	el = ft_lstnew(new);
 	if (!el)
-		return(free_return_null(new));
+		return (free_return_null(new));
 	return (el);
 }
 
-t_list			*get_instruction_pipes(t_list *instruction_el)
+t_list	*get_instruction_pipes(t_list *instruction_el)
 {
-	t_list	*el;
-	t_instruction *instruction;
+	t_list			*el;
+	t_instruction	*instruction;
 
 	instruction = (t_instruction*)instruction_el->content;
 	el = (t_list*)instruction->begin_pipes;

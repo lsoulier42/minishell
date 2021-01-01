@@ -24,9 +24,9 @@ t_token	*new_token(char *value, int is_operator)
 	return (new);
 }
 
-void 	del_token(void *token_void)
+void	del_token(void *token_void)
 {
-	t_token *token;
+	t_token	*token;
 
 	token = (t_token *) token_void;
 	free(token->value);
@@ -50,11 +50,11 @@ t_list	*new_token_el(char *value, int is_operator)
 	return (el);
 }
 
-int 	add_token(t_list **begin, char **input)
+int	add_token(t_list **begin, char **input)
 {
 	t_list	*el;
-	char 	*value;
-	int 	len;
+	char	*value;
+	int		len;
 
 	if (ft_isoperator(**input))
 		len = token_len_operator(*input);
@@ -67,7 +67,7 @@ int 	add_token(t_list **begin, char **input)
 		return (0);
 	el = new_token_el(value, ft_isoperator(**input));
 	if (!el)
-		return(free_return_int(value));
+		return (free_return_int(value));
 	ft_lstadd_back(begin, el);
 	*input += len;
 	return (1);

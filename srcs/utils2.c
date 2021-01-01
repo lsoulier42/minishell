@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-int		free_return_int(void *ptr)
+int	free_return_int(void *ptr)
 {
 	free(ptr);
 	return (0);

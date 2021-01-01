@@ -12,9 +12,9 @@
 
 #include "minishell.h"
 
-void 			del_redirection(void *redirection_void)
+void	del_redirection(void *redirection_void)
 {
-	t_redirection *redirection;
+	t_redirection	*redirection;
 
 	redirection = (t_redirection*)redirection_void;
 	free(redirection->filename);
@@ -23,7 +23,7 @@ void 			del_redirection(void *redirection_void)
 
 t_redirection	*new_redirection(char *filename, int export, int append)
 {
-	t_redirection *new;
+	t_redirection	*new;
 
 	new = (t_redirection*)malloc(sizeof(t_redirection));
 	if (!new)
@@ -35,7 +35,7 @@ t_redirection	*new_redirection(char *filename, int export, int append)
 	return (new);
 }
 
-int 			token_is_redirection(t_list *token_el)
+int	token_is_redirection(t_list *token_el)
 {
 	char	*value;
 
@@ -43,10 +43,10 @@ int 			token_is_redirection(t_list *token_el)
 		return (0);
 	value = get_token_value(token_el);
 	return (token_is_operator(token_el) && (ft_strcmp(value, ">") == 0
-		|| ft_strcmp(value, "<") == 0 || ft_strcmp(value, ">>") == 0));
+				|| ft_strcmp(value, "<") == 0 || ft_strcmp(value, ">>") == 0));
 }
 
-int 			redirection_is_not_last(t_list *token_el)
+int	redirection_is_not_last(t_list *token_el)
 {
 	token_el = token_el->next;
 	while (token_el)
