@@ -78,14 +78,27 @@ char 	*search_path_relative(t_list *begin_env, char *cmd_name)
 	return (full_path);
 }
 
-char 	*search_path_absolute(char *cmd_name)
+char 	*search_path_absolute(t_list *begin_env, char *cmd_name)
 {
 	char	*format_path;
 	char 	*trim_cmd_name;
 	char	*cur_dir;
+	t_var 	*home;
 
 	if (cmd_name[0] == '/')
 		format_path = ft_strdup(cmd_name);
+	else if (cmd_name[0] == '~')
+	{
+		home = get_env_var(begin_env, "HOME");
+		if (!home)
+			return (NULL);
+		trim_cmd_name = ft_substr(cmd_name, 2, ft_strlen(cmd_name) - 2);
+		if (!trim_cmd_name)
+			return (NULL);
+		format_path = format_found_path(home->value, trim_cmd_name);
+		if (!format_path)
+			return (free_return_null(trim_cmd_name));
+	}
 	else
 	{
 		cur_dir = getcwd(NULL, 0);
@@ -94,7 +107,7 @@ char 	*search_path_absolute(char *cmd_name)
 		trim_cmd_name = ft_substr(cmd_name, 2, ft_strlen(cmd_name) - 2);
 		if (!trim_cmd_name)
 			return (free_return_null(cur_dir));
-		format_path = format_found_path(cur_dir, cmd_name);
+		format_path = format_found_path(cur_dir, trim_cmd_name);
 		if (!format_path)
 		{
 			free(cur_dir);
@@ -108,8 +121,8 @@ char	*search_path(t_list *begin_env, char *cmd_name)
 {
 	char *full_path;
 
-	if (cmd_name[0] == '/' || cmd_name[0] == '.')
-		full_path = search_path_absolute(cmd_name);
+	if (cmd_name[0] == '/' || cmd_name[0] == '.' || cmd_name[0] == '~')
+		full_path = search_path_absolute(begin_env, cmd_name);
 	else
 		full_path = search_path_relative(begin_env, cmd_name);
 	return (full_path);

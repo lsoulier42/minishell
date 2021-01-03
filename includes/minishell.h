@@ -235,7 +235,7 @@ int				execute_all_cmds(t_data *msh_data);
 void			format_error(char *cmd_name, char *arg, int ev, char *str);
 
 char			*search_path(t_list *begin_env, char *cmd_name);
-char 			*search_path_absolute(char *cmd_name);
+char 			*search_path_absolute(t_list *begin_env, char *cmd_name);
 char 			*search_path_relative(t_list *begin_env, char *cmd_name);
 char 			*format_found_path(char *found, char *cmd_name);
 int 			search_one_relative_path(char *pathname, char *cmd_name);

@@ -19,8 +19,7 @@ int	close_redirections(t_redirection **redirections)
 	i = -1;
 	while (++i < 2)
 		if (redirections[i]->filename != NULL)
-			if (close(redirections[i]->fd) == -1)
-				return (0);
+			close(redirections[i]->fd);
 	return (1);
 }
 
