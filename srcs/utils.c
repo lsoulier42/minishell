@@ -12,13 +12,13 @@
 
 #include "minishell.h"
 
-void	format_prompt(void)
+void	format_prompt(t_list *begin_env)
 {
 	t_var	*env_pwd;
 	char	color;
 
 	color = BLUE;
-	env_pwd = get_env_var("PWD");
+	env_pwd = get_env_var(begin_env, "PWD");
 	print_color(env_pwd->value, color);
 	print_color("?>", color);
 }

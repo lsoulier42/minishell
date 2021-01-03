@@ -12,34 +12,36 @@
 
 #include "minishell.h"
 
-t_list	*g_env_list_begin;
-
 t_list	*set_env(char *envp[])
 {
 	int		i;
 	t_list	*begin_env;
+	char 	*key;
+	char 	*value;
 
 	i = -1;
 	begin_env = NULL;
 	while (envp[++i])
 	{
-		if (!set_env_var(&begin_env, envp[i]))
+		if (!parse_var(envp[i], &key, &value))
+			return (0);
+		if (!set_env_var(&begin_env, key, value))
 		{
 			ft_lstclear(&begin_env, &del_var);
-			return (NULL);
+			return (0);
 		}
 	}
 	return (begin_env);
 }
 
-t_var	*get_env_var(char *key)
+t_var	*get_env_var(t_list *begin_env, char *key)
 {
 	t_var		*found_var;
 	t_var		*var_cast;
 	t_list		*env;
 
 	found_var = NULL;
-	env = g_env_list_begin;
+	env = begin_env;
 	while (env && !found_var)
 	{
 		var_cast = (t_var*)env->content;
@@ -50,30 +52,41 @@ t_var	*get_env_var(char *key)
 	return (found_var);
 }
 
-int	set_env_var(t_list **begin_env, char *unparsed)
+int	change_env_var(t_list *begin_env, char *key, char *new_value)
 {
-	t_var	*new_var;
+	t_var	*var;
+	char	**value_ref;
+
+	var = get_env_var(begin_env, key);
+	if (!var)
+		return (0);
+	value_ref = &(var->value);
+	free(var->value);
+	*value_ref = new_value;
+	return (1);
+}
+
+int set_env_var(t_list **begin_env, char *key, char *value)
+{
+	t_var	*var;
 	t_list	*el;
 
-	new_var = parse_var(unparsed);
-	if (!new_var)
+	var = new_var(key, value);
+	if (!var)
 		return (0);
-	el = ft_lstnew(new_var);
+	el = ft_lstnew(var);
 	if (!el)
-	{
-		del_var(new_var);
 		return (0);
-	}
 	ft_lstadd_back(begin_env, el);
 	return (1);
 }
 
-void 	print_env(void)
+void 	print_env(t_list *begin_env)
 {
 	t_var	*cast;
 	t_list	*env;
 
-	env = g_env_list_begin;
+	env = begin_env;
 	while (env)
 	{
 		cast = (t_var*)env->content;

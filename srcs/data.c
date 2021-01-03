@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-void 	init_data(t_data *msh_data)
+void	init_data(t_data *msh_data, char *msh_name, char *envp[])
 {
 	msh_data->exit_msh = 0;
 	msh_data->last_return = 0;
@@ -20,4 +20,7 @@ void 	init_data(t_data *msh_data)
 	msh_data->parsed_input = NULL;
 	msh_data->begin_errors = NULL;
 	msh_data->begin_history = NULL;
+	msh_data->begin_env = set_env(envp);
+	msh_data->name = msh_name;
+	msh_data->exit_value = 0;
 }

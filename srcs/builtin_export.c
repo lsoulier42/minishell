@@ -12,74 +12,109 @@
 
 #include "minishell.h"
 
-int	export_arg_is_legit(char *str)
+int	export_key_is_legit(char *key)
 {
-	int	len_to_equal;
+	int i;
 
-	len_to_equal = 0;
-	if (ft_isdigit(str[0]) || str[0] == '=')
+	i = 0;
+	if (ft_isdigit(key[0]) || ft_strcmp(key, "=") == 0)
 		return (0);
-	while (str[len_to_equal] && str[len_to_equal] != '=')
+	while (key[i])
 	{
-		if (!ft_isalnum(str[len_to_equal]) && str[len_to_equal] != '_')
+		if (!ft_isalnum(key[i]) && key[i] != '_')
 			return (0);
-		len_to_equal++;
+		i++;
 	}
-	if (str[len_to_equal] != '=')
-		return (0);
 	return (1);
 }
 
-int	export_key_already_exist(char *key)
+int exec_export_one_var(t_list *begin_env, char *key, char *value, int has_equal)
+{
+	int error;
+	int key_exist;
+
+	key_exist = env_key_exist(begin_env, key);
+	if (export_key_is_legit(key))
+	{
+		if (key_exist && has_equal)
+			error = !change_env_var(begin_env, key, value);
+		else if (!key_exist)
+			error = !set_env_var(&begin_env, key, value);
+		else
+			error = 1;
+	}
+	else
+	{
+		format_error("export", key, 0, "not an identifier");
+		error = 1;
+	}
+	return (error == 0);
+}
+
+char 	*format_export_line(t_var *env_var)
+{
+	char	*begin_line;
+	int 	definite_len;
+	int 	begin_line_len;
+	char 	*new_line;
+
+	begin_line = "declare -x ";
+	begin_line_len = (int)ft_strlen(begin_line);
+	definite_len = begin_line_len + ft_strlen(env_var->key)
+			+ 1 + ft_strlen(env_var->value) + 2;
+	new_line = (char*)ft_calloc(definite_len + 1, sizeof(char));
+	if (!new_line)
+		return (NULL);
+	ft_strlcpy(new_line, begin_line, begin_line_len + 1);
+	ft_strcat(new_line, env_var->key);
+	ft_strcat(new_line, "=\"");
+	ft_strcat(new_line, env_var->value);
+	ft_strcat(new_line, "\"");
+	return (new_line);
+}
+
+void	exec_export_print(t_list *begin_env)
 {
 	t_list	*env;
-	t_var	*var;
+	char	*line;
 
-	env = g_env_list_begin;
+	env = begin_env;
+	ft_lstsort(&env, &cmp_key_var);
 	while (env)
 	{
-		var = (t_var*)env->content;
-		if (ft_strcmp(var->key, key) == 0)
-			return (1);
+		line = format_export_line((t_var*)env->content);
+		ft_putendl_fd(line, 1);
+		free(line);
 		env = env->next;
 	}
-	return (0);
-}
-
-int	export_change_value(char *unparsed, char *key)
-{
-	char	*value;
-
-	value = parse_var_value(unparsed);
-	if (!value)
-		return (0);
-	if (!change_env_var_value(key, value))
-		return (0);
-	return (1);
 }
 
 int	exec_export(t_data *msh_data, t_cmd *cmd)
 {
 	int		i;
 	char	*key;
-	int		error_occurred;
+	char	*value;
 
-	i = -1;
-	while (cmd->args[++i])
+	i = 0;
+	if (!(cmd->args[1]))
+		exec_export_print(msh_data->begin_env);
+	else
 	{
-		if (export_arg_is_legit(cmd->args[i]))
+		while (cmd->args[++i])
 		{
-			key = parse_var_key(cmd->args[i]);
-			if (!key)
-				return (-1);
-			if (export_key_already_exist(key))
-				error_occurred = export_change_value(cmd->args[i], key);
+			if (parse_var(cmd->args[i], &key, &value))
+			{
+				if (!exec_export_one_var(msh_data->begin_env, key, value,
+						unparsed_var_has_equal(cmd->args[i])))
+				{
+					free(key);
+					free(value);
+					return (-1);
+				}
+			}
 			else
-				error_occurred = set_env_var(&g_env_list_begin, cmd->args[i]);
-			free(key);
+				return (-1);
 		}
 	}
-	if (error_occurred == 0)
-		return (-1);
 	return (0);
 }

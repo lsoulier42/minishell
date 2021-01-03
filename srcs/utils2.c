@@ -23,3 +23,14 @@ void	*free_return_null(void *ptr)
 	free(ptr);
 	return (NULL);
 }
+
+int	ft_isnum(char *str)
+{
+	int i;
+
+	i= -1;
+	while (str[i])
+		if (!ft_isdigit(str[i]))
+			return (0);
+	return (1);
+}

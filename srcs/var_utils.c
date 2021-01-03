@@ -12,16 +12,46 @@
 
 #include "minishell.h"
 
-int	change_env_var_value(char *key, char *new_value)
+int	unparsed_var_has_equal(char *str)
 {
-	t_var	*var;
-	char	**value_ref;
+	int i;
 
-	var = get_env_var(key);
-	if (!var)
-		return (0);
-	value_ref = &(var->value);
-	free(var->value);
-	*value_ref = new_value;
-	return (1);
+	i = -1;
+	while (str[++i])
+		if (str[i] == '=')
+			return (1);
+	return (0);
+}
+
+char	*parse_var_key(char *unparsed)
+{
+	char	*key;
+	int		i;
+
+	i = 0;
+	while (unparsed[i] && unparsed[i] != '=')
+		i++;
+	if (unparsed[i] != '=')
+		return (NULL);
+	key = ft_strndup(unparsed, i);
+	return (key);
+}
+
+char	*parse_var_value(char *unparsed)
+{
+	char	*value;
+	int		i;
+	int		len;
+
+	i = 0;
+	while (unparsed[i] && unparsed[i] != '=')
+		i++;
+	if (unparsed[i] != '=')
+		return (NULL);
+	len = ft_strlen(unparsed) - i - 1;
+	value = (char*)malloc(sizeof(char) * (len + 1));
+	if (!value)
+		return (NULL);
+	ft_strlcpy(value, unparsed + i + 1, len + 1);
+	return (value);
 }

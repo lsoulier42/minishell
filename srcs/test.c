@@ -21,6 +21,7 @@ void 			print_instructions_list(t_list *instructions)
 	int 	i;
 	int 	j;
 	int 	k;
+	int 	l;
 
 	i = 1;
 	while (instructions)
@@ -31,14 +32,19 @@ void 			print_instructions_list(t_list *instructions)
 		while (begin_pipes)
 		{
 			k = -1;
+			l = -1;
 			cmds = get_pipes_cmds(begin_pipes);
 			cmd = (t_cmd*)cmds->content;
 			printf("pipe %d :\n", j++);
 			printf("cmd name : %s\n", cmd->name);
 			while(cmd->args[++k])
 				printf("argument %d : %s\n", k, cmd->args[k]);
-			printf("redirection: filename: %s, fd: %d, export: %d, append: %d\n",
-		  		cmd->redirection->filename, cmd->redirection->fd, cmd->redirection->export, cmd->redirection->append);
+			while (++l < 2)
+				printf("redirection %s: filename: %s, fd: %d, type: %s\n",
+		   				l == IN ? "in" : "out",
+					   cmd->redirections[l]->filename,
+					   cmd->redirections[l]->fd,
+					   cmd->redirections[l]->type == APPEND ? "append" : "truncate");
 			begin_pipes = begin_pipes->next;
 		}
 		instructions = instructions->next;

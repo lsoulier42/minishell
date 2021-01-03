@@ -23,7 +23,7 @@ t_list	*split_tokens(char *user_input)
 	if (!input)
 		return (NULL);
 	tmp = input;
-	while (*input)
+	while (*input && *input != '#')
 	{
 		if (!ft_isspace(*input))
 		{

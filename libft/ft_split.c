@@ -6,7 +6,7 @@
 /*   By: louise <lsoulier@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/21 17:34:34 by louise            #+#    #+#             */
-/*   Updated: 2020/10/09 22:09:23 by louise           ###   ########.fr       */
+/*   Updated: 2021/01/01 21:07:28 by lsoulier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ char	**ft_split(const char *s, char c)
 		{
 			wd_tab[wd_index] = set_wd(s, c, i);
 			if (!wd_tab[wd_index])
-				return (ft_free_double_tab(wd_tab));
+				return (free_double_tab(wd_tab));
 			wd_index++;
 		}
 		p_char = s[i];

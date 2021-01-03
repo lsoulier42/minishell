@@ -14,33 +14,31 @@
 
 int	exec_pwd(t_data *msh_data, t_cmd *cmd)
 {
-	t_var	*pwd;
+	char *pathname;
 
-	pwd = get_env_var("PWD");
-	if (!pwd)
-		return (-1);
-	ft_putendl_fd(pwd->value, 1);
+	pathname = (get_env_var(msh_data->begin_env, "PWD"))->value;
+	ft_putendl_fd(pathname, cmd->redirections[OUT]->fd);
 	return (0);
 }
 
 int	exec_env(t_data *msh_data, t_cmd *cmd)
 {
-	print_env();
+	print_env(msh_data->begin_env);
 	return (0);
 }
 
 int	exec_unset(t_data *msh_data, t_cmd *cmd)
 {
 	int		i;
-	t_var	*current;
+	t_var	*to_remove;
 
-	i = -1;
+	i = 0;
 	while (cmd->args[++i])
 	{
-		current = get_env_var(cmd->args[i]);
-		if (current)
-			ft_lstrm_if(&(g_env_list_begin), current,
-				&cmp_key_var, &del_var);
+		to_remove = get_env_var(msh_data->begin_env, cmd->args[i]);
+		if (to_remove != NULL)
+			ft_lstrm_if(&(msh_data->begin_env), to_remove,
+			   &cmp_key_var, del_var);
 	}
 	return (0);
 }

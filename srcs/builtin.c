@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-int	search_builtin(t_cmd *cmd)
+int	search_builtin(char *cmd_name)
 {
 	int		i;
 	char	**builtins;
@@ -21,7 +21,7 @@ int	search_builtin(t_cmd *cmd)
 	builtins = (char *[TOTAL_BUILTINS]){"echo", "cd", "pwd",
 		"export", "unset", "env", "exit"};
 	while (++i < TOTAL_BUILTINS)
-		if (ft_strstr(cmd->name, builtins[i]) != NULL)
+		if (ft_strstr(cmd_name, builtins[i]) != NULL)
 			return (1);
 	return (0);
 }
@@ -55,6 +55,9 @@ int	execute_builtin(t_data *msh_data, t_cmd *cmd)
 
 int	exec_exit(t_data *msh_data, t_cmd *cmd)
 {
+	ft_putstr("exit\n");
 	msh_data->exit_msh = 1;
+	if (cmd->args[1] && ft_isnum(cmd->args[1]))
+		msh_data->exit_value = ft_atoi(cmd->args[1]) % 256;
 	return (1);
 }

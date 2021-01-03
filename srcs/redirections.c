@@ -12,47 +12,31 @@
 
 #include "minishell.h"
 
-int	create_empty_file_redirection(char *filename, int append)
-{
-	int	fd;
-	int	close_return;
-
-	if (append)
-		fd = open(filename, O_RDWR | O_CREAT | O_APPEND, 0664);
-	else
-		fd = open(filename, O_RDWR | O_CREAT | O_TRUNC, 0664);
-	if (fd == -1)
-		return (0);
-	close_return = close(fd);
-	if (close_return == -1)
-		return (0);
-	return (1);
-}
-
-int	parse_one_redirection(t_list *tokens, t_redirection **redirection)
+int	parse_one_redirection(t_list *tokens, t_redirection ***redirections)
 {
 	char	*value;
 	char	*filename;
-	int		append;
-	int		export;
+	int		type_open;
+	int 	direction;
 
 	value = get_token_value(tokens);
 	filename = sub_quote(get_token_value(tokens->next));
 	if (!filename)
 		return (0);
-	append = ft_strcmp(value, ">>") == 0;
-	export = ft_strcmp(value, ">") == 0 || append;
-	if (redirection_is_not_last(tokens) && export)
+	direction = IN;
+	if (ft_strcmp(value, ">>") == 0 || ft_strcmp(value, ">") == 0)
+		direction = OUT;
+	type_open = TRUNCATE;
+	if (ft_strcmp(value, ">>") == 0)
+		type_open = APPEND;
+	if (redirection_is_not_last(tokens) && direction == OUT)
 	{
-		if (!create_empty_file_redirection(filename, append))
+		if (!create_empty_file_redirection(filename, type_open))
 			return (free_return_int(filename));
+		return (1);
 	}
-	else
-	{
-		*redirection = new_redirection(filename, export, append);
-		if (!(*redirection))
-			return (free_return_int(filename));
-	}
+	(*redirections)[direction]->filename = filename;
+	(*redirections)[direction]->type = type_open;
 	return (1);
 }
 
@@ -67,19 +51,17 @@ void	delete_redirection_tokens(t_list **tokens, t_list **previous)
 	(*previous)->next = *tokens;
 }
 
-t_redirection	*parse_redirections(t_list *tokens)
+static int	parse_redirections_loop(t_list *tokens, t_redirection ***redirections)
 {
-	t_redirection	*redirection;
-	t_list			*previous;
+	t_list	*previous;
 
-	redirection = NULL;
 	previous = NULL;
 	while (tokens)
 	{
 		if (token_is_redirection(tokens))
 		{
-			if (!parse_one_redirection(tokens, &redirection))
-				return (NULL);
+			if (!parse_one_redirection(tokens, redirections))
+				return (0);
 			delete_redirection_tokens(&tokens, &previous);
 		}
 		else
@@ -88,7 +70,30 @@ t_redirection	*parse_redirections(t_list *tokens)
 			tokens = tokens->next;
 		}
 	}
-	if (!redirection)
-		redirection = new_redirection(NULL, 0, 0);
-	return (redirection);
+	return (1);
+}
+
+t_redirection	**parse_redirections(t_list *tokens)
+{
+	t_redirection	**redirections;
+
+	redirections = (t_redirection**)malloc(sizeof(t_redirection) * 2);
+	if (!redirections)
+		return (NULL);
+	redirections[IN] = new_redirection(NULL, 0, APPEND);
+	if (!redirections[IN])
+		return (free_return_null(redirections));
+	redirections[OUT] = new_redirection(NULL, 1, APPEND);
+	if (!redirections[OUT])
+	{
+		free(redirections[IN]);
+		return (free_return_null(redirections));
+	}
+	if (!parse_redirections_loop(tokens, &redirections))
+	{
+		free(redirections[IN]);
+		free(redirections[OUT]);
+		return (free_return_null(redirections));
+	}
+	return (redirections);
 }

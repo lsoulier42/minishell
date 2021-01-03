@@ -24,26 +24,27 @@ int	add_pipe(t_list **begin_pipes, t_list *begin_cmds)
 	return (1);
 }
 
-static int	poip(t_list *to, t_list **bp, t_list *pr, t_list *bc)
+static int	parse_pipes_loop(t_list *tokens, t_list **begin_pipes,
+	t_list *previous, t_list *begin_cmds)
 {
-	while (to)
+	while (tokens)
 	{
-		if (token_is_pipe(to) || !to->next)
+		if (token_is_pipe(tokens) || !tokens->next)
 		{
-			if (!add_pipe(bp, bc))
+			if (!add_pipe(begin_pipes, begin_cmds))
 				return (0);
-			bc = to->next;
-			if (token_is_pipe(to))
+			begin_cmds = tokens->next;
+			if (token_is_pipe(tokens))
 			{
-				pr->next = NULL;
-				ft_lstdelone(to, &del_token);
+				previous->next = NULL;
+				ft_lstdelone(tokens, &del_token);
 			}
-			to = bc;
+			tokens = begin_cmds;
 		}
 		else
 		{
-			pr = to;
-			to = to->next;
+			previous = tokens;
+			tokens = tokens->next;
 		}
 	}
 	return (1);
@@ -70,7 +71,7 @@ int	parse_pipes(t_list *instructions)
 		*begin_pipes = NULL;
 		begin_cmds = tokens;
 		previous = NULL;
-		if (!poip(tokens, begin_pipes,
+		if (!parse_pipes_loop(tokens, begin_pipes,
 				previous, begin_cmds))
 			return (del_pipe_list(begin_pipes));
 		instructions = instructions->next;

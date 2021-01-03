@@ -22,60 +22,44 @@ void	del_var(void *var)
 	free(var);
 }
 
-char	*parse_var_key(char *unparsed)
+t_var	*new_var(char *key, char *value)
 {
-	char	*key;
-	int		i;
+	t_var	*new;
 
-	i = 0;
-	while (unparsed[i] && unparsed[i] != '=')
-		i++;
-	if (unparsed[i] != '=')
+	new = (t_var*)malloc(sizeof(t_var));
+	if (!new)
 		return (NULL);
-	key = (char*)malloc(sizeof(char) * (i + 1));
-	if (!key)
-		return (NULL);
-	ft_strlcpy(key, unparsed, i + 1);
-	return (key);
+	new->key = key;
+	new->value = value;
+	return (new);
 }
 
-char	*parse_var_value(char *unparsed)
+int parse_var(char *unparsed, char **key, char **value)
 {
-	char	*value;
-	int		i;
-	int		len;
-
-	i = 0;
-	while (unparsed[i] && unparsed[i] != '=')
-		i++;
-	if (unparsed[i] != '=')
-		return (NULL);
-	len = ft_strlen(unparsed) - i - 1;
-	value = (char*)malloc(sizeof(char) * (len + 1));
-	if (!value)
-		return (NULL);
-	ft_strlcpy(value, unparsed + i + 1, len + 1);
-	return (value);
-}
-
-t_var	*parse_var(char *unparsed)
-{
-	t_var	*new_var;
-
-	new_var = (t_var*)malloc(sizeof(t_var));
-	if (new_var)
+	if (unparsed[0] == '=')
 	{
-		new_var->key = parse_var_key(unparsed);
-		if (!new_var->key)
-			return (free_return_null(new_var));
-		new_var->value = parse_var_value(unparsed);
-		if (!new_var->value)
-		{
-			free(new_var->key);
-			return (free_return_null(new_var));
-		}
+		*key = ft_strdup("=");
+		*value = ft_strdup("");
 	}
-	return (new_var);
+	else if (unparsed_var_has_equal(unparsed))
+	{
+		*key = parse_var_key(unparsed);
+		*value = parse_var_value(unparsed);
+	}
+	else
+	{
+		*key = ft_strdup(unparsed);
+		*value = ft_strdup("");
+	}
+	if (!(*key) || !(*value))
+	{
+		if (*key)
+			free(*key);
+		if (*value)
+			free(*value);
+		return (0);
+	}
+	return (1);
 }
 
 int	cmp_key_var(void *var1_void, void *var2_void)

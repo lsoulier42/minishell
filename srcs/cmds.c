@@ -29,7 +29,7 @@ int 	create_args_tab(char ***args, t_list *tokens)
 	return (1);
 }
 
-int 	parse_one_pipe_cmds(t_list **tokens, t_redirection *redirection)
+int 	parse_one_pipe_cmds(t_list **tokens, t_redirection **redirections)
 {
 	t_list	*cmd_el;
 	t_list	*track;
@@ -40,13 +40,12 @@ int 	parse_one_pipe_cmds(t_list **tokens, t_redirection *redirection)
 	name = sub_quote(get_token_value(track));
 	if (!name)
 		return (0);
-	track = track->next;
 	args = (char**)malloc(sizeof(char*) * (ft_lstsize(track) + 1));
 	if (!args)
 		return (free_return_int(name));
 	if (!create_args_tab(&args, track))
 		return (free_cmd_tabs(name, args));
-	cmd_el = new_cmd_el(name, args, redirection);
+	cmd_el = new_cmd_el(name, args, redirections);
 	if (!cmd_el)
 		return (free_cmd_tabs(name, args));
 	ft_lstclear(tokens, &del_token);
@@ -58,7 +57,7 @@ int 	parse_cmds(t_list *instructions)
 {
 	t_list			*pipes;
 	t_list			**begin_cmds;
-	t_redirection	*redirection;
+	t_redirection	**redirections;
 
 	while (instructions)
 	{
@@ -66,10 +65,10 @@ int 	parse_cmds(t_list *instructions)
 		while (pipes)
 		{
 			begin_cmds = &(((t_pipe*)(pipes->content))->begin_cmds);
-			redirection = parse_redirections(*begin_cmds);
-			if (!redirection)
+			redirections = parse_redirections(*begin_cmds);
+			if (!redirections)
 				return (0);
-			if (!parse_one_pipe_cmds(begin_cmds, redirection))
+			if (!parse_one_pipe_cmds(begin_cmds, redirections))
 				return (0);
 			pipes = pipes->next;
 		}

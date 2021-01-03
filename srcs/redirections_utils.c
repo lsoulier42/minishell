@@ -21,7 +21,7 @@ void	del_redirection(void *redirection_void)
 	free(redirection_void);
 }
 
-t_redirection	*new_redirection(char *filename, int export, int append)
+t_redirection	*new_redirection(char *filename, int fd, int type)
 {
 	t_redirection	*new;
 
@@ -29,9 +29,8 @@ t_redirection	*new_redirection(char *filename, int export, int append)
 	if (!new)
 		return (NULL);
 	new->filename = filename;
-	new->fd = 1;
-	new->export = export;
-	new->append = append;
+	new->fd = fd;
+	new->type = type;
 	return (new);
 }
 
@@ -56,4 +55,21 @@ int	redirection_is_not_last(t_list *token_el)
 		token_el = token_el->next;
 	}
 	return (0);
+}
+
+int	create_empty_file_redirection(char *filename, int type)
+{
+	int	fd;
+	int	close_return;
+
+	if (type == APPEND)
+		fd = open(filename, O_RDWR | O_CREAT | O_APPEND, 0664);
+	else
+		fd = open(filename, O_RDWR | O_CREAT | O_TRUNC, 0664);
+	if (fd == -1)
+		return (0);
+	close_return = close(fd);
+	if (close_return == -1)
+		return (0);
+	return (1);
 }

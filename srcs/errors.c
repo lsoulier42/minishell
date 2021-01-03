@@ -12,16 +12,14 @@
 
 #include "minishell.h"
 
-t_error	*new_error(char *str_error, char *process, char *arg, int code)
+void	format_error(char *cmd_name, char *arg, int errno_value, char *str)
 {
-	t_error	*new;
-
-	new = (t_error*)malloc(sizeof(t_error));
-	if (!new)
-		return (NULL);
-	new->str_error = str_error;
-	new->process = process;
-	new->arg = arg;
-	new->code = code;
-	return (new);
+	ft_putstr(cmd_name);
+	ft_putstr(": ");
+	if (!str)
+		ft_putstr(strerror(errno_value));
+	else
+		ft_putstr(str);
+	ft_putstr(": ");
+	ft_putendl_fd(arg, 1);
 }

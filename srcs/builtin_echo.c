@@ -75,13 +75,13 @@ int 	exec_echo(t_data *msh_data, t_cmd *cmd)
 	if (nb_option > 0)
 		if (!remove_n_options(&(cmd->args), nb_option))
 			return (-1);
-	str = ft_joinstrs(doubletab_len(cmd->args), cmd->args, " ");
+	str = ft_joinstrs(doubletab_len(cmd->args + 1), cmd->args + 1, " ");
 	if (!str)
 		return (-1);
 	if (nb_option > 0)
-		ft_putstr_fd(str, cmd->redirection->fd);
+		ft_putstr_fd(str, cmd->redirections[OUT]->fd);
 	else
-		ft_putendl_fd(str, cmd->redirection->fd);
+		ft_putendl_fd(str, cmd->redirections[OUT]->fd);
 	free(str);
 	return (0);
 }

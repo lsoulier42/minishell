@@ -29,14 +29,14 @@ char 	*serialize_one_env_var(t_list *env_el)
 	return (str);
 }
 
-char	**serialize_env(void)
+char	**serialize_env(t_list *begin_env)
 {
 	int		len;
 	char	**envp;
 	t_list	*env;
 	int		var_nb;
 
-	env = g_env_list_begin;
+	env = begin_env;
 	len = ft_lstsize(env);
 	var_nb = 0;
 	envp = (char**)malloc(sizeof(char*) * (len + 1));
@@ -45,10 +45,26 @@ char	**serialize_env(void)
 	while (env)
 	{
 		envp[var_nb] = serialize_one_env_var(env);
-		if (!envp[var_nb])
+		if (!envp[var_nb++])
 			return (free_double_tab(envp));
 		env = env->next;
 	}
 	envp[var_nb] = NULL;
 	return (envp);
+}
+
+int env_key_exist(t_list *begin_env, char *key)
+{
+	t_list	*env;
+	t_var	*var;
+
+	env = begin_env;
+	while (env)
+	{
+		var = (t_var*)env->content;
+		if (ft_strcmp(var->key, key) == 0)
+			return (1);
+		env = env->next;
+	}
+	return (0);
 }
