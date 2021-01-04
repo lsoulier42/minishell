@@ -6,7 +6,7 @@
 /*   By: louise <lsoulier@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/16 15:55:02 by louise            #+#    #+#             */
-/*   Updated: 2020/11/16 21:31:38 by louise           ###   ########.fr       */
+/*   Updated: 2021/01/04 08:39:07 by lsoulier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ int	fill_line(char **line, char *buffer, int *offset)
 	int		line_len;
 
 	line_len = get_len(*line);
+	to_endl = 0;
 	while (buffer[to_endl] && buffer[to_endl] != '\n')
 		to_endl++;
 	new_line = (char*)ft_calloc(line_len + to_endl + 1, sizeof(char));

@@ -17,7 +17,7 @@ int	exec_pwd(t_data *msh_data, t_cmd *cmd)
 	char *pathname;
 
 	pathname = (get_env_var(msh_data->begin_env, "PWD"))->value;
-	ft_putendl_fd(pathname, cmd->redirections[OUT]->fd);
+	ft_putendl_fd(pathname, STDOUT_FILENO);
 	return (0);
 }
 

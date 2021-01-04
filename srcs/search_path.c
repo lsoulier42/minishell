@@ -121,9 +121,14 @@ char	*search_path(t_list *begin_env, char *cmd_name)
 {
 	char *full_path;
 
-	if (cmd_name[0] == '/' || cmd_name[0] == '.' || cmd_name[0] == '~')
-		full_path = search_path_absolute(begin_env, cmd_name);
-	else
-		full_path = search_path_relative(begin_env, cmd_name);
+	if (search_builtin(cmd_name))
+	    full_path = ft_strdup(cmd_name);
+	else {
+        if (cmd_name[0] == '/' || cmd_name[0] == '.' || cmd_name[0] == '~')
+            full_path = search_path_absolute(begin_env, cmd_name);
+        else
+            full_path = search_path_relative(begin_env, cmd_name);
+    }
+	free(cmd_name);
 	return (full_path);
 }
