@@ -143,6 +143,7 @@ t_var			*get_env_var(t_list *begin_env, char *key);
 char			*serialize_one_env_var(t_list *env_el);
 char			**serialize_env(t_list *begin_env);
 int				env_key_exist(t_list *begin_env, char *key);
+int             change_env_shlvl(t_list *begin_env);
 
 int				execute_builtin(t_data *msh_data, t_cmd *cmd);
 int				search_builtin(char *cmd_name);
@@ -157,6 +158,7 @@ char 			*format_export_line(t_var *env_var);
 void	        exec_export_print(t_list *begin_env, t_cmd *cmd);
 int				exec_pwd(t_data *msh_data, t_cmd *cmd);
 int				exec_cd(t_data *msh_data, t_cmd *cmd);
+int             exec_cd_particular_paths(t_data *msh_data, char **new_dir);
 int				exec_echo(t_data *msh_data, t_cmd *cmd);
 
 t_user_input	*parse_input(char *buffer);

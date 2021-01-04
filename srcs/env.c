@@ -19,6 +19,7 @@ t_list	*set_env(char *envp[])
 	char 	*key;
 	char 	*value;
 
+
 	i = -1;
 	begin_env = NULL;
 	while (envp[++i])
@@ -31,6 +32,8 @@ t_list	*set_env(char *envp[])
 			return (0);
 		}
 	}
+	if (!change_env_shlvl(begin_env))
+	    return (NULL);
 	return (begin_env);
 }
 
