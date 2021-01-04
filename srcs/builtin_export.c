@@ -73,7 +73,7 @@ char 	*format_export_line(t_var *env_var)
 	return (new_line);
 }
 
-void	exec_export_print(t_list *begin_env)
+void	exec_export_print(t_list *begin_env, t_cmd *cmd)
 {
 	t_list	*env;
 	char	*line;
@@ -83,7 +83,7 @@ void	exec_export_print(t_list *begin_env)
 	while (env)
 	{
 		line = format_export_line((t_var*)env->content);
-		ft_putendl_fd(line, 1);
+		ft_putendl_fd(line, cmd->redirections[OUT]->fd);
 		free(line);
 		env = env->next;
 	}
@@ -97,7 +97,7 @@ int	exec_export(t_data *msh_data, t_cmd *cmd)
 
 	i = 0;
 	if (!(cmd->args[1]))
-		exec_export_print(msh_data->begin_env);
+		exec_export_print(msh_data->begin_env, cmd);
 	else
 	{
 		while (cmd->args[++i])

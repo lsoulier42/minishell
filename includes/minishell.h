@@ -137,7 +137,7 @@ int				unparsed_var_has_equal(char *str);
 t_list			*set_env(char *envp[]);
 int				set_env_var(t_list **begin_env, char *key, char *value);
 int				change_env_var(t_list *begin_env, char *key, char *new_value);
-void 			print_env(t_list *begin_env);
+void 			print_env_fd(t_list *begin_env, int fd);
 t_var			*get_env_var(t_list *begin_env, char *key);
 char			*serialize_one_env_var(t_list *env_el);
 char			**serialize_env(t_list *begin_env);
@@ -153,7 +153,7 @@ int 			exec_export_one_var(t_list *begin_env,
 					char *key, char *value, int has_equal);
 int				export_key_is_legit(char *key);
 char 			*format_export_line(t_var *env_var);
-void			exec_export_print(t_list *begin_env);
+void	        exec_export_print(t_list *begin_env, t_cmd *cmd);
 int				exec_pwd(t_data *msh_data, t_cmd *cmd);
 int				exec_cd(t_data *msh_data, t_cmd *cmd);
 int				exec_echo(t_data *msh_data, t_cmd *cmd);
@@ -164,7 +164,6 @@ void			*error_instructions(t_user_input *new, t_list **tokens);
 void			*error_pipes(t_user_input *new, t_list **tokens);
 void			*error_cmds(t_user_input *new, t_list **tokens);
 void			del_user_input(t_user_input *input);
-int 			close_files(t_list *files);
 
 t_token			*new_token(char *value, int is_operator);
 void			del_token(void *token_void);

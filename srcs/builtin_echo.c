@@ -79,9 +79,9 @@ int 	exec_echo(t_data *msh_data, t_cmd *cmd)
 	if (!str)
 		return (-1);
 	if (nb_option > 0)
-		ft_putstr(str);
+		ft_putstr_fd(str, cmd->redirections[OUT]->fd);
 	else
-		ft_putendl_fd(str, STDOUT_FILENO);
+		ft_putendl_fd(str, cmd->redirections[OUT]->fd);
 	free(str);
 	return (0);
 }

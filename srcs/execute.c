@@ -20,52 +20,67 @@ int execute_cmd(t_data *msh_data, t_cmd *cmd, int previous_fd, int is_last)
 	int 	pipefd[2];
 	char    buf;
 
-	if (pipe(pipefd) == -1)
-		return (-1);
-	cpid = fork();
-	if (cpid == 0)
-	{
-		envp = serialize_env(msh_data->begin_env);
-		if (!envp)
-			return (-1);
-		close(pipefd[0]);
-		if (cmd->redirections[IN]->fd != STDIN_FILENO)
-        {
-		    close(STDIN_FILENO);
-		    dup(cmd->redirections[IN]->fd);
-		    close(cmd->redirections[IN]->fd);
+    if (pipe(pipefd) == -1)
+        return (-1);
+    cpid = fork();
+    if (is_last && search_builtin(cmd->name))
+    {
+        if (cmd->redirections[IN]->fd != STDIN_FILENO) {
+            close(STDIN_FILENO);
+            dup(cmd->redirections[IN]->fd);
+            close(cmd->redirections[IN]->fd);
         }
-        if (previous_fd != -1)
-        {
+        if (previous_fd != -1) {
             close(STDIN_FILENO);
             dup(previous_fd);
             close(previous_fd);
         }
-        if (!is_last || cmd->redirections[OUT]->fd != STDOUT_FILENO)
-            dup2(pipefd[1], STDOUT_FILENO);
-        if (search_builtin(cmd->name))
-            execute_builtin(msh_data, cmd);
-        else
-		    execve(cmd->name, cmd->args, envp);
-		close(pipefd[1]);
-		free_double_tab(envp);
-		return (0);
-	}
-	else if (cpid != -1)
-	{
-		close(pipefd[1]);
-        wait(NULL);
-        if (cmd->redirections[OUT]->fd != STDOUT_FILENO)
-            while (read(pipefd[0], &buf, 1) > 0)
-                write(cmd->redirections[OUT]->fd, &buf, 1);
-		if (is_last) {
+        msh_data->last_return = execute_builtin(msh_data, cmd);
+        return(msh_data->last_return);
+    }
+    else {
+        if (cpid == 0) {
+            envp = serialize_env(msh_data->begin_env);
+            if (!envp)
+                return (-1);
             close(pipefd[0]);
+            if (cmd->redirections[IN]->fd != STDIN_FILENO) {
+                close(STDIN_FILENO);
+                dup(cmd->redirections[IN]->fd);
+                close(cmd->redirections[IN]->fd);
+            } else if (previous_fd != -1) {
+                close(STDIN_FILENO);
+                dup(previous_fd);
+                close(previous_fd);
+            }
+            if (!is_last || cmd->redirections[OUT]->fd != STDOUT_FILENO)
+                dup2(pipefd[1], STDOUT_FILENO);
+            if (search_builtin(cmd->name))
+            {
+                execute_builtin(msh_data, cmd);
+                close(pipefd[1]);
+                free_double_tab(envp);
+                exit(0);
+            }
+            else
+                execve(cmd->name, cmd->args, envp);
+            close(pipefd[1]);
+            free_double_tab(envp);
             return (0);
+        } else if (cpid != -1) {
+            close(pipefd[1]);
+            wait(NULL);
+            if (cmd->redirections[OUT]->fd != STDOUT_FILENO)
+                while (read(pipefd[0], &buf, 1) > 0)
+                    write(cmd->redirections[OUT]->fd, &buf, 1);
+            if (is_last) {
+                close(pipefd[0]);
+                return (0);
+            } else {
+                return (pipefd[0]);
+            }
         }
-		else {
-            return (pipefd[0]);
-        }
-	}
+    }
 	return (-1);
 }
 
@@ -93,7 +108,7 @@ int	execute_all_cmds(t_data *msh_data)
                 fdstdin = execute_cmd(msh_data, cmd, fdstdin, !(pipes->next));
             else
                 format_error("minishell", cmd->name, 0, "Command not found");
-			close_redirections(cmd->redirections);
+            close_redirections(cmd->redirections);
 			pipes = pipes->next;
 		}
 		instructions = instructions->next;

@@ -17,13 +17,13 @@ int	exec_pwd(t_data *msh_data, t_cmd *cmd)
 	char *pathname;
 
 	pathname = (get_env_var(msh_data->begin_env, "PWD"))->value;
-	ft_putendl_fd(pathname, STDOUT_FILENO);
+	ft_putendl_fd(pathname, cmd->redirections[OUT]->fd);
 	return (0);
 }
 
 int	exec_env(t_data *msh_data, t_cmd *cmd)
 {
-	print_env(msh_data->begin_env);
+	print_env_fd(msh_data->begin_env, cmd->redirections[OUT]->fd);
 	return (0);
 }
 

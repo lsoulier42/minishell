@@ -55,7 +55,7 @@ int	execute_builtin(t_data *msh_data, t_cmd *cmd)
 
 int	exec_exit(t_data *msh_data, t_cmd *cmd)
 {
-	ft_putstr("exit\n");
+	ft_putstr_fd("exit\n", cmd->redirections[OUT]->fd);
 	msh_data->exit_msh = 1;
 	if (cmd->args[1] && ft_isnum(cmd->args[1]))
 		msh_data->exit_value = ft_atoi(cmd->args[1]) % 256;

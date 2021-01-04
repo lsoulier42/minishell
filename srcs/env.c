@@ -81,7 +81,7 @@ int set_env_var(t_list **begin_env, char *key, char *value)
 	return (1);
 }
 
-void 	print_env(t_list *begin_env)
+void 	print_env_fd(t_list *begin_env, int fd)
 {
 	t_var	*cast;
 	t_list	*env;
@@ -90,10 +90,10 @@ void 	print_env(t_list *begin_env)
 	while (env)
 	{
 		cast = (t_var*)env->content;
-		ft_putstr(cast->key);
-		ft_putstr("=");
-		ft_putstr(cast->value);
-		ft_putstr("\n");
+		ft_putstr_fd(cast->key, fd);
+		ft_putstr_fd("=", fd);
+		ft_putstr_fd(cast->value, fd);
+		ft_putstr_fd("\n", fd);
 		env = env->next;
 	}
 }
