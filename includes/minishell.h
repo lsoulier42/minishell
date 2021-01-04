@@ -77,6 +77,7 @@ typedef struct s_cmd
 {
 	char			*name;
 	char			**args;
+	int             is_last;
 	t_redirection	**redirections;
 }				t_cmd;
 
@@ -229,7 +230,14 @@ int				expand_one_arg_vars(t_data *msh_data, char **cur_arg);
 int				expand_one_var(t_list *begin_env, char **cur_arg, int *index);
 char			*expand_get_var_value(t_list *begin_env, char *str, int *len);
 int				expand_last_return(t_data *msh_data, char **cur_arg, int *index);
+
 int				execute_all_cmds(t_data *msh_data);
+int             execute_cmd(t_data *msh_data, t_list *pipes, int fdstdin);
+int             execute_last_builtin(t_data *msh_data, t_cmd *cmd, int previous_fd);
+int             execute_pipe_cmd(t_data *msh_data, t_cmd *cmd, int previous_fd);
+int             execute_parent_process(t_cmd *cmd, int pipefd[2]);
+int             execute_child_process(t_data *msh_data, t_cmd *cmd, int previous_fd, int pipefd[2]);
+int             execute_child_process_execve(t_data *msh_data, t_cmd *cmd, int pipefd[2]);
 
 void			format_error(char *cmd_name, char *arg, int ev, char *str);
 

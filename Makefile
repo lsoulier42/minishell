@@ -4,7 +4,7 @@ SRCS=	minishell.c env.c var.c builtin.c builtin_cd.c utils.c builtin_env.c parsi
 		tokens_utils2.c instructions.c instructions_utils.c test.c pipes_utils.c \
 		user_input_utils.c cmds.c cmds_utils.c utils2.c redirections_utils.c \
 		expand_vars.c errors.c errors_utils.c builtin_export.c redirections_files.c \
-		builtin_echo.c var_utils.c execute.c env_utils.c search_path.c
+		builtin_echo.c var_utils.c execute.c env_utils.c search_path.c execute_utils.c
 OBJS=	$(addprefix srcs/, $(SRCS:.c=.o))
 CC=		gcc
 CFLAGS=

@@ -22,6 +22,7 @@ t_cmd	*new_cmd(char *name, char **args, t_redirection **redirections)
 	new->name = name;
 	new->args = args;
 	new->redirections = redirections;
+	new->is_last = 0;
 	return (new);
 }
 
