@@ -34,3 +34,14 @@ int	ft_isnum(char *str)
 			return (0);
 	return (1);
 }
+
+int	ft_ischarset(char c, char *charset)
+{
+	int i;
+
+	i = -1;
+	while (charset[++i])
+		if (c == charset[i])
+			return (1);
+	return (0);
+}

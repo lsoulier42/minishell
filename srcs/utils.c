@@ -12,15 +12,12 @@
 
 #include "minishell.h"
 
-void	format_prompt(t_list *begin_env)
+void	format_prompt(void)
 {
-	t_var	*env_pwd;
 	char	color;
 
 	color = BLUE;
-	env_pwd = get_env_var(begin_env, "PWD");
-	print_color(env_pwd->value, color);
-	print_color("?>", color);
+	print_color("minishell-1.0$ ", color);
 }
 
 void	print_color(char *str, char color)
@@ -46,7 +43,6 @@ int	doubletab_len(char **tab)
 
 char	*ft_strndup(char *str, int n)
 {
-	int		i;
 	int		len;
 	char	*new;
 
@@ -59,4 +55,29 @@ char	*ft_strndup(char *str, int n)
 		return (NULL);
 	ft_strlcpy(new, str, len + 1);
 	return (new);
+}
+
+char *ft_trim_char(char *str, char *charset)
+{
+	char	*new_str;
+	int 	nb_char;
+	int 	i;
+	int 	j;
+	int 	k;
+
+	i = -1;
+	j = -1;
+	k = 0;
+	nb_char = 0;
+	while (str[++i])
+		if (ft_ischarset(str[i], charset))
+			nb_char ++;
+	new_str = (char*)ft_calloc(ft_strlen(str) - nb_char + 1, sizeof(char));
+	if (!new_str)
+		return (NULL);
+	while (str[++j])
+		if (!ft_ischarset(str[j], charset))
+			new_str[k++] = str[j];
+	new_str[k] = '\0';
+	return (new_str);
 }

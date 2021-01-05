@@ -119,7 +119,7 @@ typedef struct s_data
 extern int		signal_received;
 extern int		signal_value;
 
-void			format_prompt(t_list *begin_env);
+void			format_prompt(void);
 void			print_color(char *str, char color);
 int				doubletab_len(char **tab);
 char			*ft_strndup(char *str, int n);
@@ -127,6 +127,8 @@ int				free_return_int(void *ptr);
 void			*free_return_null(void *ptr);
 int				free_cmd_tabs(char *name, char **args);
 int				ft_isnum(char *str);
+int				ft_ischarset(char c, char *charset);
+char			*ft_trim_char(char *str, char *charset);
 
 void 			init_data(t_data *msh_data, char *msh_name, char *envp[]);
 
