@@ -116,6 +116,9 @@ typedef struct s_data
 	int 			exit_value;
 }				t_data;
 
+extern int		signal_received;
+extern int		signal_value;
+
 void			format_prompt(t_list *begin_env);
 void			print_color(char *str, char color);
 int				doubletab_len(char **tab);

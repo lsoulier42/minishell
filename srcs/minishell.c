@@ -11,6 +11,17 @@
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include <stdio.h>
+
+int     signal_received = 0;
+int     signal_value = -1;
+
+void    ctrlc_handler(int signum)
+{
+	signal_received = 1;
+	write(0, "\n", 1);
+	signal_value = SIGINT;
+}
 
 int main(int argc, char *argv[], char *envp[])
 {
@@ -18,13 +29,21 @@ int main(int argc, char *argv[], char *envp[])
 	char 		buffer[BUFFER_SIZE + 1];
 	int 		read_return;
 
+	if (signal(SIGINT, ctrlc_handler) == SIG_ERR)
+    {
+	    exit(0);
+    }
 	init_data(&msh_data, argv[0], envp);
-	while(!msh_data.exit_msh)
+	while(!msh_data.exit_msh && !signal_received)
 	{
 		format_prompt(msh_data.begin_env);
 		ft_bzero(buffer, BUFFER_SIZE + 1);
-		while ((read_return = read(0, buffer, BUFFER_SIZE)) != 0)
+		read_return = 1;
+		while (read_return != 0)
 		{
+			read_return = read(0, buffer, BUFFER_SIZE);
+			if (read_return == -1)
+				break ;
 			buffer[read_return] = '\0';
 			msh_data.parsed_input = parse_input(buffer);
 			if (msh_data.parsed_input)
@@ -33,7 +52,7 @@ int main(int argc, char *argv[], char *envp[])
 				execute_all_cmds(&msh_data);
 				del_user_input(msh_data.parsed_input);
 			}
-			if (buffer[read_return - 1] == '\n')
+			if (buffer[read_return - 1] == '\n' || signal_received)
 				break;
 		}
 	}
