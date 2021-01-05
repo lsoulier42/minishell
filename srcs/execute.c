@@ -55,14 +55,15 @@ int execute_all_cmds(t_data *msh_data)
 
     fdstdin = -1;
 	instructions = msh_data->parsed_input->begin_instructions;
-		while (instructions)
+	while (instructions && g_signal_value != SIGINT)
 	{
 		pipes = get_instruction_pipes(instructions);
-		while (pipes)
+		while (pipes && g_signal_value != SIGINT)
 		{
             fdstdin = execute_cmd(msh_data, pipes, fdstdin);
 			if (fdstdin == -1)
 			    return (0);
+			sigquit_exec_handler();
 			pipes = pipes->next;
 		}
 		instructions = instructions->next;

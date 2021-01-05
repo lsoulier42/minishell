@@ -72,9 +72,9 @@ char 	*search_path_relative(t_list *begin_env, char *cmd_name)
 			break ;
 	found_pathname = pathnames[i];
 	if (!found_pathname)
-		return (free_double_tab(pathnames));
+		return (ft_free_double_tab(pathnames));
 	full_path = format_found_path(found_pathname, cmd_name);
-	free_double_tab(pathnames);
+	ft_free_double_tab(pathnames);
 	return (full_path);
 }
 

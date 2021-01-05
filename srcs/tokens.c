@@ -50,25 +50,10 @@ t_list	*new_token_el(char *value, int is_operator)
 	return (el);
 }
 
-int	add_token(t_list **begin, char **input)
+char	*get_token_value(t_list *el)
 {
-	t_list	*el;
-	char	*value;
-	int		len;
+	t_token	*token;
 
-	if (ft_isoperator(**input))
-		len = token_len_operator(*input);
-	else
-		len = token_len(*input);
-	if (len == -1)
-		return (error_lexer(**input));
-	value = ft_strndup(*input, len);
-	if (!value)
-		return (0);
-	el = new_token_el(value, ft_isoperator(**input));
-	if (!el)
-		return (free_return_int(value));
-	ft_lstadd_back(begin, el);
-	*input += len;
-	return (1);
+	token = (t_token*)el->content;
+	return (token->value);
 }

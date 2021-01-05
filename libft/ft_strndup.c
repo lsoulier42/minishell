@@ -1,47 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils2.c                                           :+:      :+:    :+:   */
+/*   ft_strndup.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lsoulier <lsoulier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/12/29 05:27:29 by lsoulier          #+#    #+#             */
-/*   Updated: 2020/12/29 05:27:39 by lsoulier         ###   ########.fr       */
+/*   Created: 2021/01/06 00:12:28 by lsoulier          #+#    #+#             */
+/*   Updated: 2021/01/06 00:12:37 by lsoulier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "libft.h"
 
-int	free_return_int(void *ptr)
+char	*ft_strndup(char *str, int n)
 {
-	free(ptr);
-	return (0);
-}
+	int		len;
+	char	*new;
 
-void	*free_return_null(void *ptr)
-{
-	free(ptr);
-	return (NULL);
-}
-
-int	ft_isnum(char *str)
-{
-	int i;
-
-	i= -1;
-	while (str[i])
-		if (!ft_isdigit(str[i]))
-			return (0);
-	return (1);
-}
-
-int	ft_ischarset(char c, char *charset)
-{
-	int i;
-
-	i = -1;
-	while (charset[++i])
-		if (c == charset[i])
-			return (1);
-	return (0);
+	if (n > (int)ft_strlen(str))
+		len = ft_strlen(str);
+	else
+		len = n;
+	new = (char*)malloc(sizeof(char) * (len + 1));
+	if (!new)
+		return (NULL);
+	ft_strlcpy(new, str, len + 1);
+	return (new);
 }

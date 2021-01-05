@@ -44,7 +44,7 @@ void 	del_cmd(void *cmd_void)
 
 	cmd = (t_cmd*)cmd_void;
 	free(cmd->name);
-	free_double_tab(cmd->args);
+	ft_free_double_tab(cmd->args);
 	del_redirection(cmd->redirections[IN]);
 	del_redirection(cmd->redirections[OUT]);
 	free(cmd->redirections);
@@ -54,6 +54,6 @@ void 	del_cmd(void *cmd_void)
 int 	free_cmd_tabs(char *name, char **args)
 {
 	free(name);
-	free_double_tab(args);
+	ft_free_double_tab(args);
 	return (0);
 }

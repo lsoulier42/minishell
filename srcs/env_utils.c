@@ -46,7 +46,7 @@ char	**serialize_env(t_list *begin_env)
 	{
 		envp[var_nb] = serialize_one_env_var(env);
 		if (!envp[var_nb++])
-			return (free_double_tab(envp));
+			return (ft_free_double_tab(envp));
 		env = env->next;
 	}
 	envp[var_nb] = NULL;

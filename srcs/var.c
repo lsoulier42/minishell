@@ -71,3 +71,16 @@ int	cmp_key_var(void *var1_void, void *var2_void)
 	var2 = (t_var*)var2_void;
 	return (ft_strcmp(var1->key, var2->key));
 }
+
+int key_is_valid(char *str)
+{
+	int i;
+
+	i = -1;
+	if (ft_isdigit(str[0]) || str[0] == '=')
+		return (0);
+	while (str[++i])
+		if (str[i] != '_' && !ft_isalnum(str[i]))
+			return (0);
+	return (1);
+}

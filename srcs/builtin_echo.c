@@ -56,12 +56,12 @@ int 	remove_n_options(char ***args, int nb_options)
 		{
 			new_args[arg_nb] = ft_strdup((*args)[i]);
 			if (!new_args[arg_nb])
-				return (free_double_tab(new_args) != NULL);
+				return (ft_free_double_tab(new_args) != NULL);
 			arg_nb++;
 		}
 	}
 	new_args[arg_nb] = NULL;
-	free_double_tab(*args);
+	ft_free_double_tab(*args);
 	*args = new_args;
 	return (1);
 }

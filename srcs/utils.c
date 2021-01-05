@@ -12,12 +12,33 @@
 
 #include "minishell.h"
 
-void	format_prompt(void)
+void format_prompt(t_data *msh_data)
 {
-	char	color;
+	char 	prompt[PROMPT_MAX_SIZE];
+	t_var	*user;
+	t_var	*pwd;
+	char 	*user_value;
+	char 	*pwd_value;
 
-	color = BLUE;
-	print_color("minishell-1.0$ ", color);
+	user_value = "";
+	pwd_value = "";
+	user = get_env_var(msh_data->begin_env, "USER");
+	if (user)
+		user_value = user->value;
+	pwd = get_env_var(msh_data->begin_env, "PWD");
+	if (pwd)
+		pwd_value = pwd->value;
+	if (ft_strlen(user_value)
+		+ ft_strlen(pwd_value)
+		+ ft_strlen(msh_data->name) + 2 < PROMPT_MAX_SIZE)
+	{
+		ft_strcpy(prompt, user_value);
+		ft_strcat(prompt, "@");
+		ft_strcat(prompt, msh_data->name);
+		ft_strcat(prompt, pwd_value);
+		ft_strcat(prompt, "$ ");
+		print_color(prompt, YELLOW);
+	}
 }
 
 void	print_color(char *str, char color)
@@ -41,43 +62,14 @@ int	doubletab_len(char **tab)
 	return (i);
 }
 
-char	*ft_strndup(char *str, int n)
+int	free_return_int(void *ptr)
 {
-	int		len;
-	char	*new;
-
-	if (n > ft_strlen(str))
-		len = ft_strlen(str);
-	else
-		len = n;
-	new = (char*)malloc(sizeof(char) * (len + 1));
-	if (!new)
-		return (NULL);
-	ft_strlcpy(new, str, len + 1);
-	return (new);
+	free(ptr);
+	return (0);
 }
 
-char *ft_trim_char(char *str, char *charset)
+void	*free_return_null(void *ptr)
 {
-	char	*new_str;
-	int 	nb_char;
-	int 	i;
-	int 	j;
-	int 	k;
-
-	i = -1;
-	j = -1;
-	k = 0;
-	nb_char = 0;
-	while (str[++i])
-		if (ft_ischarset(str[i], charset))
-			nb_char ++;
-	new_str = (char*)ft_calloc(ft_strlen(str) - nb_char + 1, sizeof(char));
-	if (!new_str)
-		return (NULL);
-	while (str[++j])
-		if (!ft_ischarset(str[j], charset))
-			new_str[k++] = str[j];
-	new_str[k] = '\0';
-	return (new_str);
+	free(ptr);
+	return (NULL);
 }

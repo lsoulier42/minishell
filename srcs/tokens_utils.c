@@ -22,45 +22,26 @@ int	ft_isseparator(char c)
 	return (ft_isspace(c) || ft_isoperator(c));
 }
 
-int	token_len_operator(char *input)
+int	token_is_operator(t_list *el)
 {
-	int	len;
+	t_token	*token;
 
-	len = 1;
-	if (*input == '>' && *(input + 1) == '>')
-		len = 2;
-	else if (ft_isoperator(*(input + 1)))
-		return (-1);
-	return (len);
+	token = (t_token*)el->content;
+	return (token->is_operator);
 }
 
-int	token_len(char *input)
+int	token_is_pipe(t_list *el)
 {
-	int		len;
-	int		open;
-	char	open_char;
+	t_token	*token;
 
-	open = 0;
-	len = 0;
-	while (input[len] && (!ft_isseparator(input[len]) || open))
-	{
-		if (!open && (input[len] == '"' || input[len] == '\''))
-		{
-			open = 1;
-			open_char = input[len];
-		}
-		else if (open && input[len] == open_char)
-			open = 0;
-		len++;
-	}
-	if (open)
-		return (-1);
-	return (len);
+	token = (t_token*)el->content;
+	return (token->is_operator && ft_strcmp("|", token->value) == 0);
 }
 
-void	*free_token_struct(t_list **begin, char *tmp)
+int	token_is_semicolon(t_list *el)
 {
-	ft_lstclear(begin, &del_token);
-	free(tmp);
-	return (NULL);
+	t_token	*token;
+
+	token = (t_token*)el->content;
+	return (token->is_operator && ft_strcmp(";", token->value) == 0);
 }

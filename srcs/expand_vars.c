@@ -109,7 +109,7 @@ int	expand_last_return(t_data *msh_data, char **cur_arg, int *index)
 		return (0);
 	itoa_len = ft_strlen(itoa_value);
 	new_cur_arg = (char*)ft_calloc(ft_strlen(*cur_arg)
-								   + itoa_len - 1, sizeof(char));
+		+ itoa_len - 1, sizeof(char));
 	if (!new_cur_arg)
 		return (free_return_int(itoa_value));
 	ft_strlcpy(new_cur_arg, *cur_arg, *index + 1);

@@ -23,3 +23,14 @@ void	format_error(char *cmd_name, char *arg, int errno_value, char *str)
 	ft_putstr(": ");
 	ft_putendl_fd(arg, 1);
 }
+
+void	invalid_identifier(char *msh_name, char *cmd_name, char *arg)
+{
+	ft_putstr(msh_name);
+	ft_putstr(": ");
+	ft_putstr(cmd_name);
+	ft_putstr(": `");
+	ft_putstr(arg);
+	ft_putstr("': ");
+	ft_putendl_fd("not a valid identifier", STDOUT_FILENO);
+}

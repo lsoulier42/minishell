@@ -35,10 +35,15 @@ int	exec_unset(t_data *msh_data, t_cmd *cmd)
 	i = 0;
 	while (cmd->args[++i])
 	{
-		to_remove = get_env_var(msh_data->begin_env, cmd->args[i]);
-		if (to_remove != NULL)
-			ft_lstrm_if(&(msh_data->begin_env), to_remove,
-			   &cmp_key_var, del_var);
+		if (key_is_valid(cmd->args[i]))
+		{
+			to_remove = get_env_var(msh_data->begin_env, cmd->args[i]);
+			if (to_remove != NULL)
+				ft_lstrm_if(&(msh_data->begin_env), to_remove,
+					&cmp_key_var, del_var);
+		}
+		else
+			invalid_identifier(msh_data->name, "unset", cmd->args[i]);
 	}
 	return (0);
 }

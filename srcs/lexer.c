@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-t_list	*split_tokens(char *user_input)
+t_list	*lexer(char *user_input)
 {
 	t_list	*begin;
 	char	*input;
@@ -39,34 +39,68 @@ t_list	*split_tokens(char *user_input)
 	return (begin);
 }
 
-char	*get_token_value(t_list *el)
+int	token_len_operator(char *input)
 {
-	t_token	*token;
+	int	len;
 
-	token = (t_token*)el->content;
-	return (token->value);
+	len = 1;
+	if (*input == '>' && *(input + 1) == '>')
+		len = 2;
+	else if (ft_isoperator(*(input + 1)))
+		return (-1);
+	return (len);
 }
 
-int	token_is_operator(t_list *el)
+int	token_len(char *input)
 {
-	t_token	*token;
+	int		len;
+	int		open;
+	char	open_char;
 
-	token = (t_token*)el->content;
-	return (token->is_operator);
+	open = 0;
+	len = 0;
+	while (input[len] && (!ft_isseparator(input[len]) || open))
+	{
+		if (!open && (input[len] == '"' || input[len] == '\''))
+		{
+			open = 1;
+			open_char = input[len];
+		}
+		else if (open && input[len] == open_char)
+			open = 0;
+		len++;
+	}
+	if (open)
+		return (-1);
+	return (len);
 }
 
-int	token_is_pipe(t_list *el)
+void	*free_token_struct(t_list **begin, char *tmp)
 {
-	t_token	*token;
-
-	token = (t_token*)el->content;
-	return (token->is_operator && ft_strcmp("|", token->value) == 0);
+	ft_lstclear(begin, &del_token);
+	free(tmp);
+	return (NULL);
 }
 
-int	token_is_semicolon(t_list *el)
+int	add_token(t_list **begin, char **input)
 {
-	t_token	*token;
+	t_list	*el;
+	char	*value;
+	int		len;
 
-	token = (t_token*)el->content;
-	return (token->is_operator && ft_strcmp(";", token->value) == 0);
+	if (ft_isoperator(**input))
+		len = token_len_operator(*input);
+	else
+		len = token_len(*input);
+	if (len == -1)
+		return (error_lexer(**input));
+	value = ft_strndup(*input, len);
+	if (!value)
+		return (0);
+	el = new_token_el(value, ft_isoperator(**input));
+	if (!el)
+		return (free_return_int(value));
+	ft_lstadd_back(begin, el);
+	*input += len;
+	return (1);
 }

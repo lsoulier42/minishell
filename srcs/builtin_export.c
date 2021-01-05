@@ -12,40 +12,24 @@
 
 #include "minishell.h"
 
-int	export_key_is_legit(char *key)
-{
-	int i;
-
-	i = 0;
-	if (ft_isdigit(key[0]) || ft_strcmp(key, "=") == 0)
-		return (0);
-	while (key[i])
-	{
-		if (!ft_isalnum(key[i]) && key[i] != '_')
-			return (0);
-		i++;
-	}
-	return (1);
-}
-
-int exec_export_one_var(t_list *begin_env, char *key, char *value, int has_equal)
+int exec_export_one_var(t_data *msh_data, char *key, char *value, int has_equal)
 {
 	int error;
 	int key_exist;
 
-	key_exist = env_key_exist(begin_env, key);
-	if (export_key_is_legit(key))
+	key_exist = env_key_exist(msh_data->begin_env, key);
+	if (key_is_valid(key))
 	{
 		if (key_exist && has_equal)
-			error = !change_env_var(begin_env, key, value);
+			error = !change_env_var(msh_data->begin_env, key, value);
 		else if (!key_exist)
-			error = !set_env_var(&begin_env, key, value);
+			error = !set_env_var(&msh_data->begin_env, key, value);
 		else
 			error = 1;
 	}
 	else
 	{
-		format_error("export", key, 0, "not an identifier");
+		invalid_identifier(msh_data->name, "export", key);
 		error = 1;
 	}
 	return (error == 0);
@@ -104,7 +88,7 @@ int	exec_export(t_data *msh_data, t_cmd *cmd)
 		{
 			if (parse_var(cmd->args[i], &key, &value))
 			{
-				if (!exec_export_one_var(msh_data->begin_env, key, value,
+				if (!exec_export_one_var(msh_data, key, value,
 						unparsed_var_has_equal(cmd->args[i])))
 				{
 					free(key);

@@ -12,6 +12,7 @@
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
+# define PROMPT_MAX_SIZE 150
 # include "libft.h"
 # include <unistd.h>
 # include <stdlib.h>
@@ -108,29 +109,19 @@ typedef struct s_data
 	char 			*name;
 	t_list			*begin_env;
 	t_user_input	*parsed_input;
-	int				level;
 	int				last_return;
-	t_list			*begin_errors;
-	t_list			*begin_history;
 	int				exit_msh;
 	int 			exit_value;
 }				t_data;
 
-extern int		signal_received;
-extern int		signal_value;
+extern int		g_signal_value;
 
-void			format_prompt(void);
+void			format_prompt(t_data *msh_data);
 void			print_color(char *str, char color);
 int				doubletab_len(char **tab);
-char			*ft_strndup(char *str, int n);
 int				free_return_int(void *ptr);
 void			*free_return_null(void *ptr);
 int				free_cmd_tabs(char *name, char **args);
-int				ft_isnum(char *str);
-int				ft_ischarset(char c, char *charset);
-char			*ft_trim_char(char *str, char *charset);
-
-void 			init_data(t_data *msh_data, char *msh_name, char *envp[]);
 
 void			del_var(void *var);
 t_var			*new_var(char *key, char *value);
@@ -139,6 +130,7 @@ char			*parse_var_key(char *unparsed);
 char			*parse_var_value(char *unparsed);
 int				cmp_key_var(void *var1_void, void *var2_void);
 int				unparsed_var_has_equal(char *str);
+int				key_is_valid(char *str);
 
 t_list			*set_env(char *envp[]);
 int				set_env_var(t_list **begin_env, char *key, char *value);
@@ -156,9 +148,7 @@ int				exec_exit(t_data *msh_data, t_cmd *cmd);
 int				exec_env(t_data *msh_data, t_cmd *cmd);
 int				exec_unset(t_data *msh_data, t_cmd *cmd);
 int				exec_export(t_data *msh_data, t_cmd *cmd);
-int 			exec_export_one_var(t_list *begin_env,
-					char *key, char *value, int has_equal);
-int				export_key_is_legit(char *key);
+int 			exec_export_one_var(t_data *msh_data, char *key, char *value, int has_equal);
 char 			*format_export_line(t_var *env_var);
 void	        exec_export_print(t_list *begin_env, t_cmd *cmd);
 int				exec_pwd(t_data *msh_data, t_cmd *cmd);
@@ -179,7 +169,7 @@ t_list			*new_token_el(char *value, int is_operator);
 int				add_token(t_list **begin, char **input);
 int				ft_isseparator(char c);
 int				ft_isoperator(char c);
-t_list			*split_tokens(char *buffer);
+t_list			*lexer(char *buffer);
 char			*get_token_value(t_list *el);
 int				token_is_operator(t_list *el);
 int				token_len(char *input);
@@ -247,12 +237,19 @@ int             execute_child_process(t_data *msh_data, t_cmd *cmd, int previous
 int             execute_child_process_execve(t_data *msh_data, t_cmd *cmd, int pipefd[2]);
 
 void			format_error(char *cmd_name, char *arg, int ev, char *str);
+void			invalid_identifier(char *msh_name, char *cmd_name, char *arg);
 
 char			*search_path(t_list *begin_env, char *cmd_name);
 char 			*search_path_absolute(t_list *begin_env, char *cmd_name);
 char 			*search_path_relative(t_list *begin_env, char *cmd_name);
 char 			*format_found_path(char *found, char *cmd_name);
 int 			search_one_relative_path(char *pathname, char *cmd_name);
+
+void    		ctrlc_handler(int signum);
+void			ctrlslash_handler(int signum);
+void 			sigint_read_handler(int *read_return);
+void 			sigint_exec_handler(int *end_of_command);
+void 			sigquit_exec_handler(void);
 
 //test functions
 void			print_token_list(t_list *begin);

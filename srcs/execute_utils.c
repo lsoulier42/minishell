@@ -20,7 +20,7 @@ int execute_child_process_execve(t_data *msh_data, t_cmd *cmd, int pipefd[2])
     if (!envp)
         return (-1);
     execve(cmd->name, cmd->args, envp);
-    free_double_tab(envp);
+    ft_free_double_tab(envp);
     close(pipefd[1]);
     return (0);
 }
