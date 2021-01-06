@@ -30,7 +30,7 @@ int		exec_export_one_var(t_data *msh_data,
 	}
 	else
 	{
-		invalid_identifier(msh_data->name, "export", key);
+		invalid_identifier("export", key);
 		error = 1;
 	}
 	return (error == 0);

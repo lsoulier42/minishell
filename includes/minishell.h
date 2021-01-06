@@ -236,6 +236,8 @@ int				parse_one_redirection(t_list *tokens, t_redirection ***redirections);
 void			delete_redirection_tokens(t_list **tokens, t_list **previous);
 int 			open_redirections(t_redirection ***redirections);
 int				close_redirections(t_redirection **redirections);
+int 			open_redirection_in(t_redirection **redirection);
+int				open_redirection_out(t_redirection **redirection);
 
 int				expand_vars(t_data *msh_data, t_cmd *cmd);
 int				expand_one_arg_vars(t_data *msh_data, char **cur_arg);
@@ -254,14 +256,19 @@ int 			child_file_handler(int redir_in_fd, int previous_fd, int pipefd_read);
 int				write_process_redirection(int read_fd, int out_fd);
 
 void			format_error(char *cmd_name, char *arg, int ev, char *str);
-void			invalid_identifier(char *msh_name, char *cmd_name, char *arg);
-void			command_not_found(char *msh_name, char *cmd_name);
+void			invalid_identifier(char *cmd_name, char *arg);
+void			command_not_found(char *cmd_name);
+void			directory_not_found(char *cmd_name);
+void			open_file_error(char *filename);
 
-char			*search_path(t_list *begin_env, char *cmd_name);
+char			*search_path(t_data *msh_data, char *cmd_name);
 char 			*search_path_absolute(t_list *begin_env, char *cmd_name);
 char 			*search_path_relative(t_list *begin_env, char *cmd_name);
 char 			*format_found_path(char *found, char *cmd_name);
-int 			search_one_relative_path(char *pathname, char *cmd_name);
+int				search_in_dir(char *dirname, char *cmd_name);
+char			*search_path_absolute_home(t_list *begin_env, char *input_path);
+char			*search_path_absolute_dot(t_list *begin_env, char *input_path);
+char			*search_path_absolute_std(char *input_path);
 
 void    		ctrlc_handler(int signum);
 void			ctrlslash_handler(int signum);

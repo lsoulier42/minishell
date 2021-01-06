@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-void	del_redirection(void *redirection_void)
+void			del_redirection(void *redirection_void)
 {
 	t_redirection	*redirection;
 
@@ -34,7 +34,7 @@ t_redirection	*new_redirection(char *filename, int fd, int type)
 	return (new);
 }
 
-int	token_is_redirection(t_list *token_el)
+int				token_is_redirection(t_list *token_el)
 {
 	char	*value;
 
@@ -45,7 +45,7 @@ int	token_is_redirection(t_list *token_el)
 				|| ft_strcmp(value, "<") == 0 || ft_strcmp(value, ">>") == 0));
 }
 
-int	redirection_is_not_last(t_list *token_el)
+int				redirection_is_not_last(t_list *token_el)
 {
 	token_el = token_el->next;
 	while (token_el)
@@ -57,19 +57,4 @@ int	redirection_is_not_last(t_list *token_el)
 	return (0);
 }
 
-int	create_empty_file_redirection(char *filename, int type)
-{
-	int	fd;
-	int	close_return;
 
-	if (type == APPEND)
-		fd = open(filename, O_RDWR | O_CREAT | O_APPEND, 0664);
-	else
-		fd = open(filename, O_RDWR | O_CREAT | O_TRUNC, 0664);
-	if (fd == -1)
-		return (0);
-	close_return = close(fd);
-	if (close_return == -1)
-		return (0);
-	return (1);
-}

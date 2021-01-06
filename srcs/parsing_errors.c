@@ -14,19 +14,22 @@
 
 int	error_operator_is_last_token(void)
 {
-	ft_putstr("syntax error near unexpected token `newline'\n");
+	ft_putstr_fd("minishell: ", STDERR_FILENO);
+	ft_putendl_fd("syntax error near unexpected token `newline'", STDERR_FILENO);
 	return (0);
 }
 
 int	error_quote_is_not_closed(void)
 {
-	ft_putstr("syntax error : quote is not closed\n");
+	ft_putstr_fd("minishell: ", STDERR_FILENO);
+	ft_putendl_fd("syntax error : quote is not closed", STDERR_FILENO);
 	return (0);
 }
 
 int	error_operator_defined(void)
 {
-	ft_putstr("syntax error : operator is not defined\n");
+	ft_putstr_fd("minishell: ", STDERR_FILENO);
+	ft_putendl_fd("syntax error : operator is not defined", STDERR_FILENO);
 	return (0);
 }
 

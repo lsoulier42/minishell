@@ -12,12 +12,13 @@
 
 #include "minishell.h"
 
-int	parse_one_redirection(t_list *tokens, t_redirection ***redirections)
+int				parse_one_redirection(t_list *tokens,
+	t_redirection ***redirections)
 {
 	char	*value;
 	char	*filename;
 	int		type_open;
-	int 	direction;
+	int		direction;
 
 	value = get_token_value(tokens);
 	filename = sub_quote(get_token_value(tokens->next));
@@ -40,7 +41,7 @@ int	parse_one_redirection(t_list *tokens, t_redirection ***redirections)
 	return (1);
 }
 
-void	delete_redirection_tokens(t_list **tokens, t_list **previous)
+void			delete_redirection_tokens(t_list **tokens, t_list **previous)
 {
 	t_list	*jump_token;
 
@@ -51,7 +52,8 @@ void	delete_redirection_tokens(t_list **tokens, t_list **previous)
 	(*previous)->next = *tokens;
 }
 
-static int	parse_redirections_loop(t_list *tokens, t_redirection ***redirections)
+static int		parse_redirections_loop(t_list *tokens,
+	t_redirection ***redirections)
 {
 	t_list	*previous;
 

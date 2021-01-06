@@ -53,7 +53,7 @@ int		execute_cmd(t_data *msh_data, t_list *pipes, int previous_fd)
 		return (-1);
 	if (!expand_vars(msh_data, cmd))
 		return (-1);
-	cmd->name = search_path(msh_data->begin_env, cmd->name);
+	cmd->name = search_path(msh_data, cmd->name);
 	cmd->is_last = !pipes->next;
 	cmd->is_piped = previous_fd != -1;
 	if (cmd->name != NULL)
@@ -65,7 +65,6 @@ int		execute_cmd(t_data *msh_data, t_list *pipes, int previous_fd)
 	}
 	else
 	{
-		command_not_found(msh_data->name, cmd->args[0]);
 		previous_fd = 0;
 		msh_data->last_return = 127;
 	}

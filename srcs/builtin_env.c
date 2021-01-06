@@ -48,7 +48,7 @@ int	exec_unset(t_data *msh_data, t_cmd *cmd)
 		}
 		else
 		{
-			invalid_identifier(msh_data->name, "unset", cmd->args[i]);
+			invalid_identifier("unset", cmd->args[i]);
 			return (EXIT_FAILURE);
 		}
 	}

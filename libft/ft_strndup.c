@@ -17,6 +17,8 @@ char	*ft_strndup(char *str, int n)
 	int		len;
 	char	*new;
 
+	if (!str)
+		return (NULL);
 	if (n > (int)ft_strlen(str))
 		len = ft_strlen(str);
 	else
