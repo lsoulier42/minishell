@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-void	del_instruction(void *instruction_void)
+void			del_instruction(void *instruction_void)
 {
 	t_instruction	*instruction;
 
@@ -32,7 +32,7 @@ t_instruction	*new_instruction(t_list *begin_pipes)
 	return (new);
 }
 
-t_list	*new_instruction_el(t_list *begin_pipes)
+t_list			*new_instruction_el(t_list *begin_pipes)
 {
 	t_list			*el;
 	t_instruction	*new;
@@ -46,7 +46,7 @@ t_list	*new_instruction_el(t_list *begin_pipes)
 	return (el);
 }
 
-t_list	*get_instruction_pipes(t_list *instruction_el)
+t_list			*get_instruction_pipes(t_list *instruction_el)
 {
 	t_list			*el;
 	t_instruction	*instruction;

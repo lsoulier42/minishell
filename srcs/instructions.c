@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-int 	add_instruction(t_list **begin_instructions, t_list *begin_pipes)
+int			add_instruction(t_list **begin_instructions, t_list *begin_pipes)
 {
 	t_list	*el_instruction;
 
@@ -46,14 +46,14 @@ static int	parse_instructions_loop(t_list **tokens, t_list **previous,
 	return (1);
 }
 
-void 	*del_instruction_list(t_list **begin_instructions)
+void		*del_instruction_list(t_list **begin_instructions)
 {
 	if (*begin_instructions)
 		ft_lstclear(begin_instructions, &del_instruction);
 	return (NULL);
 }
 
-t_list	*parse_instructions(t_list *tokens)
+t_list		*parse_instructions(t_list *tokens)
 {
 	t_list	*previous;
 	t_list	*begin_instructions;

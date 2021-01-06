@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-int	expand_vars(t_data *msh_data, t_cmd *cmd)
+int		expand_vars(t_data *msh_data, t_cmd *cmd)
 {
 	int		i;
 
@@ -23,7 +23,7 @@ int	expand_vars(t_data *msh_data, t_cmd *cmd)
 	return (1);
 }
 
-int	expand_one_arg_vars(t_data *msh_data, char **cur_arg)
+int		expand_one_arg_vars(t_data *msh_data, char **cur_arg)
 {
 	int	i;
 
@@ -48,14 +48,15 @@ int	expand_one_arg_vars(t_data *msh_data, char **cur_arg)
 	return (1);
 }
 
-int	expand_one_var(t_list *begin_env, char **cur_arg, int *index)
+int		expand_one_var(t_list *begin_env, char **cur_arg, int *index)
 {
 	int		key_len;
 	char	*var_value;
 	char	*new_cur_arg;
 
 	key_len = 0;
-	var_value = expand_get_var_value(begin_env, *cur_arg + *index + 1, &key_len);
+	var_value = expand_get_var_value(begin_env,
+		*cur_arg + *index + 1, &key_len);
 	if (!var_value)
 		return (0);
 	new_cur_arg = (char*)ft_calloc(ft_strlen(*cur_arg)
@@ -98,7 +99,7 @@ char	*expand_get_var_value(t_list *begin_env, char *str, int *len)
 	return (value);
 }
 
-int	expand_last_return(t_data *msh_data, char **cur_arg, int *index)
+int		expand_last_return(t_data *msh_data, char **cur_arg, int *index)
 {
 	char	*itoa_value;
 	int		itoa_len;

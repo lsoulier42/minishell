@@ -39,7 +39,7 @@ t_list	*lexer(char *user_input)
 	return (begin);
 }
 
-int	token_len_operator(char *input)
+int		token_len_operator(char *input)
 {
 	int	len;
 
@@ -51,7 +51,7 @@ int	token_len_operator(char *input)
 	return (len);
 }
 
-int	token_len(char *input)
+int		token_len(char *input)
 {
 	int		len;
 	int		open;
@@ -61,12 +61,12 @@ int	token_len(char *input)
 	len = 0;
 	while (input[len] && (!ft_isseparator(input[len]) || open))
 	{
-		if (!open && (input[len] == '"' || input[len] == '\''))
+		if (!open && ft_isquote(input[len]) && !is_escaped(input, len))
 		{
 			open = 1;
 			open_char = input[len];
 		}
-		else if (open && input[len] == open_char)
+		else if (open && input[len] == open_char && !is_escaped(input, len))
 			open = 0;
 		len++;
 	}
@@ -82,7 +82,7 @@ void	*free_token_struct(t_list **begin, char *tmp)
 	return (NULL);
 }
 
-int	add_token(t_list **begin, char **input)
+int		add_token(t_list **begin, char **input)
 {
 	t_list	*el;
 	char	*value;

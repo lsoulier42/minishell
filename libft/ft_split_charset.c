@@ -94,7 +94,7 @@ char	**ft_split_charset(char *str, char *charset)
 			word_len = ft_word_len(str, charset);
 			words_tab[word_nb] = set_new_word(str, charset, word_len);
 			if (!words_tab[word_nb++])
-				return (free_double_tab(words_tab));
+				return (ft_free_double_tab(words_tab));
 		}
 		p_char = *str++;
 	}

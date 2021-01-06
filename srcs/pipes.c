@@ -13,7 +13,7 @@
 #include "minishell.h"
 #include <stdio.h>
 
-int	add_pipe(t_list **begin_pipes, t_list *begin_cmds)
+int			add_pipe(t_list **begin_pipes, t_list *begin_cmds)
 {
 	t_list	*el_pipe;
 
@@ -50,14 +50,14 @@ static int	parse_pipes_loop(t_list *tokens, t_list **begin_pipes,
 	return (1);
 }
 
-int	del_pipe_list(t_list **begin_pipes)
+int			del_pipe_list(t_list **begin_pipes)
 {
 	if (*begin_pipes)
 		ft_lstclear(begin_pipes, &del_pipe);
 	return (0);
 }
 
-int	parse_pipes(t_list *instructions)
+int			parse_pipes(t_list *instructions)
 {
 	t_list	*tokens;
 	t_list	**begin_pipes;

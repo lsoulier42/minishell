@@ -29,6 +29,21 @@ int		execute_last_builtin(t_data *msh_data, t_cmd *cmd, int previous_fd)
 	return (msh_data->last_return);
 }
 
+int		execute_pipe_cmd(t_data *msh_data, t_cmd *cmd, int previous_fd)
+{
+	pid_t	cpid;
+	int		pipefd[2];
+
+	if (pipe(pipefd) == -1)
+		return (-1);
+	cpid = fork();
+	if (cpid == 0)
+		return (execute_child_process(msh_data, cmd, previous_fd, pipefd));
+	else if (cpid != -1)
+		return (execute_parent_process(msh_data, cmd, cpid, pipefd));
+	return (-1);
+}
+
 int		execute_cmd(t_data *msh_data, t_list *pipes, int previous_fd)
 {
 	t_cmd	*cmd;

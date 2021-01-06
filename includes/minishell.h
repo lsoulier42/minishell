@@ -192,6 +192,9 @@ void			*free_token_struct(t_list **begin, char *tmp);
 
 int				ft_isquote(char c);
 char			*sub_quote(char *str);
+int 			is_escaped(char *str, int char_index);
+int 			count_escaped_char(char *str, char quote_char);
+int 			len_to_first_quote(char *str);
 
 void			del_instruction(void *instruction_void);
 t_instruction	*new_instruction(t_list *begin_pipes);
@@ -248,6 +251,7 @@ int				execute_parent_process(t_data *msh_data, t_cmd *cmd, pid_t cpid, int pipe
 int             execute_child_process(t_data *msh_data, t_cmd *cmd, int previous_fd, int pipefd[2]);
 int             execute_child_process_execve(t_data *msh_data, t_cmd *cmd, int pipefd[2]);
 int 			child_file_handler(int redir_in_fd, int previous_fd, int pipefd_read);
+int				write_process_redirection(int read_fd, int out_fd);
 
 void			format_error(char *cmd_name, char *arg, int ev, char *str);
 void			invalid_identifier(char *msh_name, char *cmd_name, char *arg);

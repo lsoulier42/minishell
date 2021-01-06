@@ -35,7 +35,8 @@ static int	init_data(t_data *msh_data, char *msh_name, char *envp[])
 	return (1);
 }
 
-static int msh_second_loop(t_data *msh_data, char *buffer, int argc, char **argv)
+static int	msh_second_loop(t_data *msh_data,
+	char *buffer, int argc, char **argv)
 {
 	int error;
 
@@ -46,8 +47,10 @@ static int msh_second_loop(t_data *msh_data, char *buffer, int argc, char **argv
 		if (argc == 2 && ft_strcmp(argv[1], "debug") == 0)
 			print_instructions_list(msh_data->parsed_input->begin_instructions);
 		else
+		{
 			if (!execute_all_cmds(msh_data))
 				error = 1;
+		}
 		del_user_input(msh_data->parsed_input);
 	}
 	else
@@ -55,9 +58,10 @@ static int msh_second_loop(t_data *msh_data, char *buffer, int argc, char **argv
 	return (error == 0);
 }
 
-static int	msh_first_loop(t_data *msh_data, int argc, char **argv, int *read_return)
+static int	msh_first_loop(t_data *msh_data,
+	int argc, char **argv, int *read_return)
 {
-	char 		buffer[BUFFER_SIZE + 1];
+	char		buffer[BUFFER_SIZE + 1];
 	int			end_of_command;
 	int			error;
 
@@ -82,11 +86,11 @@ static int	msh_first_loop(t_data *msh_data, int argc, char **argv, int *read_ret
 	return (error == 0);
 }
 
-int main(int argc, char *argv[], char *envp[])
+int			main(int argc, char *argv[], char *envp[])
 {
 	t_data		msh_data;
-	int 		read_return;
-	int 		error;
+	int			read_return;
+	int			error;
 
 	if (!init_data(&msh_data, argv[0], envp))
 		return (EXIT_FAILURE);
@@ -94,7 +98,7 @@ int main(int argc, char *argv[], char *envp[])
 	error = 0;
 	signal(SIGINT, ctrlc_handler);
 	signal(SIGQUIT, ctrlslash_handler);
-	while(!msh_data.exit_msh && read_return > 0)
+	while (!msh_data.exit_msh && read_return > 0)
 		if (!msh_first_loop(&msh_data, argc, argv, &read_return))
 			error = 1;
 	ft_putendl_fd("exit", STDOUT_FILENO);
