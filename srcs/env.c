@@ -16,9 +16,8 @@ t_list	*set_env(char *envp[])
 {
 	int		i;
 	t_list	*begin_env;
-	char 	*key;
-	char 	*value;
-
+	char	*key;
+	char	*value;
 
 	i = -1;
 	begin_env = NULL;
@@ -33,7 +32,7 @@ t_list	*set_env(char *envp[])
 		}
 	}
 	if (!change_env_shlvl(begin_env))
-	    return (NULL);
+		return (NULL);
 	return (begin_env);
 }
 
@@ -55,21 +54,34 @@ t_var	*get_env_var(t_list *begin_env, char *key)
 	return (found_var);
 }
 
-int	change_env_var(t_list *begin_env, char *key, char *new_value)
+int		change_env_var(t_list *begin_env, char *key, char *new_value)
 {
 	t_var	*var;
 	char	**value_ref;
 
 	var = get_env_var(begin_env, key);
 	if (!var)
-		return (0);
+	{
+		key = ft_strdup(key);
+		if (!key)
+			return (0);
+		new_value = ft_strdup(new_value);
+		if (!new_value)
+			return (free_return_int(key));
+		if (!set_env_var(&begin_env, key, new_value))
+		{
+			free(key);
+			return (free_return_int(new_value));
+		}
+		return (1);
+	}
 	value_ref = &(var->value);
 	free(var->value);
 	*value_ref = new_value;
 	return (1);
 }
 
-int set_env_var(t_list **begin_env, char *key, char *value)
+int		set_env_var(t_list **begin_env, char *key, char *value)
 {
 	t_var	*var;
 	t_list	*el;
@@ -84,7 +96,7 @@ int set_env_var(t_list **begin_env, char *key, char *value)
 	return (1);
 }
 
-void 	print_env_fd(t_list *begin_env, int fd)
+void	print_env_fd(t_list *begin_env, int fd)
 {
 	t_var	*cast;
 	t_list	*env;

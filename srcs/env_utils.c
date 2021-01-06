@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-char 	*serialize_one_env_var(t_list *env_el)
+char	*serialize_one_env_var(t_list *env_el)
 {
 	char	*str;
 	int		len;
@@ -53,7 +53,7 @@ char	**serialize_env(t_list *begin_env)
 	return (envp);
 }
 
-int env_key_exist(t_list *begin_env, char *key)
+int		env_key_exist(t_list *begin_env, char *key)
 {
 	t_list	*env;
 	t_var	*var;
@@ -69,26 +69,26 @@ int env_key_exist(t_list *begin_env, char *key)
 	return (0);
 }
 
-int     change_env_shlvl(t_list *begin_env)
+int		change_env_shlvl(t_list *begin_env)
 {
-    t_var   *shlvl;
-    char    *itoa_value;
+	t_var	*shlvl;
+	char	*itoa_value;
 
-    shlvl = get_env_var(begin_env, "SHLVL");
-    if (!shlvl)
-    {
-        itoa_value = ft_strdup("1");
-        if (!itoa_value)
-            return (0);
-        if (!set_env_var(&begin_env, "SHLVL", itoa_value))
-            return (0);
-    }
-    else
-    {
-        itoa_value = ft_itoa(ft_atoi(shlvl->value) + 1);
-        if (!itoa_value)
-            return (0);
-        change_env_var(begin_env, "SHLVL", itoa_value);
-    }
-    return (1);
+	shlvl = get_env_var(begin_env, "SHLVL");
+	if (!shlvl)
+	{
+		itoa_value = ft_strdup("1");
+		if (!itoa_value)
+			return (0);
+		if (!set_env_var(&begin_env, "SHLVL", itoa_value))
+			return (0);
+	}
+	else
+	{
+		itoa_value = ft_itoa(ft_atoi(shlvl->value) + 1);
+		if (!itoa_value)
+			return (0);
+		change_env_var(begin_env, "SHLVL", itoa_value);
+	}
+	return (1);
 }

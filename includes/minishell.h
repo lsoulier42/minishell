@@ -38,11 +38,6 @@ typedef enum e_builtins
 	TOTAL_BUILTINS
 }				t_builtins;
 
-typedef enum e_error_builtins
-{
-	EXPORT_INVALID_IDENTIFIER
-}				t_error_builtins;
-
 typedef enum e_ansi_color
 {
 	RED = '1',
@@ -79,6 +74,7 @@ typedef struct s_cmd
 	char			*name;
 	char			**args;
 	int             is_last;
+	int 			is_piped;
 	t_redirection	**redirections;
 }				t_cmd;
 
@@ -144,17 +140,33 @@ int             change_env_shlvl(t_list *begin_env);
 
 int				execute_builtin(t_data *msh_data, t_cmd *cmd);
 int				search_builtin(char *cmd_name);
+
 int				exec_exit(t_data *msh_data, t_cmd *cmd);
+
 int				exec_env(t_data *msh_data, t_cmd *cmd);
+
 int				exec_unset(t_data *msh_data, t_cmd *cmd);
+
 int				exec_export(t_data *msh_data, t_cmd *cmd);
-int 			exec_export_one_var(t_data *msh_data, char *key, char *value, int has_equal);
+int 			exec_export_one_var(t_data *msh_data, char *key,
+					char *value, int has_equal);
 char 			*format_export_line(t_var *env_var);
-void	        exec_export_print(t_list *begin_env, t_cmd *cmd);
+int				exec_export_print(t_list *begin_env, t_cmd *cmd);
+
 int				exec_pwd(t_data *msh_data, t_cmd *cmd);
+
 int				exec_cd(t_data *msh_data, t_cmd *cmd);
-int             exec_cd_particular_paths(t_data *msh_data, char **new_dir);
+int 			exec_cd_particular_paths(t_data *msh_data,
+					t_cmd *cmd, char *new_dir, char *oldpwd);
+int 			exec_cd_change_dir(t_data *msh_data, t_cmd *cmd,
+					char *new_dir, char *oldpwd);
+int				exec_cd_env_var(t_list *begin_env,
+					char *new_pathname, char *oldpwd);
+
 int				exec_echo(t_data *msh_data, t_cmd *cmd);
+int 			remove_n_options(char ***args, int nb_options);
+int 			nb_n_options(char **args);
+int 			is_legit_n_option(char *str);
 
 t_user_input	*parse_input(char *buffer);
 void			*error_tokens(t_user_input *new);
@@ -229,15 +241,17 @@ char			*expand_get_var_value(t_list *begin_env, char *str, int *len);
 int				expand_last_return(t_data *msh_data, char **cur_arg, int *index);
 
 int				execute_all_cmds(t_data *msh_data);
-int             execute_cmd(t_data *msh_data, t_list *pipes, int fdstdin);
+int 			execute_cmd(t_data *msh_data, t_list *pipes, int previous_fd);
 int             execute_last_builtin(t_data *msh_data, t_cmd *cmd, int previous_fd);
 int             execute_pipe_cmd(t_data *msh_data, t_cmd *cmd, int previous_fd);
-int             execute_parent_process(t_cmd *cmd, int pipefd[2]);
+int				execute_parent_process(t_data *msh_data, t_cmd *cmd, pid_t cpid, int pipefd[2]);
 int             execute_child_process(t_data *msh_data, t_cmd *cmd, int previous_fd, int pipefd[2]);
 int             execute_child_process_execve(t_data *msh_data, t_cmd *cmd, int pipefd[2]);
+int 			child_file_handler(int redir_in_fd, int previous_fd, int pipefd_read);
 
 void			format_error(char *cmd_name, char *arg, int ev, char *str);
 void			invalid_identifier(char *msh_name, char *cmd_name, char *arg);
+void			command_not_found(char *msh_name, char *cmd_name);
 
 char			*search_path(t_list *begin_env, char *cmd_name);
 char 			*search_path_absolute(t_list *begin_env, char *cmd_name);

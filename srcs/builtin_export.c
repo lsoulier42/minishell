@@ -12,7 +12,8 @@
 
 #include "minishell.h"
 
-int exec_export_one_var(t_data *msh_data, char *key, char *value, int has_equal)
+int		exec_export_one_var(t_data *msh_data,
+	char *key, char *value, int has_equal)
 {
 	int error;
 	int key_exist;
@@ -35,12 +36,12 @@ int exec_export_one_var(t_data *msh_data, char *key, char *value, int has_equal)
 	return (error == 0);
 }
 
-char 	*format_export_line(t_var *env_var)
+char	*format_export_line(t_var *env_var)
 {
 	char	*begin_line;
-	int 	definite_len;
-	int 	begin_line_len;
-	char 	*new_line;
+	int		definite_len;
+	int		begin_line_len;
+	char	*new_line;
 
 	begin_line = "declare -x ";
 	begin_line_len = (int)ft_strlen(begin_line);
@@ -57,7 +58,7 @@ char 	*format_export_line(t_var *env_var)
 	return (new_line);
 }
 
-void	exec_export_print(t_list *begin_env, t_cmd *cmd)
+int		exec_export_print(t_list *begin_env, t_cmd *cmd)
 {
 	t_list	*env;
 	char	*line;
@@ -71,9 +72,10 @@ void	exec_export_print(t_list *begin_env, t_cmd *cmd)
 		free(line);
 		env = env->next;
 	}
+	return (EXIT_SUCCESS);
 }
 
-int	exec_export(t_data *msh_data, t_cmd *cmd)
+int		exec_export(t_data *msh_data, t_cmd *cmd)
 {
 	int		i;
 	char	*key;
@@ -81,24 +83,20 @@ int	exec_export(t_data *msh_data, t_cmd *cmd)
 
 	i = 0;
 	if (!(cmd->args[1]))
-		exec_export_print(msh_data->begin_env, cmd);
-	else
+		return (exec_export_print(msh_data->begin_env, cmd));
+	while (cmd->args[++i])
 	{
-		while (cmd->args[++i])
+		if (parse_var(cmd->args[i], &key, &value))
 		{
-			if (parse_var(cmd->args[i], &key, &value))
+			if (!exec_export_one_var(msh_data, key, value,
+					unparsed_var_has_equal(cmd->args[i])))
 			{
-				if (!exec_export_one_var(msh_data, key, value,
-						unparsed_var_has_equal(cmd->args[i])))
-				{
-					free(key);
-					free(value);
-					return (-1);
-				}
+				free(key);
+				return (free_return_int(value) + EXIT_FAILURE);
 			}
-			else
-				return (-1);
 		}
+		else
+			return (EXIT_FAILURE);
 	}
-	return (0);
+	return (EXIT_SUCCESS);
 }

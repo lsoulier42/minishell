@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-int 	is_legit_n_option(char *str)
+int		is_legit_n_option(char *str)
 {
 	int	i;
 
@@ -25,7 +25,7 @@ int 	is_legit_n_option(char *str)
 	return (1);
 }
 
-int 	nb_n_options(char **args)
+int		nb_n_options(char **args)
 {
 	int	i;
 	int	nb;
@@ -38,7 +38,7 @@ int 	nb_n_options(char **args)
 	return (nb);
 }
 
-int 	remove_n_options(char ***args, int nb_options)
+int		remove_n_options(char ***args, int nb_options)
 {
 	char	**new_args;
 	int		i;
@@ -66,7 +66,7 @@ int 	remove_n_options(char ***args, int nb_options)
 	return (1);
 }
 
-int 	exec_echo(t_data *msh_data, t_cmd *cmd)
+int		exec_echo(t_data *msh_data, t_cmd *cmd)
 {
 	int		nb_option;
 	char	*str;
@@ -74,14 +74,14 @@ int 	exec_echo(t_data *msh_data, t_cmd *cmd)
 	nb_option = nb_n_options(cmd->args);
 	if (nb_option > 0)
 		if (!remove_n_options(&(cmd->args), nb_option))
-			return (-1);
+			return (EXIT_FAILURE);
 	str = ft_joinstrs(doubletab_len(cmd->args + 1), cmd->args + 1, " ");
 	if (!str)
-		return (-1);
+		return (EXIT_FAILURE);
 	if (nb_option > 0)
 		ft_putstr_fd(str, cmd->redirections[OUT]->fd);
 	else
 		ft_putendl_fd(str, cmd->redirections[OUT]->fd);
 	free(str);
-	return (0);
+	return (EXIT_SUCCESS);
 }

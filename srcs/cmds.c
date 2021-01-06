@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-int 	create_args_tab(char ***args, t_list *tokens)
+int		create_args_tab(char ***args, t_list *tokens)
 {
 	int	i;
 
@@ -29,7 +29,7 @@ int 	create_args_tab(char ***args, t_list *tokens)
 	return (1);
 }
 
-int 	parse_one_pipe_cmds(t_list **tokens, t_redirection **redirections)
+int		parse_one_pipe_cmds(t_list **tokens, t_redirection **redirections)
 {
 	t_list	*cmd_el;
 	t_list	*track;
@@ -53,7 +53,7 @@ int 	parse_one_pipe_cmds(t_list **tokens, t_redirection **redirections)
 	return (1);
 }
 
-int 	parse_cmds(t_list *instructions)
+int		parse_cmds(t_list *instructions)
 {
 	t_list			*pipes;
 	t_list			**begin_cmds;

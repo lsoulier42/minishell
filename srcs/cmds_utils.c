@@ -23,6 +23,7 @@ t_cmd	*new_cmd(char *name, char **args, t_redirection **redirections)
 	new->args = args;
 	new->redirections = redirections;
 	new->is_last = 0;
+	new->is_piped = 0;
 	return (new);
 }
 
@@ -38,7 +39,7 @@ t_list	*new_cmd_el(char *name, char **args, t_redirection **redirections)
 	return (el);
 }
 
-void 	del_cmd(void *cmd_void)
+void	del_cmd(void *cmd_void)
 {
 	t_cmd	*cmd;
 
@@ -51,7 +52,7 @@ void 	del_cmd(void *cmd_void)
 	free(cmd_void);
 }
 
-int 	free_cmd_tabs(char *name, char **args)
+int		free_cmd_tabs(char *name, char **args)
 {
 	free(name);
 	ft_free_double_tab(args);

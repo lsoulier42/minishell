@@ -14,23 +14,31 @@
 
 void	format_error(char *cmd_name, char *arg, int errno_value, char *str)
 {
-	ft_putstr(cmd_name);
-	ft_putstr(": ");
+	ft_putstr_fd(cmd_name, STDERR_FILENO);
+	ft_putstr_fd(": ", STDERR_FILENO);
 	if (!str)
-		ft_putstr(strerror(errno_value));
+		ft_putstr_fd(strerror(errno_value), STDERR_FILENO);
 	else
-		ft_putstr(str);
-	ft_putstr(": ");
-	ft_putendl_fd(arg, 1);
+		ft_putstr_fd(str, STDERR_FILENO);
+	ft_putstr_fd(": ", STDERR_FILENO);
+	ft_putendl_fd(arg, STDERR_FILENO);
 }
 
 void	invalid_identifier(char *msh_name, char *cmd_name, char *arg)
 {
-	ft_putstr(msh_name);
-	ft_putstr(": ");
-	ft_putstr(cmd_name);
-	ft_putstr(": `");
-	ft_putstr(arg);
-	ft_putstr("': ");
-	ft_putendl_fd("not a valid identifier", STDOUT_FILENO);
+	ft_putstr_fd(msh_name, STDERR_FILENO);
+	ft_putstr_fd(": ", STDERR_FILENO);
+	ft_putstr_fd(cmd_name, STDERR_FILENO);
+	ft_putstr_fd(": `", STDERR_FILENO);
+	ft_putstr_fd(arg, STDERR_FILENO);
+	ft_putstr_fd("': ", STDERR_FILENO);
+	ft_putendl_fd("not a valid identifier", STDERR_FILENO);
+}
+
+void	command_not_found(char *msh_name, char *cmd_name)
+{
+	ft_putstr_fd(msh_name, STDERR_FILENO);
+	ft_putstr_fd(": ", STDERR_FILENO);
+	ft_putstr_fd(cmd_name, STDERR_FILENO);
+	ft_putstr_fd(": command not found\n", STDERR_FILENO);
 }

@@ -16,15 +16,19 @@ int	exec_pwd(t_data *msh_data, t_cmd *cmd)
 {
 	char *pathname;
 
-	pathname = (get_env_var(msh_data->begin_env, "PWD"))->value;
+	pathname = getcwd(NULL, 0);
+	if (!pathname)
+		return (EXIT_FAILURE);
 	ft_putendl_fd(pathname, cmd->redirections[OUT]->fd);
-	return (0);
+	msh_data->last_return = EXIT_SUCCESS;
+	return (msh_data->last_return);
 }
 
 int	exec_env(t_data *msh_data, t_cmd *cmd)
 {
 	print_env_fd(msh_data->begin_env, cmd->redirections[OUT]->fd);
-	return (0);
+	msh_data->last_return = EXIT_SUCCESS;
+	return (msh_data->last_return);
 }
 
 int	exec_unset(t_data *msh_data, t_cmd *cmd)
@@ -43,7 +47,10 @@ int	exec_unset(t_data *msh_data, t_cmd *cmd)
 					&cmp_key_var, del_var);
 		}
 		else
+		{
 			invalid_identifier(msh_data->name, "unset", cmd->args[i]);
+			return (EXIT_FAILURE);
+		}
 	}
-	return (0);
+	return (EXIT_SUCCESS);
 }
