@@ -66,8 +66,11 @@ int		token_len(char *input)
 			open = 1;
 			open_char = input[len];
 		}
-		else if (open && input[len] == open_char && !is_escaped(input, len))
+		else if (open && input[len] == open_char && (open_char == '\''
+			|| (open_char == '"' && !is_escaped(input, len))))
 			open = 0;
+		if (!open && (input[len] == '\\' && !is_escaped(input, len)))
+			len++;
 		len++;
 	}
 	if (open)

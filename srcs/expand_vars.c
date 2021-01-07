@@ -30,9 +30,9 @@ int		expand_one_arg_vars(t_data *msh_data, char **cur_arg)
 	i = 0;
 	while ((*cur_arg)[i])
 	{
-		if ((*cur_arg)[i] == '$' && (*cur_arg)[i + 1] != '\0'
-			&& !ft_isspace((*cur_arg)[i + 1]) && (*cur_arg)[i + 1] != '$'
-			&& (*cur_arg)[i + 1] != '?')
+		if ((*cur_arg)[i] == '$' && !is_escaped(*cur_arg, i)
+			&& (*cur_arg)[i + 1] != '\0' && !ft_isspace((*cur_arg)[i + 1])
+			&& (*cur_arg)[i + 1] != '$'	&& (*cur_arg)[i + 1] != '?')
 		{
 			if (!expand_one_var(msh_data->begin_env, cur_arg, &i))
 				return (0);
@@ -42,6 +42,8 @@ int		expand_one_arg_vars(t_data *msh_data, char **cur_arg)
 			if (!expand_last_return(msh_data, cur_arg, &i))
 				return (0);
 		}
+		else if ((*cur_arg)[i] == '\\' && !is_escaped(*cur_arg, i))
+			trail_one_backslash(cur_arg, &i);
 		else
 			i++;
 	}

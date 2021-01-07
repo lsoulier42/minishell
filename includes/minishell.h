@@ -192,9 +192,8 @@ void			*free_token_struct(t_list **begin, char *tmp);
 
 int				ft_isquote(char c);
 char			*sub_quote(char *str);
-int 			is_escaped(char *str, int char_index);
-int 			count_escaped_char(char *str, char quote_char);
 int 			len_to_first_quote(char *str);
+int 			is_printable_quote(char *str, int i, char quote_char);
 
 void			del_instruction(void *instruction_void);
 t_instruction	*new_instruction(t_list *begin_pipes);
@@ -275,6 +274,11 @@ void			ctrlslash_handler(int signum);
 void 			sigint_read_handler(int *read_return);
 void 			sigint_exec_handler(int *end_of_command);
 void 			sigquit_exec_handler(void);
+
+int				is_escaped(char *str, int char_index);
+int				is_weakquote_spec_char(char c);
+int				count_escaped_char_quotes(char *str, char quote_char);
+char 			*trail_backslash(char *str);
 
 //test functions
 void			print_token_list(t_list *begin);

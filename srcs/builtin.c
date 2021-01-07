@@ -21,7 +21,7 @@ int	search_builtin(char *cmd_name)
 	builtins = (char *[TOTAL_BUILTINS]){"echo", "cd", "pwd",
 		"export", "unset", "env", "exit"};
 	while (++i < TOTAL_BUILTINS)
-		if (ft_strstr(cmd_name, builtins[i]) != NULL)
+		if (ft_strcmp(cmd_name, builtins[i]) == 0)
 			return (1);
 	return (0);
 }
@@ -44,7 +44,7 @@ int	execute_builtin(t_data *msh_data, t_cmd *cmd)
 	builtin_fct[EXIT] = &exec_exit;
 	while (++i < TOTAL_BUILTINS)
 	{
-		if (ft_strstr(cmd->name, builtins[i]) != NULL)
+		if (ft_strcmp(cmd->name, builtins[i]) == 0)
 		{
 			msh_data->last_return = (*builtin_fct[i])(msh_data, cmd);
 			return (msh_data->last_return);

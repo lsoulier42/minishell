@@ -29,47 +29,42 @@ int		len_to_first_quote(char *str)
 	return (i);
 }
 
-int		count_escaped_char(char *str, char quote_char)
+int		is_weakquote_specchar(char c)
 {
-	int i;
-	int nb_char;
-
-	i = -1;
-	nb_char = 0;
-	while (str[++i])
-		if (str[i] == '\\' && !is_escaped(str, i))
-			nb_char++;
-	return (nb_char);
+	return (c == '$' || c == '`' || c == '"' || c == '\n');
 }
 
-int		is_escaped(char *str, int char_index)
+int 	is_printable_quote(char *str, int i, char quote_char)
 {
-	if (char_index == 0)
-		return (0);
-	if (str[char_index - 1] == '\\')
-		return (is_escaped(str, char_index - 1) == 0);
-	return (0);
+	return ((quote_char == '\'' && str[i] != quote_char)
+		|| (quote_char == '"' && ((str[i] != quote_char && str[i] != '\\')
+		|| (str[i] == quote_char && is_escaped(str, i))
+		|| (str[i] == '\\' && str[i + 1] != '\\'
+		&& !is_weakquote_spec_char(str[i + 1])))));
 }
 
 char	*sub_quote(char *str)
 {
-	int		first_quote;
 	char	*new_str;
 	int		i;
 	int		j;
+	char 	quote_char;
 
 	i = -1;
 	j = 0;
-	first_quote = len_to_first_quote(str);
+	quote_char = str[len_to_first_quote(str)];
+	if (quote_char == '\0')
+		return (trail_backslash(str));
 	new_str = (char*)ft_calloc(ft_strlen(str)
-		- count_escaped_char(str, str[first_quote]) - 1, sizeof(char));
+		- count_escaped_char_quotes(str, quote_char) - 1, sizeof(char));
 	if (!new_str)
 		return (NULL);
 	while (str[++i])
 	{
-		if ((str[i] != str[first_quote] || is_escaped(str, i))
-			&& (str[i] != '\\' || is_escaped(str, i)))
+		if (is_printable_quote(str, i, quote_char))
 			new_str[j++] = str[i];
+		else if (quote_char == '"' && str[i] == '\\' && str[i + 1] == '\\')
+			new_str[j++] = str[i++];
 	}
 	new_str[j] = '\0';
 	return (new_str);
