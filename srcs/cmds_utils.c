@@ -12,14 +12,14 @@
 
 #include "minishell.h"
 
-t_cmd	*new_cmd(char *name, char **args, t_redirection **redirections)
+t_cmd	*new_cmd(char *path, char **args, t_redirection **redirections)
 {
 	t_cmd	*new;
 
 	new = (t_cmd*)malloc(sizeof(t_cmd));
 	if (!new)
 		return (NULL);
-	new->name = name;
+	new->path = path;
 	new->args = args;
 	new->redirections = redirections;
 	new->is_last = 0;
@@ -27,12 +27,12 @@ t_cmd	*new_cmd(char *name, char **args, t_redirection **redirections)
 	return (new);
 }
 
-t_list	*new_cmd_el(char *name, char **args, t_redirection **redirections)
+t_list	*new_cmd_el(char *path, char **args, t_redirection **redirections)
 {
 	t_list	*el;
 	t_cmd	*cmd;
 
-	cmd = new_cmd(name, args, redirections);
+	cmd = new_cmd(path, args, redirections);
 	if (!cmd)
 		return (NULL);
 	el = ft_lstnew(cmd);
@@ -44,7 +44,7 @@ void	del_cmd(void *cmd_void)
 	t_cmd	*cmd;
 
 	cmd = (t_cmd*)cmd_void;
-	free(cmd->name);
+	free(cmd->path);
 	ft_free_double_tab(cmd->args);
 	del_redirection(cmd->redirections[IN]);
 	del_redirection(cmd->redirections[OUT]);
@@ -52,9 +52,9 @@ void	del_cmd(void *cmd_void)
 	free(cmd_void);
 }
 
-int		free_cmd_tabs(char *name, char **args)
+int		free_cmd_tabs(char *path, char **args)
 {
-	free(name);
+	free(path);
 	ft_free_double_tab(args);
 	return (0);
 }

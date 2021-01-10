@@ -21,7 +21,7 @@ int		is_escaped(char *str, int char_index)
 	return (0);
 }
 
-int 	is_specchar(char c)
+/*int 	is_specchar(char c)
 {
 	return (ft_isseparator(c) || c == '#' || c == '$');
 }
@@ -78,4 +78,4 @@ char	*trail_backslash(char *str)
 		if (str[i] != '\\' || (str[i] == '\\' && !is_escaped(str, i) && !ft_isseparator(str[i + 1])))
 			trail_str[j++] = str[i];
 	return (trail_str);
-}
+}*/

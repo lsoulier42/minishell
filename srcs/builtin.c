@@ -44,7 +44,7 @@ int	execute_builtin(t_data *msh_data, t_cmd *cmd)
 	builtin_fct[EXIT] = &exec_exit;
 	while (++i < TOTAL_BUILTINS)
 	{
-		if (ft_strcmp(cmd->name, builtins[i]) == 0)
+		if (ft_strcmp(cmd->args[0], builtins[i]) == 0)
 		{
 			msh_data->last_return = (*builtin_fct[i])(msh_data, cmd);
 			return (msh_data->last_return);

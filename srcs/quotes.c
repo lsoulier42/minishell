@@ -17,7 +17,7 @@ int		ft_isquote(char c)
 	return (c == '"' || c == '\'');
 }
 
-int		len_to_first_quote(char *str)
+/*int		len_to_first_quote(char *str)
 {
 	int i;
 
@@ -69,3 +69,4 @@ char	*sub_quote(char *str)
 	new_str[j] = '\0';
 	return (new_str);
 }
+*/

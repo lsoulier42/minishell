@@ -37,81 +37,70 @@ int		search_in_dir(char *dirname, char *cmd_name)
 	return (0);
 }
 
-char	*format_found_path(char *found, char *cmd_name)
+int search_path_relative_in_path(t_data *msh_data, t_cmd **cmd)
 {
-	int		len;
-	char	*path;
-
-	len = ft_strlen(found) + 1 + ft_strlen(cmd_name);
-	path = (char*)ft_calloc(len + 1, sizeof(char));
-	if (!path)
-		return (NULL);
-	ft_strcpy(path, found);
-	ft_strcat(path, "/");
-	ft_strcat(path, cmd_name);
-	return (path);
-}
-
-char	*search_path_relative(t_list *begin_env, char *cmd_name)
-{
-	t_var 	*env_path;
+	t_var	*path;
 	char	**pathnames;
-	char	*found_pathname;
-	char	*full_path;
-	int 	i;
+	int		i;
 
-	i = -1;
-	env_path = get_env_var(begin_env, "PATH");
-	if (!env_path)
-		return (NULL);
-	pathnames = ft_split(env_path->value, ':');
+	path = get_env_var(msh_data->begin_env, "PATH");
+	if (!path)
+		return (0);
+	pathnames = ft_split(path->value, ':');
 	if (!pathnames)
 		return (0);
+	i = -1;
 	while (pathnames[++i])
-		if (search_in_dir(pathnames[i], cmd_name))
-			break ;
-	found_pathname = pathnames[i];
-	if (!found_pathname)
-		return (ft_free_double_tab(pathnames));
-	full_path = format_found_path(found_pathname, cmd_name);
-	ft_free_double_tab(pathnames);
-	return (full_path);
+		if (search_in_dir(pathnames[i], (*cmd)->args[0]))
+		{
+			free((*cmd)->path);
+			(*cmd)->path = ft_strjoin(pathnames[i], "/");
+			return (free_double_tab_ret_int(pathnames) + 1);
+		}
+	return (free_double_tab_ret_int(pathnames));
 }
 
-char	*search_path_absolute(t_list *begin_env, char *cmd_name)
+int search_path_relative(t_data *msh_data, t_cmd **cmd)
 {
-	char	*format_path;
+	char	*current_dir;
 
-	if (cmd_name[0] == '/')
-		format_path = search_path_absolute_std(cmd_name);
-	else if (cmd_name[0] == '~')
-		format_path = search_path_absolute_home(begin_env, cmd_name);
-	else
-		format_path = search_path_absolute_dot(begin_env, cmd_name);
-	return (format_path);
-}
-
-char	*search_path(t_data *msh_data, char *cmd_name)
-{
-	char *full_path;
-
-	if (search_builtin(cmd_name))
-	    full_path = ft_strdup(cmd_name);
+	current_dir = getcwd(NULL, 0);
+	if (!current_dir)
+		return (0);
+	if (!search_in_dir(current_dir, (*cmd)->args[0]))
+	{
+		free(current_dir);
+		return (search_path_relative_in_path(msh_data, cmd));
+	}
 	else
 	{
-		if (cmd_name[0] == '/' || cmd_name[0] == '.' || cmd_name[0] == '~')
+		free((*cmd)->path);
+		(*cmd)->path = ft_strjoin(current_dir, "/");
+		return (free_return_int(current_dir) + 1);
+	}
+
+}
+
+int search_path(t_data *msh_data, t_cmd **cmd)
+{
+	if (!search_builtin((*cmd)->args[0]))
+	{
+		if (ft_strcmp((*cmd)->path, "") == 0)
 		{
-			full_path = search_path_absolute(msh_data->begin_env, cmd_name);
-			if (!full_path)
-				directory_not_found(cmd_name);
+			if (!search_path_relative(msh_data, cmd))
+			{
+				directory_not_found((*cmd)->path);
+				return (0);
+			}
 		}
 		else
 		{
-			full_path = search_path_relative(msh_data->begin_env, cmd_name);
-			if (!full_path)
-				command_not_found(cmd_name);
+			if (!search_in_dir((*cmd)->path, (*cmd)->args[0]))
+			{
+				command_not_found((*cmd)->args[0]);
+				return (0);
+			}
 		}
 	}
-	free(cmd_name);
-	return (full_path);
+	return (1);
 }

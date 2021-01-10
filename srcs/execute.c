@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include <stdio.h>
 
 int		execute_last_builtin(t_data *msh_data, t_cmd *cmd, int previous_fd)
 {
@@ -49,24 +48,25 @@ int		execute_cmd(t_data *msh_data, t_list *pipes, int previous_fd)
 	t_cmd	*cmd;
 
 	cmd = get_cmd(pipes);
-	if (!open_redirections(&(cmd->redirections)))
-		return (-1);
 	if (!expand_vars(msh_data, cmd))
 		return (-1);
-	cmd->name = search_path(msh_data, cmd->name);
-	cmd->is_last = !pipes->next;
-	cmd->is_piped = previous_fd != -1;
-	if (cmd->name != NULL)
-	{
-		if (!pipes->next && search_builtin(cmd->name))
-			previous_fd = execute_last_builtin(msh_data, cmd, previous_fd);
-		else
-			previous_fd = execute_pipe_cmd(msh_data, cmd, previous_fd);
-	}
-	else
+	if (!parse_path_and_name(&cmd))
+		return (-1);
+	if (!open_redirections(&(cmd->redirections)))
+		return (-1);
+	if (!search_path(msh_data, &cmd))
 	{
 		previous_fd = 0;
 		msh_data->last_return = 127;
+	}
+	else
+	{
+		cmd->is_last = !pipes->next;
+		cmd->is_piped = previous_fd != -1;
+		if (!pipes->next && search_builtin(cmd->args[0]))
+			previous_fd = execute_last_builtin(msh_data, cmd, previous_fd);
+		else
+			previous_fd = execute_pipe_cmd(msh_data, cmd, previous_fd);
 	}
 	close_redirections(cmd->redirections);
 	return (previous_fd);

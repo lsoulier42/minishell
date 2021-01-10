@@ -68,7 +68,7 @@ int		exec_cd_change_dir(t_data *msh_data,
 	if (chdir_return == -1)
 	{
 		error = 1;
-		format_error(cmd->name, new_dir, errno, NULL);
+		format_error(cmd->args[0], new_dir, errno, NULL);
 	}
 	if (error == 1)
 		free(new_pathname);
@@ -84,7 +84,7 @@ int		exec_cd(t_data *msh_data, t_cmd *cmd)
 	oldpwd = getcwd(NULL, 0);
 	if (!oldpwd)
 		return (-1);
-	if (!new_dir || (new_dir && (*new_dir == '-' || *new_dir == '~')))
+	if (!new_dir || (new_dir != NULL && (*new_dir == '-' || *new_dir == '~')))
 	{
 		if (!exec_cd_particular_paths(msh_data, cmd, new_dir, oldpwd))
 			return (free_return_int(oldpwd) + EXIT_FAILURE);

@@ -71,7 +71,7 @@ typedef struct s_redirection
 
 typedef struct s_cmd
 {
-	char			*name;
+	char			*path;
 	char			**args;
 	int             is_last;
 	int 			is_piped;
@@ -117,7 +117,8 @@ void			print_color(char *str, char color);
 int				doubletab_len(char **tab);
 int				free_return_int(void *ptr);
 void			*free_return_null(void *ptr);
-int				free_cmd_tabs(char *name, char **args);
+int				free_cmd_tabs(char *path, char **args);
+int 			free_double_tab_ret_int(char **tab);
 
 void			del_var(void *var);
 t_var			*new_var(char *key, char *value);
@@ -191,9 +192,7 @@ int				token_is_semicolon(t_list *el);
 void			*free_token_struct(t_list **begin, char *tmp);
 
 int				ft_isquote(char c);
-char			*sub_quote(char *str);
-int 			len_to_first_quote(char *str);
-int 			is_printable_quote(char *str, int i, char quote_char);
+
 
 void			del_instruction(void *instruction_void);
 t_instruction	*new_instruction(t_list *begin_pipes);
@@ -217,8 +216,8 @@ int				error_quote_is_not_closed(void);
 int				error_operator_defined(void);
 int				error_lexer(char c);
 
-t_cmd			*new_cmd(char *name, char **args, t_redirection **redirections);
-t_list			*new_cmd_el(char *name, char **args, t_redirection **redirections);
+t_cmd			*new_cmd(char *path, char **args, t_redirection **redirections);
+t_list			*new_cmd_el(char *path, char **args, t_redirection **redirections);
 void			del_cmd(void *cmd_void);
 int				parse_cmds(t_list *instructions);
 int				create_args_tab(char ***args, t_list *tokens);
@@ -239,10 +238,9 @@ int 			open_redirection_in(t_redirection **redirection);
 int				open_redirection_out(t_redirection **redirection);
 
 int				expand_vars(t_data *msh_data, t_cmd *cmd);
-int				expand_one_arg_vars(t_data *msh_data, char **cur_arg);
-int				expand_one_var(t_list *begin_env, char **cur_arg, int *index);
-char			*expand_get_var_value(t_list *begin_env, char *str, int *len);
-int				expand_last_return(t_data *msh_data, char **cur_arg, int *index);
+int				expand_one_arg(t_data *msh_data, char **arg);
+
+
 
 int				execute_all_cmds(t_data *msh_data);
 int 			execute_cmd(t_data *msh_data, t_list *pipes, int previous_fd);
@@ -260,14 +258,14 @@ void			command_not_found(char *cmd_name);
 void			directory_not_found(char *cmd_name);
 void			open_file_error(char *filename);
 
-char			*search_path(t_data *msh_data, char *cmd_name);
-char 			*search_path_absolute(t_list *begin_env, char *cmd_name);
-char 			*search_path_relative(t_list *begin_env, char *cmd_name);
-char 			*format_found_path(char *found, char *cmd_name);
+int 			search_path(t_data *msh_data, t_cmd **cmd);
 int				search_in_dir(char *dirname, char *cmd_name);
-char			*search_path_absolute_home(t_list *begin_env, char *input_path);
-char			*search_path_absolute_dot(t_list *begin_env, char *input_path);
-char			*search_path_absolute_std(char *input_path);
+int 			parse_path_and_name(t_cmd **cmd);
+int 			parse_path_and_name_absolute(t_cmd **cmd);
+int 			parse_path_and_name_relative(t_cmd **cmd);
+int				search_path_relative(t_data *msh_data, t_cmd **cmd);
+int				search_path_relative_in_path(t_data *msh_data, t_cmd **cmd);
+
 
 void    		ctrlc_handler(int signum);
 void			ctrlslash_handler(int signum);
@@ -276,9 +274,7 @@ void 			sigint_exec_handler(int *end_of_command);
 void 			sigquit_exec_handler(void);
 
 int				is_escaped(char *str, int char_index);
-int				is_weakquote_spec_char(char c);
-int				count_escaped_char_quotes(char *str, char quote_char);
-char 			*trail_backslash(char *str);
+
 
 //test functions
 void			print_token_list(t_list *begin);

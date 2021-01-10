@@ -12,59 +12,57 @@
 
 #include "minishell.h"
 
-char	*search_path_absolute_home(t_list *begin_env, char *input_path)
+int parse_path_and_name_absolute(t_cmd **cmd)
 {
-	t_var	*home;
-	char	*trim_cmd_name;
-	char	*format_path;
+	char *path;
+	char *cmd_name;
 
-	format_path = NULL;
-	home = get_env_var(begin_env, "HOME");
-	if (!home)
-		return (NULL);
-	trim_cmd_name = ft_substr(input_path, 2, ft_strlen(input_path) - 2);
-	if (!trim_cmd_name)
-		return (NULL);
-	if (search_in_dir(home->value, trim_cmd_name))
-		format_path = format_found_path(home->value, trim_cmd_name);
-	free(trim_cmd_name);
-	return (format_path);
+	cmd_name = ft_strdup(ft_strrchr((*cmd)->args[0], '/') + 1);
+	if (!cmd_name)
+		return (0);
+	if ((*cmd)->args[0][0] == '.')
+		path = ft_strdup(getcwd(NULL, 0));
+	else
+		path = ft_strndup((*cmd)->args[0],
+			ft_strlen((*cmd)->args[0]) - ft_strlen(cmd_name));
+	if (!path)
+		return (free_return_int(cmd_name));
+	free((*cmd)->path);
+	free((*cmd)->args[0]);
+	(*cmd)->path = path;
+	(*cmd)->args[0] = cmd_name;
+	return (1);
 }
 
-char	*search_path_absolute_dot(t_list *begin_env, char *input_path)
+int parse_path_and_name_relative(t_cmd **cmd)
 {
-	char	*format_path;
-	char	*cur_dir;
-	char	*trim_cmd_name;
+	char *path;
+	char *cmd_name;
 
-	cur_dir = getcwd(NULL, 0);
-	format_path = NULL;
-	if (!cur_dir)
-		return (NULL);
-	trim_cmd_name = ft_substr(input_path, 2, ft_strlen(input_path) - 2);
-	if (!trim_cmd_name)
-		return (free_return_null(cur_dir));
-	if (search_in_dir(cur_dir, trim_cmd_name))
-		format_path = format_found_path(cur_dir, trim_cmd_name);
-	free(cur_dir);
-	free(trim_cmd_name);
-	return (format_path);
+	path = ft_strdup("");
+	if (!path)
+		return (0);
+	cmd_name = ft_strdup((*cmd)->args[0]);
+	if (!cmd_name)
+		return (free_return_int(cmd_name));
+	free((*cmd)->path);
+	free((*cmd)->args[0]);
+	(*cmd)->path = path;
+	(*cmd)->args[0] = cmd_name;
+	return (1);
 }
 
-char	*search_path_absolute_std(char *input_path)
+int parse_path_and_name(t_cmd **cmd)
 {
-	char	*trim_cmd_name;
-	char 	*trim_path;
-	char 	*format_path;
-
-	format_path = NULL;
-	trim_cmd_name = ft_strrchr(input_path, '/') + 1;
-	trim_path = ft_strndup(input_path,
-		ft_strlen(input_path) - ft_strlen(trim_cmd_name));
-	if (!trim_path)
-		return (NULL);
-	if (search_in_dir(trim_path, trim_cmd_name))
-		format_path = ft_strdup(input_path);
-	free(trim_path);
-	return (format_path);
+	if ((*cmd)->args[0][0] == '/' || (*cmd)->args[0][0] == '.')
+	{
+		if (!parse_path_and_name_absolute(cmd))
+			return (0);
+	}
+	else
+	{
+		if (!parse_path_and_name_relative(cmd))
+			return (0);
+	}
+	return (1);
 }

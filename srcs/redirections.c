@@ -21,7 +21,7 @@ int				parse_one_redirection(t_list *tokens,
 	int		direction;
 
 	value = get_token_value(tokens);
-	filename = sub_quote(get_token_value(tokens->next));
+	filename = ft_strdup(get_token_value(tokens->next));
 	if (!filename)
 		return (0);
 	direction = IN;

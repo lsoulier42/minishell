@@ -17,12 +17,17 @@ int		execute_child_process_execve(t_data *msh_data,
 {
 	char	**envp;
 	int		execve_return;
+	char 	*fullname;
 
 	envp = serialize_env(msh_data->begin_env);
 	if (!envp)
 		return (-1);
-	execve_return = execve(cmd->name, cmd->args, envp);
+	fullname = ft_strjoin(cmd->path, cmd->args[0]);
+	if (!fullname)
+		return(free_double_tab_ret_int(envp));
+	execve_return = execve(fullname, cmd->args, envp);
 	ft_free_double_tab(envp);
+	free(fullname);
 	close(pipefd[1]);
 	return (execve_return);
 }
@@ -65,7 +70,7 @@ int		execute_child_process(t_data *msh_data,
 	if (!cmd->is_last || cmd->redirections[OUT]->fd != STDOUT_FILENO)
 		if (dup2(pipefd[1], STDOUT_FILENO) == -1)
 			return (-1);
-	if (search_builtin(cmd->name))
+	if (search_builtin(cmd->args[0]))
 	{
 		exit_status = execute_builtin(msh_data, cmd);
 		close(pipefd[1]);

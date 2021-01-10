@@ -19,7 +19,7 @@ int		create_args_tab(char ***args, t_list *tokens)
 	i = 0;
 	while (tokens)
 	{
-		(*args)[i] = sub_quote(get_token_value(tokens));
+		(*args)[i] = ft_strdup(get_token_value(tokens));
 		if (!(*args)[i])
 			return (0);
 		i++;
@@ -33,21 +33,21 @@ int		parse_one_pipe_cmds(t_list **tokens, t_redirection **redirections)
 {
 	t_list	*cmd_el;
 	t_list	*track;
-	char	*name;
+	char	*path;
 	char	**args;
 
 	track = *tokens;
-	name = sub_quote(get_token_value(track));
-	if (!name)
+	path = ft_strdup(get_token_value(track));
+	if (!path)
 		return (0);
 	args = (char**)malloc(sizeof(char*) * (ft_lstsize(track) + 1));
 	if (!args)
-		return (free_return_int(name));
+		return (free_return_int(path));
 	if (!create_args_tab(&args, track))
-		return (free_cmd_tabs(name, args));
-	cmd_el = new_cmd_el(name, args, redirections);
+		return (free_cmd_tabs(path, args));
+	cmd_el = new_cmd_el(path, args, redirections);
 	if (!cmd_el)
-		return (free_cmd_tabs(name, args));
+		return (free_cmd_tabs(path, args));
 	ft_lstclear(tokens, &del_token);
 	*tokens = cmd_el;
 	return (1);

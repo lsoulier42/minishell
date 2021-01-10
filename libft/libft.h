@@ -123,4 +123,5 @@ char 			*ft_trim_charset(char *str, char *charset);
 int				ft_ischarset(char c, char *charset);
 int				ft_isnum(char *str);
 char			*ft_strndup(char *str, int n);
+char 			*ft_lstjoin(t_list *begin);
 #endif
