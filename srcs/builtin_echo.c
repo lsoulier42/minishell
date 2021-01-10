@@ -68,6 +68,37 @@ int		remove_n_options(char ***args, int nb_options)
 	return (1);
 }
 
+char 	*exec_echo_join(char **args)
+{
+	int i;
+	int nb_wd;
+	char *str;
+	int total_len;
+
+	nb_wd = 0;
+	i = -1;
+	total_len = 0;
+	while (args[++i])
+		if (ft_strcmp(args[i], "\0") != 0)
+		{
+			nb_wd++;
+			total_len += ft_strlen(args[i]);
+		}
+	total_len += nb_wd - 1;
+	str = (char*)ft_calloc(total_len + 1, sizeof(char));
+	if (!str)
+		return (NULL);
+	i = -1;
+	while (args[++i])
+		if (ft_strcmp(args[i], "\0") != 0)
+		{
+			ft_strcat(str, args[i]);
+			if (args[i + 1] && ft_strcmp(args[i + 1], "\0") != 0)
+				ft_strcat(str, " ");
+		}
+	return (str);
+}
+
 int		exec_echo(t_data *msh_data, t_cmd *cmd)
 {
 	int		nb_options;
@@ -77,7 +108,7 @@ int		exec_echo(t_data *msh_data, t_cmd *cmd)
 	if (nb_options > 0)
 		if (!remove_n_options(&(cmd->args), nb_options))
 			return (EXIT_FAILURE);
-	str = ft_joinstrs(doubletab_len(cmd->args + 1), cmd->args + 1, " ");
+	str = exec_echo_join(cmd->args + 1);
 	if (!str)
 		return (EXIT_FAILURE);
 	if (nb_options > 0)

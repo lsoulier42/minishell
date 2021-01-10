@@ -25,14 +25,6 @@ void	format_error(char *cmd_name, char *arg, int errno_value, char *str)
 	ft_putendl_fd(arg, STDERR_FILENO);
 }
 
-void	execve_error(char *cmd_name, int errno_value)
-{
-	ft_putstr_fd("minishell: ", STDERR_FILENO);
-	ft_putstr_fd(cmd_name, STDERR_FILENO);
-	ft_putstr_fd(": ", STDERR_FILENO);
-	ft_putendl_fd(strerror(errno_value), STDERR_FILENO);
-}
-
 void	invalid_identifier(char *cmd_name, char *arg)
 {
 	ft_putstr_fd("minishell: ", STDERR_FILENO);

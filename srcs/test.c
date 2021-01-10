@@ -36,11 +36,11 @@ void 			print_instructions_list(t_list *instructions)
 			cmds = get_pipes_cmds(begin_pipes);
 			cmd = (t_cmd*)cmds->content;
 			printf("pipe %d :\n", j++);
-			printf("cmd name : %s\n", cmd->args[0]);
+			printf("cmd name : |%s|\n", cmd->args[0]);
 			while(cmd->args[++k])
-				printf("argument %d : %s\n", k, cmd->args[k]);
+				printf("argument %d : |%s|\n", k, cmd->args[k]);
 			while (++l < 2)
-				printf("redirection %s: filename: %s, fd: %d, type: %s\n",
+				printf("redirection %s: filename: |%s|, fd: %d, type: %s\n",
 		   				l == IN ? "in" : "out",
 					   cmd->redirections[l]->filename,
 					   cmd->redirections[l]->fd,

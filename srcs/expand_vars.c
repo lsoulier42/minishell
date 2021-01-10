@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include <stdio.h>
 
 int		expand_vars(t_data *msh_data, t_cmd *cmd)
 {
@@ -62,30 +61,6 @@ int flush_buffer(t_list **begin, char buffer[BUFFER_SIZE + 1], int *nb_read)
 	return (1);
 }
 
-int		is_weakquote_specchar(char c)
-{
-	return (c == '$' || c == '`' || c == '"' || c == '\n' || c == '\\');
-}
-
-int 	is_specchar(char c)
-{
-	return (ft_isseparator(c) || c == '#' || c == '$' || c == '\\');
-}
-
-int expand_is_printable(char *arg, int i, char quote_char)
-{
-	return ((!ft_isquote(arg[i]) && arg[i] != '\\' && arg[i] != '$')
-		|| (arg[i] == '$' && (ft_isspace(arg[i + 1]) || arg[i + 1] == '\0'))
-		|| (quote_char == '\'' && arg[i] != quote_char)
-		|| (quote_char == '"' && arg[i] == quote_char && is_escaped(arg, i))
-		|| (quote_char == '"' && arg[i] == '\'')
-		|| (quote_char == '"' && arg[i] == '\\'
-			&& (!is_weakquote_specchar(arg[i + 1]) || is_escaped(arg, i)))
-		|| (quote_char == '\0' && arg[i] == '\\'
-			&& (is_escaped(arg, i) || !is_specchar(arg[i + 1])))
-		|| (quote_char != '\'' && arg[i] == '$' && is_escaped(arg, i)));
-}
-
 int expand_last_return(t_data *msh_data, t_list **begin, int *i)
 {
 	char	*value;
@@ -133,80 +108,3 @@ int expand_one_var(t_data *msh_data, t_list **begin, char *arg, int *i)
 	}
 	return (1);
 }
-
-int expand_is_expandable_var(char *arg, int i, char quote_char)
-{
-	return (quote_char != '\'' && arg[i] == '$' && !is_escaped(arg, i)
-		&& (ft_isalnum(arg[i + 1]) || arg[i + 1] == '_'));
-}
-
-int expand_is_last_return_var(char *arg, int i, char quote_char)
-{
-	return (quote_char != '\'' && arg[i] == '$'
-		&& !is_escaped(arg, i) && arg[i + 1] == '?');
-}
-
-char expand_set_quote_char(char quote_char, char *arg, int i)
-{
-	if (!quote_char && ft_isquote(arg[i]) && !is_escaped(arg, i))
-		quote_char = arg[i];
-	else if ((quote_char == '\'' && arg[i] == '\'')
-		|| (quote_char == '"' && arg[i] == '"' && !is_escaped(arg, i)))
-		quote_char = '\0';
-	return (quote_char);
-}
-
-int expand_is_flushable_buffer(char *arg, int i, int j, char quote_char)
-{
-	return (j == BUFFER_SIZE || expand_is_expandable_var(arg, i, quote_char)
-		|| expand_is_last_return_var(arg, i, quote_char));
-}
-
-void expand_init_var(int *i, int *j, char *quote_char, t_list **begin)
-{
-	*quote_char = '\0';
-	*i = -1;
-	*j = 0;
-	*begin = NULL;
-}
-
-int expand_one_arg_finish(char **arg_ptr, t_list **begin, char buffer[BUFFER_SIZE + 1], int *j)
-{
-	if (!flush_buffer(begin, buffer, j))
-		return (0);
-	free(*arg_ptr);
-	*arg_ptr = ft_lstjoin(*begin);
-	ft_lstclear(begin, &free);
-	return (1);
-}
-
-int	expand_one_arg(t_data *msh_data, char **arg_ptr)
-{
-	char	quote_char;
-	char	buffer[BUFFER_SIZE + 1];
-	int		i;
-	int 	j;
-	t_list	*begin;
-
-	expand_init_var(&i, &j, &quote_char, &begin);
-	while ((*arg_ptr)[++i])
-	{
-		if (expand_is_flushable_buffer(*arg_ptr, i, j, quote_char))
-			if(!flush_buffer(&begin, buffer, &j))
-				return (0);
-		if (expand_is_printable(*arg_ptr, i, quote_char))
-			buffer[j++] = (*arg_ptr)[i];
-		quote_char = expand_set_quote_char(quote_char, *arg_ptr, i);
-		if (expand_is_expandable_var(*arg_ptr, i, quote_char))
-			if (!expand_one_var(msh_data, &begin, *arg_ptr, &i))
-				return (0);
-		if (expand_is_last_return_var(*arg_ptr, i, quote_char))
-			if (!expand_last_return(msh_data, &begin, &i))
-				return (0);
-	}
-	if (!expand_one_arg_finish(arg_ptr, &begin, buffer, &j))
-		return (0);
-	return (1);
-}
-
-

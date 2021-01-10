@@ -47,9 +47,9 @@ void	print_color(char *str, char color)
 
 	ft_strcpy(ansi_color, "\x1b[3xm");
 	ansi_color[3] = color;
-	ft_putstr(ansi_color);
-	ft_putstr(str);
-	ft_putstr("\x1b[0m");
+	ft_putstr_fd(ansi_color, STDERR_FILENO);
+	ft_putstr_fd(str, STDERR_FILENO);
+	ft_putstr_fd("\x1b[0m", STDERR_FILENO);
 }
 
 int	doubletab_len(char **tab)
@@ -60,27 +60,4 @@ int	doubletab_len(char **tab)
 	while (tab[i])
 		i++;
 	return (i);
-}
-
-int	free_return_int(void *ptr)
-{
-	free(ptr);
-	return (0);
-}
-
-void	*free_return_null(void *ptr)
-{
-	free(ptr);
-	return (NULL);
-}
-
-int 	free_double_tab_ret_int(char **tab)
-{
-	int i;
-
-	i = -1;
-	while(tab[++i])
-		free(tab[i]);
-	free(tab);
-	return (0);
 }

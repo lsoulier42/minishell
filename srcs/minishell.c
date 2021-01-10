@@ -38,9 +38,6 @@ static int	init_data(t_data *msh_data, char *msh_name, char *envp[])
 static int	msh_second_loop(t_data *msh_data,
 	char *buffer, int argc, char **argv)
 {
-	int error;
-
-	error = 0;
 	msh_data->parsed_input = parse_input(buffer);
 	if (msh_data->parsed_input)
 	{
@@ -49,16 +46,16 @@ static int	msh_second_loop(t_data *msh_data,
 		else
 		{
 			if (!execute_all_cmds(msh_data))
-				error = 1;
+				msh_data->last_return = EXIT_FAILURE;
 		}
 		del_user_input(msh_data->parsed_input);
 	}
 	else
-		error = 1;
-	return (error == 0);
+		msh_data->last_return = 2;
+	return (msh_data->last_return == 0);
 }
 
-static int	msh_first_loop(t_data *msh_data,
+static void	msh_first_loop(t_data *msh_data,
 	int argc, char **argv, int *read_return)
 {
 	char		buffer[BUFFER_SIZE + 1];
@@ -83,28 +80,25 @@ static int	msh_first_loop(t_data *msh_data,
 		if (buffer[*read_return - 1] == '\n' || error == 1)
 			end_of_command = 1;
 	}
-	return (error == 0);
 }
 
 int			main(int argc, char *argv[], char *envp[])
 {
 	t_data		msh_data;
 	int			read_return;
-	int			error;
 
 	if (!init_data(&msh_data, argv[0], envp))
 		return (EXIT_FAILURE);
 	read_return = 1;
-	error = 0;
 	signal(SIGINT, ctrlc_handler);
 	signal(SIGQUIT, ctrlslash_handler);
 	while (!msh_data.exit_msh && read_return > 0)
-		if (!msh_first_loop(&msh_data, argc, argv, &read_return))
-			error = 1;
-	ft_putendl_fd("exit", STDOUT_FILENO);
+		msh_first_loop(&msh_data, argc, argv, &read_return);
+	ft_putendl_fd("exit", STDERR_FILENO);
 	ft_lstclear(&(msh_data.begin_env), &del_var);
 	free(msh_data.name);
-	if (error == 1)
-		msh_data.exit_value = EXIT_FAILURE;
-	return (msh_data.exit_value);
+	if (msh_data.exit_msh)
+		return (msh_data.exit_value);
+	else
+		return (msh_data.last_return);
 }

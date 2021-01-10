@@ -44,10 +44,14 @@ int	error_lexer(char c)
 int	check_token_list(t_list *tokens)
 {
 	char	*value;
+	int		i;
 
+	i = 0;
 	while (tokens)
 	{
 		value = get_token_value(tokens);
+		if (i++ == 0 && token_is_operator(tokens))
+			return (error_operator_is_last_token());
 		if (token_is_operator(tokens) && (ft_strcmp(value, "|") == 0
 					|| ft_strcmp(value, ">") == 0
 					|| ft_strcmp(value, "<") == 0

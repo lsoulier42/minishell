@@ -55,8 +55,18 @@ int	execute_builtin(t_data *msh_data, t_cmd *cmd)
 
 int	exec_exit(t_data *msh_data, t_cmd *cmd)
 {
+	int arg_value;
+
 	msh_data->exit_msh = 1;
-	if (cmd->args[1] && ft_isnum(cmd->args[1]))
-		msh_data->exit_value = ft_atoi(cmd->args[1]) % 256;
+	if (cmd->args[1])
+	{
+		arg_value = ft_atoi(cmd->args[1]);
+		if (ft_isnum(cmd->args[1]) && !cmd->args[2])
+			msh_data->exit_value = arg_value % 256;
+		else
+			msh_data->exit_value = EXIT_FAILURE;
+	}
+	else
+		msh_data->exit_value = msh_data->last_return;
 	return (msh_data->exit_value);
 }
