@@ -27,8 +27,14 @@ int		execute_child_process_execve(t_data *msh_data,
 		return(free_double_tab_ret_int(envp));
 	execve_return = execve(fullname, cmd->args, envp);
 	ft_free_double_tab(envp);
-	free(fullname);
 	close(pipefd[1]);
+	if (execve_return == -1)
+	{
+		execve_error(fullname, errno);
+		free(fullname);
+		exit(EXIT_FAILURE);
+	}
+	free(fullname);
 	return (execve_return);
 }
 

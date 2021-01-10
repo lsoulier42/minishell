@@ -149,8 +149,8 @@ int				exec_env(t_data *msh_data, t_cmd *cmd);
 int				exec_unset(t_data *msh_data, t_cmd *cmd);
 
 int				exec_export(t_data *msh_data, t_cmd *cmd);
-int 			exec_export_one_var(t_data *msh_data, char *key,
-					char *value, int has_equal);
+int				exec_export_one_var(t_data *msh_data,
+					char *key, char *value, char *arg);
 char 			*format_export_line(t_var *env_var);
 int				exec_export_print(t_list *begin_env, t_cmd *cmd);
 
@@ -239,9 +239,6 @@ int				open_redirection_out(t_redirection **redirection);
 
 int				expand_vars(t_data *msh_data, t_cmd *cmd);
 int				expand_one_arg(t_data *msh_data, char **arg);
-
-
-
 int				execute_all_cmds(t_data *msh_data);
 int 			execute_cmd(t_data *msh_data, t_list *pipes, int previous_fd);
 int             execute_last_builtin(t_data *msh_data, t_cmd *cmd, int previous_fd);
@@ -257,6 +254,7 @@ void			invalid_identifier(char *cmd_name, char *arg);
 void			command_not_found(char *cmd_name);
 void			directory_not_found(char *cmd_name);
 void			open_file_error(char *filename);
+void			execve_error(char *cmd_name, int errno_value);
 
 int 			search_path(t_data *msh_data, t_cmd **cmd);
 int				search_in_dir(char *dirname, char *cmd_name);

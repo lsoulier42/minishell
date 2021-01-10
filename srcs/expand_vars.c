@@ -26,22 +26,16 @@ int		expand_vars(t_data *msh_data, t_cmd *cmd)
 	return (1);
 }
 
-char *expand_get_var_key(t_list *begin_env, char *unparsed)
+char *expand_get_var_key(char *unparsed)
 {
 	int		i;
 	char	*key;
-	t_var	*var;
 
 	i = 0;
 	unparsed++;
 	while (unparsed[i] && (ft_isalnum(unparsed[i]) || unparsed[i] == '_'))
 		i++;
 	key = ft_strndup(unparsed, i);
-	if (!key)
-		return (NULL);
-	var = get_env_var(begin_env, key);
-	if (!var)
-		return (NULL);
 	return (key);
 }
 
@@ -81,11 +75,14 @@ int 	is_specchar(char c)
 int expand_is_printable(char *arg, int i, char quote_char)
 {
 	return ((!ft_isquote(arg[i]) && arg[i] != '\\' && arg[i] != '$')
+		|| (arg[i] == '$' && (ft_isspace(arg[i + 1]) || arg[i + 1] == '\0'))
 		|| (quote_char == '\'' && arg[i] != quote_char)
 		|| (quote_char == '"' && arg[i] == quote_char && is_escaped(arg, i))
 		|| (quote_char == '"' && arg[i] == '\'')
-		|| (quote_char == '"' && arg[i] == '\\' && (!is_weakquote_specchar(arg[i + 1]) || is_escaped(arg, i)))
-		|| (quote_char == '\0' && arg[i] == '\\' && (is_escaped(arg, i) || !is_specchar(arg[i + 1])))
+		|| (quote_char == '"' && arg[i] == '\\'
+			&& (!is_weakquote_specchar(arg[i + 1]) || is_escaped(arg, i)))
+		|| (quote_char == '\0' && arg[i] == '\\'
+			&& (is_escaped(arg, i) || !is_specchar(arg[i + 1])))
 		|| (quote_char != '\'' && arg[i] == '$' && is_escaped(arg, i)));
 }
 
@@ -112,25 +109,27 @@ int expand_one_var(t_data *msh_data, t_list **begin, char *arg, int *i)
 {
 	char	*key;
 	char	*value;
+	t_var	*var;
 
 	if (ft_isdigit(arg[*i + 1]))
 		(*i)++;
 	else
 	{
-		key = expand_get_var_key(msh_data->begin_env, arg + *i);
-		if (key)
+		key = expand_get_var_key(arg + *i);
+		var = get_env_var(msh_data->begin_env, key);
+		if (var)
 		{
-			value = ft_strdup(get_env_var(msh_data->begin_env, key)->value);
+			value = ft_strdup(var->value);
 			if (!value)
 			{
 				ft_lstclear(begin, &free);
 				free(key);
 				return (0);
 			}
-			*i += ft_strlen(key);
-			free(key);
 			ft_lstadd_back(begin, ft_lstnew(value));
 		}
+		*i += ft_strlen(key);
+		free(key);
 	}
 	return (1);
 }
@@ -149,9 +148,10 @@ int expand_is_last_return_var(char *arg, int i, char quote_char)
 
 char expand_set_quote_char(char quote_char, char *arg, int i)
 {
-	if (!quote_char && ft_isquote(arg[i]))
+	if (!quote_char && ft_isquote(arg[i]) && !is_escaped(arg, i))
 		quote_char = arg[i];
-	else if (quote_char != '\0' && arg[i] == quote_char)
+	else if ((quote_char == '\'' && arg[i] == '\'')
+		|| (quote_char == '"' && arg[i] == '"' && !is_escaped(arg, i)))
 		quote_char = '\0';
 	return (quote_char);
 }

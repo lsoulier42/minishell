@@ -63,22 +63,28 @@ int search_path_relative_in_path(t_data *msh_data, t_cmd **cmd)
 int search_path_relative(t_data *msh_data, t_cmd **cmd)
 {
 	char	*current_dir;
+	char 	*cmd_name;
 
 	current_dir = getcwd(NULL, 0);
 	if (!current_dir)
 		return (0);
-	if (!search_in_dir(current_dir, (*cmd)->args[0]))
+	cmd_name = (*cmd)->args[0];
+	if (ft_strncmp(cmd_name, "./", 2) == 0)
+		cmd_name = ft_strchr(cmd_name, '/') + 1;
+	if (!search_in_dir(current_dir, cmd_name))
 	{
 		free(current_dir);
 		return (search_path_relative_in_path(msh_data, cmd));
 	}
 	else
 	{
-		free((*cmd)->path);
-		(*cmd)->path = ft_strjoin(current_dir, "/");
+		if (ft_strncmp((*cmd)->args[0], "./", 2) != 0)
+		{
+			free((*cmd)->path);
+			(*cmd)->path = ft_strjoin(current_dir, "/");
+		}
 		return (free_return_int(current_dir) + 1);
 	}
-
 }
 
 int search_path(t_data *msh_data, t_cmd **cmd)

@@ -34,6 +34,7 @@ int				parse_one_redirection(t_list *tokens,
 	{
 		if (!create_empty_file_redirection(filename, type_open))
 			return (free_return_int(filename));
+		free(filename);
 		return (1);
 	}
 	(*redirections)[direction]->filename = filename;

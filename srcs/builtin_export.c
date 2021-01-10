@@ -13,12 +13,14 @@
 #include "minishell.h"
 
 int		exec_export_one_var(t_data *msh_data,
-	char *key, char *value, int has_equal)
+	char *key, char *value, char *arg)
 {
 	int error;
 	int key_exist;
+	int has_equal;
 
 	key_exist = env_key_exist(msh_data->begin_env, key);
+	has_equal = unparsed_var_has_equal(arg);
 	if (key_is_valid(key))
 	{
 		if (key_exist && has_equal)
@@ -30,7 +32,7 @@ int		exec_export_one_var(t_data *msh_data,
 	}
 	else
 	{
-		invalid_identifier("export", key);
+		invalid_identifier("export", arg);
 		error = 1;
 	}
 	return (error == 0);
@@ -89,7 +91,7 @@ int		exec_export(t_data *msh_data, t_cmd *cmd)
 		if (parse_var(cmd->args[i], &key, &value))
 		{
 			if (!exec_export_one_var(msh_data, key, value,
-					unparsed_var_has_equal(cmd->args[i])))
+				cmd->args[i]))
 			{
 				free(key);
 				return (free_return_int(value) + EXIT_FAILURE);
