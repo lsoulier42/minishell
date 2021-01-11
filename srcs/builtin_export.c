@@ -14,36 +14,30 @@
 
 int		exec_export_one_var(t_list *begin_env, t_export_var *var)
 {
-	char *key;
-	char *value;
+	char	*new;
 
-	key = ft_strdup(var->key);
-	if (!key)
-		return (0);
-	if (var->value)
 	if (var->type == EXPORT_CREATE)
 	{
 		if (!set_env_var(&begin_env, var->key, var->value))
-
+			return (0);
 	}
-
-	/*key_exist = env_key_exist(msh_data->begin_env, key);
-	has_equal = unparsed_var_has_equal(arg);
-	if (key_is_valid(key))
+	else if (var->type == EXPORT_TRUNCATE)
 	{
-		if (key_exist && has_equal)
-			error = !change_env_var(msh_data->begin_env, key, value);
-		else if (!key_exist)
-			error = !set_env_var(&msh_data->begin_env, key, value);
-		else
-			error = 1;
+		if (!change_env_var(begin_env, var->key, var->value))
+			return (0);
+		free(var->key);
 	}
 	else
 	{
-		invalid_identifier("export", arg);
-		error = 1;
-	}*/
-	return (error == 0);
+		new = ft_strjoin(get_env_var(begin_env, var->key)->value, var->value);
+		if (!new)
+			return (0);
+		if (!change_env_var(begin_env, var->key, new))
+			return (0);
+		free(var->value);
+		free(var->key);
+	}
+	return (1);
 }
 
 char	*format_export_line(t_var *env_var)
@@ -92,9 +86,9 @@ int		exec_export_print(t_list *begin_env, t_cmd *cmd)
 
 int exec_export_parsing(t_list *begin_env, char *unparsed, t_export_var *var)
 {
-	int equal_sign;
-	int plus_sign;
-	t_var *env_var;
+	int		equal_sign;
+	int		plus_sign;
+	t_var	*env_var;
 
 	if (!unparsed || (unparsed != NULL && !(*unparsed)))
 		return (0);
@@ -117,15 +111,6 @@ int exec_export_parsing(t_list *begin_env, char *unparsed, t_export_var *var)
 	return (1);
 }
 
-int 	del_export_var(t_export_var *var)
-{
-	if (var->key)
-		free(var->key);
-	if (var->value)
-		free(var->value);
-	return (0);
-}
-
 int		exec_export(t_data *msh_data, t_cmd *cmd)
 {
 	int				i;
@@ -140,7 +125,6 @@ int		exec_export(t_data *msh_data, t_cmd *cmd)
 			return (EXIT_FAILURE);
 		if (!exec_export_one_var(msh_data->begin_env, &var))
 			return (del_export_var(&var) + EXIT_FAILURE);
-		del_export_var(&var);
 	}
 	return (EXIT_SUCCESS);
 }

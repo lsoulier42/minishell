@@ -71,29 +71,25 @@ static unsigned long long	exec_exit_atoi_unsigned(char *str)
 
 int							exec_exit(t_data *msh_data, t_cmd *cmd)
 {
-	unsigned long long	unsigned_arg_value;
-
 	msh_data->exit_msh = 1;
-	if (!cmd->args[1])
+	ft_putendl_fd("exit", STDERR_FILENO);
+	if (!cmd || (cmd != NULL && !cmd->args[1]))
 		msh_data->exit_value = msh_data->last_return;
 	else
 	{
-		if (ft_isnum(cmd->args[1]))
+		msh_data->exit_msh = 0;
+		msh_data->exit_value = EXIT_FAILURE;
+		if (!cmd->args[2])
 		{
-			if (!cmd->args[2])
-			{
-				unsigned_arg_value = exec_exit_atoi_unsigned(cmd->args[1]);
-				if (unsigned_arg_value > LLONG_MAX
-					&& ft_strcmp(cmd->args[1], "-9223372036854775808") != 0)
-					msh_data->exit_value = 255;
-				else
-					msh_data->exit_value = ft_atoi(cmd->args[1]) % 256;
-			}
+			if ((exec_exit_atoi_unsigned(cmd->args[1]) > LLONG_MAX
+				 && ft_strcmp(cmd->args[1], "-9223372036854775808") != 0)
+				|| !ft_isnum(cmd->args[1]))
+				msh_data->exit_value = exit_error(cmd->args[1], NON_NUMERIC_ARG);
 			else
-				msh_data->exit_value = EXIT_FAILURE;
+				msh_data->exit_value = ft_atoi(cmd->args[1]) % 256;
 		}
 		else
-			msh_data->exit_value = 255;
+			exit_error(NULL, WRONG_NB_ARGS);
 	}
 	return (msh_data->exit_value);
 }

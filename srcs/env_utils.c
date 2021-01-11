@@ -53,22 +53,6 @@ char	**serialize_env(t_list *begin_env)
 	return (envp);
 }
 
-int		env_key_exist(t_list *begin_env, char *key)
-{
-	t_list	*env;
-	t_var	*var;
-
-	env = begin_env;
-	while (env)
-	{
-		var = (t_var*)env->content;
-		if (ft_strcmp(var->key, key) == 0)
-			return (1);
-		env = env->next;
-	}
-	return (0);
-}
-
 int		change_env_shlvl(t_list *begin_env)
 {
 	t_var	*shlvl;

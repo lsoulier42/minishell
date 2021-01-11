@@ -19,3 +19,17 @@ void	execve_error(char *cmd_name, int errno_value)
 	ft_putstr_fd(": ", STDERR_FILENO);
 	ft_putendl_fd(strerror(errno_value), STDERR_FILENO);
 }
+
+int exit_error(char *arg, int error_code)
+{
+	ft_putstr_fd("minishell: ", STDERR_FILENO);
+	ft_putstr_fd("exit: ", STDERR_FILENO);
+	if (error_code == NON_NUMERIC_ARG)
+	{
+		ft_putstr_fd(arg, STDERR_FILENO);
+		ft_putendl_fd(": numeric argument required", STDERR_FILENO);
+	}
+	if (error_code == WRONG_NB_ARGS)
+		ft_putendl_fd("too many arguments", STDERR_FILENO);
+	return (BASH_BUILTIN_EXIT_STATUS);
+}

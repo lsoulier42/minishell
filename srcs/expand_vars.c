@@ -94,7 +94,7 @@ int expand_one_var(t_data *msh_data, t_list **begin, char *arg, int *i)
 	{
 		key = expand_get_var_key(arg + *i);
 		var = get_env_var(msh_data->begin_env, key);
-		if (var)
+		if (var && var->value)
 		{
 			value = ft_strdup(var->value);
 			if (!value)

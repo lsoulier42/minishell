@@ -94,11 +94,9 @@ int			main(int argc, char *argv[], char *envp[])
 	signal(SIGQUIT, ctrlslash_handler);
 	while (!msh_data.exit_msh && read_return > 0)
 		msh_first_loop(&msh_data, argc, argv, &read_return);
-	ft_putendl_fd("exit", STDERR_FILENO);
+	if (read_return == 0)
+		exec_exit(&msh_data, NULL);
 	ft_lstclear(&(msh_data.begin_env), &del_var);
 	free(msh_data.name);
-	if (msh_data.exit_msh)
-		return (msh_data.exit_value);
-	else
-		return (msh_data.last_return);
+	return (msh_data.exit_value);
 }

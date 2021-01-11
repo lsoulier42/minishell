@@ -78,3 +78,12 @@ int get_export_value(char *unparsed, int has_equal, char **value)
 	*value = new;
 	return (1);
 }
+
+int 	del_export_var(t_export_var *var)
+{
+	if (var->key)
+		free(var->key);
+	if (var->value)
+		free(var->value);
+	return (0);
+}

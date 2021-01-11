@@ -13,6 +13,7 @@
 #ifndef MINISHELL_H
 # define MINISHELL_H
 # define PROMPT_MAX_SIZE 150
+# define BASH_BUILTIN_EXIT_STATUS 2
 # include "libft.h"
 # include <unistd.h>
 # include <stdlib.h>
@@ -42,6 +43,12 @@ typedef enum	e_builtins
 	EXIT,
 	TOTAL_BUILTINS
 }				t_builtins;
+
+typedef enum 	e_exit_error
+{
+	NON_NUMERIC_ARG,
+	WRONG_NB_ARGS
+}				t_exit_error;
 
 typedef enum	e_ansi_color
 {
@@ -170,7 +177,6 @@ void 			print_env_fd(t_list *begin_env, int fd);
 t_var			*get_env_var(t_list *begin_env, char *key);
 char			*serialize_one_env_var(t_list *env_el);
 char			**serialize_env(t_list *begin_env);
-int				env_key_exist(t_list *begin_env, char *key);
 int             change_env_shlvl(t_list *begin_env);
 
 /*
@@ -187,8 +193,6 @@ int				exec_pwd(t_data *msh_data, t_cmd *cmd);
  * Specific functions for export
  */
 int				exec_export(t_data *msh_data, t_cmd *cmd);
-int				exec_export_one_var(t_data *msh_data,
-					char *key, char *value, char *arg);
 char 			*format_export_line(t_var *env_var);
 int				exec_export_print(t_list *begin_env, t_cmd *cmd);
 int				var_has_equal(char *str);
@@ -196,6 +200,7 @@ int				var_has_plus(char *str);
 char			*get_export_key(char *unparsed);
 int 			del_export_var(t_export_var *var);
 int 			get_export_value(char *unparsed, int has_equal, char **value);
+int				exec_export_one_var(t_list *begin_env, t_export_var *var);
 /*
  * Specific functions for cd
  */
@@ -398,6 +403,7 @@ void			command_not_found(char *cmd_name);
 void			directory_not_found(char *cmd_name);
 void			open_file_error(char *filename);
 void			execve_error(char *cmd_name, int errno_value);
+int				exit_error(char *arg, int error_code);
 
 /*
  * Functions for searching command in path or current dir,
