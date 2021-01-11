@@ -25,6 +25,7 @@
 # include <dirent.h>
 # include <string.h>
 # include <errno.h>
+# include <limits.h>
 
 /*
  * Enum declaration
@@ -80,6 +81,7 @@ typedef struct s_redirection
 typedef struct s_cmd
 {
 	char			*path;
+	int 			argc;
 	char			**args;
 	int             is_last;
 	int 			is_piped;
@@ -129,7 +131,6 @@ void			print_color(char *str, char color);
 int				doubletab_len(char **tab);
 int				free_return_int(void *ptr);
 void			*free_return_null(void *ptr);
-int				free_cmd_tabs(char *path, char **args);
 int 			free_double_tab_ret_int(char **tab);
 
 /*
@@ -272,13 +273,13 @@ int				error_lexer(char c);
  * a redirection IN and a redirection OUT
  */
 
-t_cmd			*new_cmd(char *path, char **args,
+t_cmd			*new_cmd(int argc, char **args,
 					t_redirection **redirections);
-t_list			*new_cmd_el(char *path, char **args,
+t_list			*new_cmd_el(int argc, char **args,
 					t_redirection **redirections);
 void			del_cmd(void *cmd_void);
 int				parse_cmds(t_list *instructions);
-int				create_args_tab(char ***args, t_list *tokens);
+char 			**create_args_tab(t_list *tokens);
 int 			parse_one_pipe_cmds(t_list **tokens,
 					t_redirection **redirections);
 t_cmd			*get_cmd(t_list *pipe_el);
@@ -333,13 +334,14 @@ void			expand_init_var(int *i, int *j,
 					char *quote_char, t_list **begin);
 int				expand_one_arg_finish(char **arg_ptr, t_list **begin,
 					char buffer[BUFFER_SIZE + 1], int *j);
-int				expand_one_arg(t_data *msh_data, char **arg_ptr);
 char			*expand_get_var_key(char *unparsed);
 int				flush_buffer(t_list **begin, char buffer[BUFFER_SIZE + 1],
 					int *nb_read);
 int				expand_last_return(t_data *msh_data, t_list **begin, int *i);
 int				expand_one_var(t_data *msh_data, t_list **begin,
 					char *arg, int *i);
+int 			no_quote_arg(char *str);
+int				trail_null_args(t_cmd *cmd);
 
 /*
  * Execute functions. One function, if found, will be executed depending
@@ -353,7 +355,7 @@ int				expand_one_var(t_data *msh_data, t_list **begin,
  */
 
 int				execute_all_cmds(t_data *msh_data);
-int 			execute_cmd(t_data *msh_data, t_list *pipes, int previous_fd);
+int				execute_cmd(t_data *msh_data, t_cmd *cmd, int previous_fd, int is_last);
 int             execute_last_builtin(t_data *msh_data,
 					t_cmd *cmd, int previous_fd);
 int             execute_pipe_cmd(t_data *msh_data,

@@ -12,42 +12,38 @@
 
 #include "minishell.h"
 
-int		create_args_tab(char ***args, t_list *tokens)
+char **create_args_tab(t_list *tokens)
 {
-	int	i;
+	int		i;
+	char	**args;
 
+	args = (char**)malloc(sizeof(char*) * (ft_lstsize(tokens) + 1));
+	if (!args)
+		return (NULL);
 	i = 0;
 	while (tokens)
 	{
-		(*args)[i] = ft_strdup(get_token_value(tokens));
-		if (!(*args)[i])
-			return (0);
+		args[i] = ft_strdup(get_token_value(tokens));
+		if (!args[i])
+			return (ft_free_double_tab(args));
 		i++;
 		tokens = tokens->next;
 	}
-	(*args)[i] = NULL;
-	return (1);
+	args[i] = NULL;
+	return (args);
 }
 
 int		parse_one_pipe_cmds(t_list **tokens, t_redirection **redirections)
 {
 	t_list	*cmd_el;
-	t_list	*track;
-	char	*path;
 	char	**args;
 
-	track = *tokens;
-	path = ft_strdup(get_token_value(track));
-	if (!path)
-		return (0);
-	args = (char**)malloc(sizeof(char*) * (ft_lstsize(track) + 1));
+	args = create_args_tab(*tokens);
 	if (!args)
-		return (free_return_int(path));
-	if (!create_args_tab(&args, track))
-		return (free_cmd_tabs(path, args));
-	cmd_el = new_cmd_el(path, args, redirections);
+		return (0);
+	cmd_el = new_cmd_el(doubletab_len(args), args, redirections);
 	if (!cmd_el)
-		return (free_cmd_tabs(path, args));
+		return (free_double_tab_ret_int(args));
 	ft_lstclear(tokens, &del_token);
 	*tokens = cmd_el;
 	return (1);

@@ -43,13 +43,8 @@ int		execute_pipe_cmd(t_data *msh_data, t_cmd *cmd, int previous_fd)
 	return (-1);
 }
 
-int		execute_cmd(t_data *msh_data, t_list *pipes, int previous_fd)
+int		execute_cmd(t_data *msh_data, t_cmd *cmd, int previous_fd, int is_last)
 {
-	t_cmd	*cmd;
-
-	cmd = get_cmd(pipes);
-	if (!expand_vars(msh_data, cmd))
-		return (-1);
 	if (!parse_path_and_name(&cmd))
 		return (-1);
 	if (!open_redirections(&(cmd->redirections)))
@@ -61,9 +56,9 @@ int		execute_cmd(t_data *msh_data, t_list *pipes, int previous_fd)
 	}
 	else
 	{
-		cmd->is_last = !pipes->next;
+		cmd->is_last = is_last;
 		cmd->is_piped = previous_fd != -1;
-		if (!pipes->next && search_builtin(cmd->args[0]))
+		if (cmd->is_last && search_builtin(cmd->args[0]))
 			previous_fd = execute_last_builtin(msh_data, cmd, previous_fd);
 		else
 			previous_fd = execute_pipe_cmd(msh_data, cmd, previous_fd);
@@ -77,6 +72,7 @@ int		execute_all_cmds(t_data *msh_data)
 	t_list	*instructions;
 	t_list	*pipes;
 	int		previous_fd;
+	t_cmd	*cmd;
 
 	instructions = msh_data->parsed_input->begin_instructions;
 	while (instructions && g_signal_value != SIGINT)
@@ -85,10 +81,14 @@ int		execute_all_cmds(t_data *msh_data)
 		pipes = get_instruction_pipes(instructions);
 		while (pipes && g_signal_value != SIGINT)
 		{
-			previous_fd = execute_cmd(msh_data, pipes, previous_fd);
-			if (previous_fd == -1)
-				return (0);
-			sigquit_exec_handler();
+			cmd = get_cmd(pipes);
+			if (expand_vars(msh_data, cmd) && cmd->args[0])
+			{
+				previous_fd = execute_cmd(msh_data, cmd, previous_fd, !pipes->next);
+				if (previous_fd == -1)
+					return (0);
+				sigquit_exec_handler();
+			}
 			pipes = pipes->next;
 		}
 		instructions = instructions->next;

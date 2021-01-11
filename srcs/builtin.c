@@ -53,20 +53,47 @@ int	execute_builtin(t_data *msh_data, t_cmd *cmd)
 	return (0);
 }
 
-int	exec_exit(t_data *msh_data, t_cmd *cmd)
+static unsigned long long	exec_exit_atoi_unsigned(char *str)
 {
-	int arg_value;
+	unsigned long long result;
+	int i;
+
+	i = 0;
+	result = 0;
+	while (str[i] && ft_isspace(str[i]))
+		i++;
+	if (str[i] == '+' || str[i] == '-')
+		i++;
+	while (str[i] && ft_isdigit(str[i]))
+		result = result * 10 + str[i++] - '0';
+	return (result);
+}
+
+int							exec_exit(t_data *msh_data, t_cmd *cmd)
+{
+	unsigned long long	unsigned_arg_value;
 
 	msh_data->exit_msh = 1;
-	if (cmd->args[1])
-	{
-		arg_value = ft_atoi(cmd->args[1]);
-		if (ft_isnum(cmd->args[1]) && !cmd->args[2])
-			msh_data->exit_value = arg_value % 256;
-		else
-			msh_data->exit_value = EXIT_FAILURE;
-	}
-	else
+	if (!cmd->args[1])
 		msh_data->exit_value = msh_data->last_return;
+	else
+	{
+		if (ft_isnum(cmd->args[1]))
+		{
+			if (!cmd->args[2])
+			{
+				unsigned_arg_value = exec_exit_atoi_unsigned(cmd->args[1]);
+				if (unsigned_arg_value > LLONG_MAX
+					&& ft_strcmp(cmd->args[1], "-9223372036854775808") != 0)
+					msh_data->exit_value = 255;
+				else
+					msh_data->exit_value = ft_atoi(cmd->args[1]) % 256;
+			}
+			else
+				msh_data->exit_value = EXIT_FAILURE;
+		}
+		else
+			msh_data->exit_value = 255;
+	}
 	return (msh_data->exit_value);
 }

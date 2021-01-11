@@ -22,6 +22,8 @@ int		expand_vars(t_data *msh_data, t_cmd *cmd)
 		if (!expand_one_arg(msh_data, &cmd->args[i]))
 			return (0);
 	}
+	if (!trail_null_args(cmd))
+		return (0);
 	return (1);
 }
 

@@ -24,7 +24,6 @@ int parse_path_and_name_absolute(t_cmd **cmd)
 		ft_strlen((*cmd)->args[0]) - ft_strlen(cmd_name));
 	if (!path)
 		return (free_return_int(cmd_name));
-	free((*cmd)->path);
 	free((*cmd)->args[0]);
 	(*cmd)->path = path;
 	(*cmd)->args[0] = cmd_name;
@@ -42,7 +41,6 @@ int parse_path_and_name_relative(t_cmd **cmd)
 	cmd_name = ft_strdup((*cmd)->args[0]);
 	if (!cmd_name)
 		return (free_return_int(cmd_name));
-	free((*cmd)->path);
 	free((*cmd)->args[0]);
 	(*cmd)->path = path;
 	(*cmd)->args[0] = cmd_name;

@@ -12,12 +12,59 @@
 
 #include "minishell.h"
 
+int	trail_null_args(t_cmd *cmd)
+{
+	int i;
+	int j;
+	int nb;
+	char **new;
+
+	i = -1;
+	nb = 0;
+	j = 0;
+	while (++i < cmd->argc)
+		if (cmd->args[i])
+			nb++;
+	new = (char**)malloc(sizeof(char*) * (nb + 1));
+	if (!new)
+		return (0);
+	i = -1;
+	while (++i < cmd->argc)
+		if (cmd->args[i])
+		{
+			new[j] = ft_strdup(cmd->args[i]);
+			if (!new[j++])
+				return (free_double_tab_ret_int(new));
+		}
+	new[j] = NULL;
+	free(cmd->args);
+	cmd->args = new;
+	cmd->argc = nb;
+	return (1);
+}
+
+int no_quote_arg(char *str)
+{
+	int i;
+
+	i = -1;
+	while (str[++i])
+		if (ft_isquote(str[i]))
+			return (0);
+	return (1);
+}
+
 int expand_one_arg_finish(char **arg_ptr, t_list **begin, char buffer[BUFFER_SIZE + 1], int *j)
 {
+	char *result;
+
 	if (!flush_buffer(begin, buffer, j))
 		return (0);
+	result = ft_lstjoin(*begin);
+	if(no_quote_arg(*arg_ptr) && ft_strcmp(result, "\0") == 0)
+		result = NULL;
 	free(*arg_ptr);
-	*arg_ptr = ft_lstjoin(*begin);
+	*arg_ptr = result;
 	ft_lstclear(begin, &free);
 	return (1);
 }

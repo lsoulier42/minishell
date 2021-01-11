@@ -29,7 +29,7 @@ int		is_weakquote_specchar(char c)
 
 int 	is_specchar(char c)
 {
-	return (ft_isseparator(c) || c == '`'
+	return (ft_isseparator(c) || ft_isquote(c) || c == '`'
 		|| c == '#' || c == '$' || c == '\\');
 }
 

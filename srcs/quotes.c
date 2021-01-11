@@ -40,6 +40,7 @@ int expand_is_printable(char *arg, int i, char quote_char)
 				&& (!is_weakquote_specchar(arg[i + 1]) || is_escaped(arg, i)))
 			|| (quote_char == '\0' && arg[i] == '\\'
 				&& (is_escaped(arg, i) || !is_specchar(arg[i + 1])))
+			|| (quote_char == '\0' && ft_isquote(arg[i]) && is_escaped(arg, i))
 			|| (quote_char != '\'' && arg[i] == '$' && is_escaped(arg, i)));
 }
 

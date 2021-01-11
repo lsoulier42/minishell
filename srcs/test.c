@@ -36,6 +36,7 @@ void 			print_instructions_list(t_list *instructions)
 			cmds = get_pipes_cmds(begin_pipes);
 			cmd = (t_cmd*)cmds->content;
 			printf("pipe %d :\n", j++);
+			printf("nb arguments : %d\n", cmd->argc);
 			printf("cmd name : |%s|\n", cmd->args[0]);
 			while(cmd->args[++k])
 				printf("argument %d : |%s|\n", k, cmd->args[k]);
