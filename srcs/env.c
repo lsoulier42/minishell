@@ -107,7 +107,8 @@ void	print_env_fd(t_list *begin_env, int fd)
 		cast = (t_var*)env->content;
 		ft_putstr_fd(cast->key, fd);
 		ft_putstr_fd("=", fd);
-		ft_putstr_fd(cast->value, fd);
+		if (cast->value)
+			ft_putstr_fd(cast->value, fd);
 		ft_putstr_fd("\n", fd);
 		env = env->next;
 	}

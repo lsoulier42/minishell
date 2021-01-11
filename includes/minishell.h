@@ -31,7 +31,7 @@
  * Enum declaration
  */
 
-typedef enum e_builtins
+typedef enum	e_builtins
 {
 	ECHO,
 	CD,
@@ -43,7 +43,7 @@ typedef enum e_builtins
 	TOTAL_BUILTINS
 }				t_builtins;
 
-typedef enum e_ansi_color
+typedef enum	e_ansi_color
 {
 	RED = '1',
 	GREEN,
@@ -53,13 +53,20 @@ typedef enum e_ansi_color
 	CYAN
 }				t_ansi_color;
 
-typedef enum e_redirection_type
+typedef enum	e_redirection_type
 {
 	IN,
 	OUT,
 	APPEND,
 	TRUNCATE
 }				t_redirection_type;
+
+typedef enum	e_export_type
+{
+	EXPORT_CREATE,
+	EXPORT_TRUNCATE,
+	EXPORT_APPEND
+}				t_export_type;
 
 /*
  * Struct declarations
@@ -70,6 +77,13 @@ typedef struct s_var
 	char	*key;
 	char	*value;
 }				t_var;
+
+typedef struct s_export_var
+{
+	char	*key;
+	char	*value;
+	int		type;
+}				t_export_var;
 
 typedef struct s_redirection
 {
@@ -143,7 +157,6 @@ int				parse_var(char *unparsed, char **key, char **value);
 char			*parse_var_key(char *unparsed);
 char			*parse_var_value(char *unparsed);
 int				cmp_key_var(void *var1_void, void *var2_void);
-int				unparsed_var_has_equal(char *str);
 int				key_is_valid(char *str);
 
 /*
@@ -178,6 +191,11 @@ int				exec_export_one_var(t_data *msh_data,
 					char *key, char *value, char *arg);
 char 			*format_export_line(t_var *env_var);
 int				exec_export_print(t_list *begin_env, t_cmd *cmd);
+int				var_has_equal(char *str);
+int				var_has_plus(char *str);
+char			*get_export_key(char *unparsed);
+int 			del_export_var(t_export_var *var);
+int 			get_export_value(char *unparsed, int has_equal, char **value);
 /*
  * Specific functions for cd
  */

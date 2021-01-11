@@ -17,8 +17,10 @@ void	del_var(void *var)
 	t_var	*var_cast;
 
 	var_cast = (t_var*)var;
-	free(var_cast->key);
-	free(var_cast->value);
+	if (var_cast->key)
+		free(var_cast->key);
+	if (var_cast->value)
+		free(var_cast->value);
 	free(var);
 }
 
@@ -36,29 +38,12 @@ t_var	*new_var(char *key, char *value)
 
 int parse_var(char *unparsed, char **key, char **value)
 {
-	if (unparsed[0] == '=')
-	{
-		*key = ft_strdup("=");
-		*value = ft_strdup("");
-	}
-	else if (unparsed_var_has_equal(unparsed))
-	{
-		*key = parse_var_key(unparsed);
-		*value = parse_var_value(unparsed);
-	}
-	else
-	{
-		*key = ft_strdup(unparsed);
-		*value = ft_strdup("");
-	}
-	if (!(*key) || !(*value))
-	{
-		if (*key)
-			free(*key);
-		if (*value)
-			free(*value);
+	*key = parse_var_key(unparsed);
+	if (!(*key))
 		return (0);
-	}
+	*value = parse_var_value(unparsed);
+	if (!*value)
+		return (free_return_int(*key));
 	return (1);
 }
 
@@ -77,7 +62,7 @@ int key_is_valid(char *str)
 	int i;
 
 	i = -1;
-	if (ft_isdigit(str[0]) || str[0] == '=')
+	if (ft_isdigit(str[0]))
 		return (0);
 	while (str[++i])
 		if (str[i] != '_' && !ft_isalnum(str[i]))

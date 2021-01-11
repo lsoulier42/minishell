@@ -12,17 +12,6 @@
 
 #include "minishell.h"
 
-int	unparsed_var_has_equal(char *str)
-{
-	int i;
-
-	i = -1;
-	while (str[++i])
-		if (str[i] == '=')
-			return (1);
-	return (0);
-}
-
 char	*parse_var_key(char *unparsed)
 {
 	char	*key;
