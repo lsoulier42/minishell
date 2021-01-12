@@ -149,7 +149,6 @@ extern int		g_signal_value;
 
 void			format_prompt(t_data *msh_data);
 void			print_color(char *str, char color);
-int				doubletab_len(char **tab);
 int				free_return_int(void *ptr);
 void			*free_return_null(void *ptr);
 int 			free_double_tab_ret_int(char **tab);

@@ -51,13 +51,3 @@ void	print_color(char *str, char color)
 	ft_putstr_fd(str, STDERR_FILENO);
 	ft_putstr_fd("\x1b[0m", STDERR_FILENO);
 }
-
-int	doubletab_len(char **tab)
-{
-	int	i;
-
-	i = 0;
-	while (tab[i])
-		i++;
-	return (i);
-}

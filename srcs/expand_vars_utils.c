@@ -37,7 +37,7 @@ int	trail_null_args(t_cmd *cmd)
 				return (free_double_tab_ret_int(new));
 		}
 	new[j] = NULL;
-	ft_free_double_tab(cmd->args);
+	ft_double_tab_free(cmd->args);
 	cmd->args = new;
 	cmd->argc = nb;
 	return (1);

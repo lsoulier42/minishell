@@ -48,7 +48,7 @@ void	del_cmd(void *cmd_void)
 	if (cmd->path)
 		free(cmd->path);
 	if (cmd->args)
-		ft_free_double_tab(cmd->args);
+		ft_double_tab_free(cmd->args);
 	del_redirection(cmd->redirections[IN]);
 	del_redirection(cmd->redirections[OUT]);
 	free(cmd->redirections);

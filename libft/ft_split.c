@@ -69,7 +69,7 @@ char	**ft_split(const char *s, char c)
 		{
 			wd_tab[wd_index] = set_wd(s, c, i);
 			if (!wd_tab[wd_index])
-				return (ft_free_double_tab(wd_tab));
+				return (ft_double_tab_free(wd_tab));
 			wd_index++;
 		}
 		p_char = s[i];

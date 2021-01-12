@@ -1,24 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   free_double_tab.c                                  :+:      :+:    :+:   */
+/*   ft_double_tab_len.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lsoulier <lsoulier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/12/31 05:08:34 by lsoulier          #+#    #+#             */
-/*   Updated: 2020/12/31 05:08:43 by lsoulier         ###   ########.fr       */
+/*   Created: 2021/01/12 11:33:36 by lsoulier          #+#    #+#             */
+/*   Updated: 2021/01/12 11:33:43 by lsoulier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	*ft_free_double_tab(char **tab)
+int	ft_double_tab_len(char **tab)
 {
 	int	i;
 
-	i = -1;
-	while (tab[++i])
-		free(tab[i]);
-	free(tab);
-	return (NULL);
+	i = 0;
+	while (tab[i])
+		i++;
+	return (i);
 }

@@ -25,7 +25,7 @@ char **create_args_tab(t_list *tokens)
 	{
 		args[i] = ft_strdup(get_token_value(tokens));
 		if (!args[i])
-			return (ft_free_double_tab(args));
+			return (ft_double_tab_free(args));
 		i++;
 		tokens = tokens->next;
 	}
@@ -41,7 +41,7 @@ int		parse_one_pipe_cmds(t_list **tokens, t_redirection **redirections)
 	args = create_args_tab(*tokens);
 	if (!args)
 		return (0);
-	cmd_el = new_cmd_el(doubletab_len(args), args, redirections);
+	cmd_el = new_cmd_el(ft_double_tab_len(args), args, redirections);
 	if (!cmd_el)
 		return (free_double_tab_ret_int(args));
 	ft_lstclear(tokens, &del_token);

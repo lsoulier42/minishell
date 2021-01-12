@@ -118,10 +118,12 @@ int				get_next_line(int fd, char **line);
 int				begin_line(char **line, char *buffer, int *offset);
 int				fill_line(char **line, char *buffer, int *offset);
 int				ft_strcmp(const char *s1, const char *s2);
-void			*ft_free_double_tab(char **tab);
 char 			*ft_trim_charset(char *str, char *charset);
 int				ft_ischarset(char c, char *charset);
 int				ft_isnum(char *str);
 char			*ft_strndup(char *str, int n);
 char 			*ft_lstjoin(t_list *begin);
+int				ft_double_tab_len(char **tab);
+char			**ft_double_tab_merge(char **tab1, char **tab2);
+void			*ft_double_tab_free(char **tab);
 #endif

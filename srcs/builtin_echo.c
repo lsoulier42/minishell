@@ -49,7 +49,7 @@ int		remove_n_options(char ***args, int nb_options)
 	i = nb_options;
 	arg_nb = 1;
 	new_args = (char**)malloc(sizeof(char*)
-		* (doubletab_len(*args) + 1 - nb_options));
+		* (ft_double_tab_len(*args) + 1 - nb_options));
 	if (!new_args)
 		return (0);
 	new_args[0] = ft_strdup((*args)[0]);
@@ -59,11 +59,11 @@ int		remove_n_options(char ***args, int nb_options)
 	{
 		new_args[arg_nb] = ft_strdup((*args)[i]);
 		if (!new_args[arg_nb])
-			return (ft_free_double_tab(new_args) != NULL);
+			return (ft_double_tab_free(new_args) != NULL);
 		arg_nb++;
 	}
 	new_args[arg_nb] = NULL;
-	ft_free_double_tab(*args);
+	ft_double_tab_free(*args);
 	*args = new_args;
 	return (1);
 }
@@ -77,7 +77,7 @@ int		exec_echo(t_data *msh_data, t_cmd *cmd)
 	if (nb_options > 0)
 		if (!remove_n_options(&(cmd->args), nb_options))
 			return (EXIT_FAILURE);
-	str = ft_joinstrs(doubletab_len(cmd->args + 1), cmd->args + 1, " ");
+	str = ft_joinstrs(ft_double_tab_len(cmd->args + 1), cmd->args + 1, " ");
 	if (!str)
 		return (EXIT_FAILURE);
 	if (nb_options > 0)
