@@ -19,6 +19,8 @@ static int	init_data(t_data *msh_data, char *envp[])
 	msh_data->last_return = EXIT_SUCCESS;
 	msh_data->parsed_input = NULL;
 	msh_data->begin_env = set_env(envp);
+	if (!msh_data->begin_env)
+		return (0);
 	msh_data->exit_value = EXIT_SUCCESS;
 	return (1);
 }

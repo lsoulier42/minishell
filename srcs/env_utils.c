@@ -65,14 +65,15 @@ int		change_env_shlvl(t_list *begin_env)
 		if (!itoa_value)
 			return (0);
 		if (!set_env_var(&begin_env, "SHLVL", itoa_value))
-			return (0);
+			return (free_return_int(itoa_value));
 	}
 	else
 	{
 		itoa_value = ft_itoa(ft_atoi(shlvl->value) + 1);
 		if (!itoa_value)
 			return (0);
-		change_env_var(begin_env, "SHLVL", itoa_value);
+		if(!change_env_var(begin_env, "SHLVL", itoa_value))
+			return (free_return_int(itoa_value));
 	}
 	return (1);
 }

@@ -21,7 +21,7 @@ t_list	*set_env(char *envp[])
 
 	i = -1;
 	begin_env = NULL;
-	while (envp[++i])
+	while (envp && envp[++i])
 	{
 		if (!parse_var(envp[i], &key, &value))
 			return (0);
@@ -105,11 +105,15 @@ void	print_env_fd(t_list *begin_env, int fd)
 	while (env)
 	{
 		cast = (t_var*)env->content;
-		ft_putstr_fd(cast->key, fd);
-		ft_putstr_fd("=", fd);
-		if (cast->value)
-			ft_putstr_fd(cast->value, fd);
-		ft_putstr_fd("\n", fd);
+		if (cast)
+		{
+			if (cast->key)
+				ft_putstr_fd(cast->key, fd);
+			ft_putstr_fd("=", fd);
+			if (cast->value)
+				ft_putstr_fd(cast->value, fd);
+			ft_putstr_fd("\n", fd);
+		}
 		env = env->next;
 	}
 }
