@@ -17,7 +17,10 @@ void			del_instruction(void *instruction_void)
 	t_instruction	*instruction;
 
 	instruction = (t_instruction*)instruction_void;
-	ft_lstclear(&instruction->begin_pipes, &del_pipe);
+	if (instruction->begin_pipes)
+		ft_lstclear(&instruction->begin_pipes, &del_pipe);
+	if (instruction->begin_cpid)
+		ft_lstclear(&instruction->begin_cpid, &free);
 	free(instruction_void);
 }
 
@@ -29,6 +32,7 @@ t_instruction	*new_instruction(t_list *begin_pipes)
 	if (!new)
 		return (NULL);
 	new->begin_pipes = begin_pipes;
+	new->begin_cpid = NULL;
 	return (new);
 }
 

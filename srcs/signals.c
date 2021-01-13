@@ -24,13 +24,13 @@ void	ctrlslash_handler(int signum)
 	g_signal_value = signum;
 }
 
-void 	sigint_read_handler(int *read_return)
+void 	sigint_read_handler(int *gnl_return)
 {
 	if (g_signal_value == SIGINT)
 	{
 		dup(STDOUT_FILENO);
 		write(STDOUT_FILENO, "\n", 1);
-		*read_return = 1;
+		*gnl_return = 1;
 	}
 }
 

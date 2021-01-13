@@ -13,32 +13,20 @@
 #include "minishell.h"
 #include <stdio.h>
 
-static int	init_data(t_data *msh_data, char *msh_name, char *envp[])
+static int	init_data(t_data *msh_data, char *envp[])
 {
 	msh_data->exit_msh = 0;
 	msh_data->last_return = EXIT_SUCCESS;
 	msh_data->parsed_input = NULL;
 	msh_data->begin_env = set_env(envp);
-	if (ft_strncmp(msh_name, "./", 2) == 0)
-	{
-		msh_data->name = ft_substr(msh_name, 2, ft_strlen(msh_name) - 2);
-		if (!msh_data->name)
-			return (0);
-	}
-	else
-	{
-		msh_data->name = ft_strdup(msh_name);
-		if (!msh_data->name)
-			return (0);
-	}
 	msh_data->exit_value = EXIT_SUCCESS;
 	return (1);
 }
 
 static int	msh_second_loop(t_data *msh_data,
-	char *buffer, int argc, char **argv)
+	char *line, int argc, char **argv)
 {
-	msh_data->parsed_input = parse_input(buffer);
+	msh_data->parsed_input = parse_input(line);
 	if (msh_data->parsed_input)
 	{
 		if (argc == 2 && ft_strcmp(argv[1], "debug") == 0)
@@ -56,28 +44,27 @@ static int	msh_second_loop(t_data *msh_data,
 }
 
 static void	msh_first_loop(t_data *msh_data,
-	int argc, char **argv, int *read_return)
+	int argc, char **argv, int *gnl_return)
 {
-	char		buffer[BUFFER_SIZE + 1];
 	int			end_of_command;
 	int			error;
+	char 		*line;
 
 	format_prompt(msh_data);
-	ft_bzero(buffer, BUFFER_SIZE + 1);
 	end_of_command = 0;
 	g_signal_value = 0;
 	error = 0;
 	while (!end_of_command)
 	{
-		*read_return = read(0, buffer, BUFFER_SIZE);
-		sigint_read_handler(read_return);
-		if (*read_return <= 0 || g_signal_value == SIGINT)
+		*gnl_return = get_next_line(STDIN_FILENO, &line);
+		sigint_read_handler(gnl_return);
+		if (*gnl_return == -1 || g_signal_value == SIGINT)
 			break ;
-		buffer[*read_return] = '\0';
-		if (!msh_second_loop(msh_data, buffer, argc, argv))
+		if (!msh_second_loop(msh_data, line, argc, argv))
 			error = 1;
+		free(line);
 		sigint_exec_handler(&end_of_command);
-		if (buffer[*read_return - 1] == '\n' || error == 1)
+		if (*gnl_return == 1 || error == 1)
 			end_of_command = 1;
 	}
 }
@@ -85,18 +72,19 @@ static void	msh_first_loop(t_data *msh_data,
 int			main(int argc, char *argv[], char *envp[])
 {
 	t_data		msh_data;
-	int			read_return;
+	int			gnl_return;
 
-	if (!init_data(&msh_data, argv[0], envp))
+	if (!init_data(&msh_data, envp))
 		return (EXIT_FAILURE);
-	read_return = 1;
-	signal(SIGINT, ctrlc_handler);
-	signal(SIGQUIT, ctrlslash_handler);
-	while (!msh_data.exit_msh && read_return > 0)
-		msh_first_loop(&msh_data, argc, argv, &read_return);
-	if (read_return == 0)
+	gnl_return = 1;
+	if (signal(SIGINT, ctrlc_handler) == SIG_ERR)
+		exit(EXIT_FAILURE);
+	if (signal(SIGQUIT, ctrlslash_handler) == SIG_ERR)
+		exit(EXIT_FAILURE);
+	while (!msh_data.exit_msh && gnl_return > 0)
+		msh_first_loop(&msh_data, argc, argv, &gnl_return);
+	if (gnl_return == 0)
 		exec_exit(&msh_data, NULL);
 	ft_lstclear(&(msh_data.begin_env), &del_var);
-	free(msh_data.name);
 	return (msh_data.exit_value);
 }

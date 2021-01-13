@@ -14,31 +14,29 @@
 
 void format_prompt(t_data *msh_data)
 {
-	char 	prompt[PROMPT_MAX_SIZE];
-	t_var	*user;
+	char 	*prompt;
+	char 	*name;
+	int 	len;
 	t_var	*pwd;
-	char 	*user_value;
 	char 	*pwd_value;
 
-	user_value = "";
 	pwd_value = "";
-	user = get_env_var(msh_data->begin_env, "USER");
-	if (user)
-		user_value = user->value;
+	name = "minishell@";
 	pwd = get_env_var(msh_data->begin_env, "PWD");
 	if (pwd)
 		pwd_value = pwd->value;
-	if (ft_strlen(user_value)
-		+ ft_strlen(pwd_value)
-		+ ft_strlen(msh_data->name) + 2 < PROMPT_MAX_SIZE)
+	len = ft_strlen(name) + ft_strlen(pwd_value) + 2;
+	prompt = (char*)ft_calloc(len + 1, sizeof(char));
+	if (prompt)
 	{
-		ft_strcpy(prompt, user_value);
-		ft_strcat(prompt, "@");
-		ft_strcat(prompt, msh_data->name);
+		ft_strcat(prompt, name);
 		ft_strcat(prompt, pwd_value);
 		ft_strcat(prompt, "$ ");
 		print_color(prompt, YELLOW);
 	}
+	else
+		print_color(name, YELLOW);
+	free(prompt);
 }
 
 void	print_color(char *str, char color)

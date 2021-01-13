@@ -12,87 +12,74 @@
 
 #include "minishell.h"
 
-int		exec_cd_particular_paths(t_data *msh_data, t_cmd *cmd,
-	char *new_dir, char *oldpwd)
+int 	exec_cd_change_dir(t_data *msh_data, t_cmd *cmd, char *new_dir)
 {
-	t_var	*var;
+	int		chdir_return;
+	char	*new_current;
 
-	if (!new_dir || (new_dir != NULL && *new_dir == '~'))
+	chdir_return = 0;
+	if(!cmd->is_piped)
+		chdir_return = chdir(new_dir);
+	if (chdir_return == -1)
+		format_error(cmd->args[0], new_dir, errno, NULL);
+	new_current = getcwd(NULL, 0);
+	if (!new_current)
+		return (0);
+	if(!exec_cd_change_env_var(msh_data,new_current) || chdir_return == -1)
 	{
-		var = get_env_var(msh_data->begin_env, "HOME");
-		if (!var)
-			return (0);
-		new_dir = var->value;
+		free(new_current);
+		return (0);
 	}
-	else
-	{
-		var = get_env_var(msh_data->begin_env, "OLDPWD");
-		if (!var)
-			return (0);
-		new_dir = var->value;
-	}
-	if (!exec_cd_change_dir(msh_data, cmd, new_dir, oldpwd))
+	free(new_current);
+	return (1);
+}
+
+int		exec_cd_home(t_data *msh_data, t_cmd *cmd)
+{
+	t_var *home;
+
+	home = get_env_var(msh_data->begin_env, "HOME");
+	if (!home)
+		return (0);
+	if (!exec_cd_change_dir(msh_data, cmd, home->value))
 		return (0);
 	return (1);
 }
 
-int		exec_cd_env_var(t_list *begin_env, char *new_pathname, char *oldpwd)
+int		exec_cd_oldpwd(t_data *msh_data, t_cmd *cmd)
 {
-	int	error;
+	t_var *oldpwd;
 
-	error = 0;
-	if (!change_env_var(begin_env, "OLDPWD", oldpwd))
-		error = 1;
-	if (!change_env_var(begin_env, "PWD", new_pathname))
-		error = 1;
-	return (error == 0);
-}
-
-int		exec_cd_change_dir(t_data *msh_data,
-	t_cmd *cmd, char *new_dir, char *oldpwd)
-{
-	char	*new_pathname;
-	int		chdir_return;
-	int		error;
-
-	chdir_return = chdir(new_dir);
-	error = 0;
-	if (cmd->is_piped && chdir_return == 0)
-		chdir(oldpwd);
-	new_pathname = getcwd(NULL, 0);
-	if (!new_pathname)
+	oldpwd = get_env_var(msh_data->begin_env, "OLDPWD");
+	if (!oldpwd)
 		return (0);
-	if (chdir_return == 0)
-		if (!exec_cd_env_var(msh_data->begin_env, new_pathname, oldpwd))
-			error = 1;
-	if (chdir_return == -1)
-	{
-		error = 1;
-		format_error(cmd->args[0], new_dir, errno, NULL);
-	}
-	if (error == 1)
-		free(new_pathname);
-	return (error == 0);
+	if (!exec_cd_change_dir(msh_data, cmd, oldpwd->value))
+		return (0);
+	return (1);
 }
 
 int		exec_cd(t_data *msh_data, t_cmd *cmd)
 {
-	char	*new_dir;
-	char	*oldpwd;
+	char *new_dir;
 
 	new_dir = cmd->args[1];
-	oldpwd = getcwd(NULL, 0);
-	if (!oldpwd)
-		return (-1);
-	if (!new_dir || (new_dir != NULL && (*new_dir == '-' || *new_dir == '~')))
+	if (!new_dir || (new_dir != NULL && ft_strcmp(new_dir, "~") == 0))
 	{
-		if (!exec_cd_particular_paths(msh_data, cmd, new_dir, oldpwd))
-			return (free_return_int(oldpwd) + EXIT_FAILURE);
+		if (!exec_cd_home(msh_data, cmd))
+			return (EXIT_FAILURE);
+	}
+	else if (ft_strcmp(new_dir, ".") == 0)
+	{
+		if (!exec_cd_current_dir(msh_data, cmd))
+			return (EXIT_FAILURE);
+	}
+	else if (ft_strcmp(new_dir, "-") == 0)
+	{
+		if (!exec_cd_oldpwd(msh_data, cmd))
+			return (EXIT_FAILURE);
 	}
 	else
-	{
-		if (!exec_cd_change_dir(msh_data, cmd, new_dir, oldpwd))
-			return (free_return_int(oldpwd) + EXIT_FAILURE);
-	}
+		if (!exec_cd_change_dir(msh_data, cmd, new_dir))
+			return (EXIT_FAILURE);
 	return (EXIT_SUCCESS);
 }

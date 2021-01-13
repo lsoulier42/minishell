@@ -61,7 +61,7 @@ int		parse_cmds(t_list *instructions)
 		while (pipes)
 		{
 			begin_cmds = &(((t_pipe*)(pipes->content))->begin_cmds);
-			redirections = parse_redirections(*begin_cmds);
+			redirections = parse_redirections(begin_cmds);
 			if (!redirections)
 				return (0);
 			if (!parse_one_pipe_cmds(begin_cmds, redirections))

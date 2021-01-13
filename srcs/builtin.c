@@ -81,6 +81,7 @@ int							exec_exit(t_data *msh_data, t_cmd *cmd)
 		msh_data->exit_value = EXIT_FAILURE;
 		if (!cmd->args[2])
 		{
+			msh_data->exit_msh = 1;
 			if ((exec_exit_atoi_unsigned(cmd->args[1]) > LLONG_MAX
 				 && ft_strcmp(cmd->args[1], "-9223372036854775808") != 0)
 				|| !ft_isnum(cmd->args[1]))

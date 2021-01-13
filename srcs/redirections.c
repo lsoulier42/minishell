@@ -42,45 +42,60 @@ int				parse_one_redirection(t_list *tokens,
 	return (1);
 }
 
-void			delete_redirection_tokens(t_list **tokens, t_list **previous)
+void			delete_redirection_tokens(t_list **begins_cmds, t_list *token)
 {
-	t_list	*jump_token;
+	t_list *track;
+	t_list *previous;
+	t_list *next;
 
-	jump_token = (*tokens)->next->next;
-	ft_lstdelone((*tokens)->next, &del_token);
-	ft_lstdelone(*tokens, &del_token);
-	*tokens = jump_token;
-	(*previous)->next = *tokens;
+	track = *begins_cmds;
+	previous = NULL;
+	while (track)
+	{
+		if (track == token)
+		{
+			next = token->next->next;
+			ft_lstdelone(token->next, &del_token);
+			ft_lstdelone(token, &del_token);
+			if (previous)
+				previous->next = next;
+			else
+				*begins_cmds = next;
+			break ;
+		}
+		previous = track;
+		track = track->next;
+	}
 }
 
-static int		parse_redirections_loop(t_list *tokens,
+static int		parse_redirections_loop(t_list **begins_cmds,
 	t_redirection ***redirections)
 {
-	t_list	*previous;
+	t_list	*tokens;
+	t_list	*next;
 
-	previous = NULL;
+	tokens = *begins_cmds;
 	while (tokens)
 	{
 		if (token_is_redirection(tokens))
 		{
 			if (!parse_one_redirection(tokens, redirections))
 				return (0);
-			delete_redirection_tokens(&tokens, &previous);
+			next = tokens->next->next;
+			delete_redirection_tokens(begins_cmds, tokens);
+			tokens = next;
 		}
 		else
-		{
-			previous = tokens;
 			tokens = tokens->next;
-		}
 	}
 	return (1);
 }
 
-t_redirection	**parse_redirections(t_list *tokens)
+t_redirection	**parse_redirections(t_list **begin_cmds)
 {
 	t_redirection	**redirections;
 
-	redirections = (t_redirection**)malloc(sizeof(t_redirection) * 2);
+	redirections = (t_redirection**)malloc(sizeof(t_redirection*) * 2);
 	if (!redirections)
 		return (NULL);
 	redirections[IN] = new_redirection(NULL, 0, APPEND);
@@ -92,7 +107,7 @@ t_redirection	**parse_redirections(t_list *tokens)
 		free(redirections[IN]);
 		return (free_return_null(redirections));
 	}
-	if (!parse_redirections_loop(tokens, &redirections))
+	if (!parse_redirections_loop(begin_cmds, &redirections))
 	{
 		free(redirections[IN]);
 		free(redirections[OUT]);

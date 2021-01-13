@@ -14,12 +14,18 @@
 
 int	exec_pwd(t_data *msh_data, t_cmd *cmd)
 {
-	char *pathname;
+	t_var	*pwd;
+	char	*current;
 
-	pathname = getcwd(NULL, 0);
-	if (!pathname)
+	pwd = get_env_var(msh_data->begin_env, "PWD");
+	if (!pwd)
+		current = getcwd(NULL, 0);
+	else
+		current = ft_strdup(pwd->value);
+	if (!current)
 		return (EXIT_FAILURE);
-	ft_putendl_fd(pathname, cmd->redirections[OUT]->fd);
+	ft_putendl_fd(current, cmd->redirections[OUT]->fd);
+	free(current);
 	msh_data->last_return = EXIT_SUCCESS;
 	return (msh_data->last_return);
 }

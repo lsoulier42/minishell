@@ -33,3 +33,10 @@ int exit_error(char *arg, int error_code)
 		ft_putendl_fd("too many arguments", STDERR_FILENO);
 	return (BASH_BUILTIN_EXIT_STATUS);
 }
+
+void cd_current_dir_error(void)
+{
+	ft_putstr_fd("cd: error retrieving current directory: ", STDERR_FILENO);
+	ft_putstr_fd("getcwd: cannot access parent directories: ", STDERR_FILENO);
+	ft_putendl_fd(strerror(errno), STDERR_FILENO);
+}

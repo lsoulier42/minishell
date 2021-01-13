@@ -42,7 +42,7 @@ int				token_is_redirection(t_list *token_el)
 		return (0);
 	value = get_token_value(token_el);
 	return (token_is_operator(token_el) && (ft_strcmp(value, ">") == 0
-				|| ft_strcmp(value, "<") == 0 || ft_strcmp(value, ">>") == 0));
+		|| ft_strcmp(value, "<") == 0 || ft_strcmp(value, ">>") == 0));
 }
 
 int				redirection_is_not_last(t_list *token_el)

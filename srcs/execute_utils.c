@@ -103,14 +103,9 @@ int		write_process_redirection(int read_fd, int out_fd)
 }
 
 int		execute_parent_process(t_data *msh_data,
-	t_cmd *cmd, pid_t cpid, int pipefd[2])
+	t_cmd *cmd, int pipefd[2])
 {
-	int		stat_loc;
-
 	close(pipefd[1]);
-	waitpid(cpid, &stat_loc, 0);
-	if (WIFEXITED(stat_loc))
-		msh_data->last_return = WEXITSTATUS(stat_loc);
 	if (cmd->redirections[OUT]->fd != STDOUT_FILENO)
 		if (!write_process_redirection(pipefd[0], cmd->redirections[OUT]->fd))
 			return (-1);

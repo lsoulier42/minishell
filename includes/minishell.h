@@ -12,7 +12,6 @@
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
-# define PROMPT_MAX_SIZE 150
 # define BASH_BUILTIN_EXIT_STATUS 2
 # include "libft.h"
 # include <unistd.h>
@@ -114,9 +113,15 @@ typedef struct s_pipe
 	t_list	*begin_cmds;
 }				t_pipe;
 
+typedef struct	s_cpid
+{
+	pid_t	child_pid;
+}				t_cpid;
+
 typedef struct s_instruction
 {
 	t_list	*begin_pipes;
+	t_list	*begin_cpid;
 }				t_instruction;
 
 typedef struct s_token
@@ -127,13 +132,12 @@ typedef struct s_token
 
 typedef struct s_user_input
 {
-	char	*input;
 	t_list	*begin_instructions;
+	char 	*input;
 }				t_user_input;
 
 typedef struct s_data
 {
-	char 			*name;
 	t_list			*begin_env;
 	t_user_input	*parsed_input;
 	int				last_return;
@@ -204,12 +208,12 @@ int				exec_export_one_var(t_list *begin_env, t_export_var *var);
  * Specific functions for cd
  */
 int				exec_cd(t_data *msh_data, t_cmd *cmd);
-int 			exec_cd_particular_paths(t_data *msh_data,
-					t_cmd *cmd, char *new_dir, char *oldpwd);
-int 			exec_cd_change_dir(t_data *msh_data, t_cmd *cmd,
-					char *new_dir, char *oldpwd);
-int				exec_cd_env_var(t_list *begin_env,
-					char *new_pathname, char *oldpwd);
+int				exec_cd_current_dir(t_data *msh_data, t_cmd *cmd);
+int 			exec_cd_change_env_var(t_data *msh_data, char *new_dir);
+int 			exec_cd_change_dir(t_data *msh_data, t_cmd *cmd, char *new_dir);
+int				exec_cd_home(t_data *msh_data, t_cmd *cmd);
+int				exec_cd_oldpwd(t_data *msh_data, t_cmd *cmd);
+
 /*
  * Specific functions for echo
  */
@@ -317,12 +321,12 @@ t_cmd			*get_cmd(t_list *pipe_el);
 void			del_redirection(void *redirection_void);
 t_redirection	*new_redirection(char *filename, int fd, int type);
 int				token_is_redirection(t_list *token_el);
-t_redirection	**parse_redirections(t_list *tokens);
+t_redirection	**parse_redirections(t_list **begin_cmds);
 int				create_empty_file_redirection(char *filename, int append);
 int				redirection_is_not_last(t_list *token_el);
 int				parse_one_redirection(t_list *tokens,
 					t_redirection ***redirections);
-void			delete_redirection_tokens(t_list **tokens, t_list **previous);
+void			delete_redirection_tokens(t_list **begins_cmds, t_list *token);
 int 			open_redirections(t_redirection ***redirections);
 int				close_redirections(t_redirection **redirections);
 int 			open_redirection_in(t_redirection **redirection);
@@ -377,13 +381,14 @@ int				trail_null_args(t_cmd *cmd);
  */
 
 int				execute_all_cmds(t_data *msh_data);
-int				execute_cmd(t_data *msh_data, t_cmd *cmd, int previous_fd, int is_last);
+int				execute_cmd(t_data *msh_data, t_list **begin_cpid,
+				   t_list *pipes, int previous_fd);
 int             execute_last_builtin(t_data *msh_data,
 					t_cmd *cmd, int previous_fd);
-int             execute_pipe_cmd(t_data *msh_data,
+int				execute_pipe_cmd(t_data *msh_data, t_list **begin_cpid,
 					t_cmd *cmd, int previous_fd);
 int				execute_parent_process(t_data *msh_data,
-					t_cmd *cmd, pid_t cpid, int pipefd[2]);
+					t_cmd *cmd, int pipefd[2]);
 int             execute_child_process(t_data *msh_data,
 					t_cmd *cmd, int previous_fd, int pipefd[2]);
 int             execute_child_process_execve(t_data *msh_data,
@@ -391,6 +396,8 @@ int             execute_child_process_execve(t_data *msh_data,
 int 			child_file_handler(int redir_in_fd,
 					int previous_fd, int pipefd_read);
 int				write_process_redirection(int read_fd, int out_fd);
+int 			process_sub_system(t_data *msh_data,
+					t_list **begin_cpid, t_list *pipes);
 
 /*
  * Functions for general errors management and messages
@@ -403,6 +410,7 @@ void			directory_not_found(char *cmd_name);
 void			open_file_error(char *filename);
 void			execve_error(char *cmd_name, int errno_value);
 int				exit_error(char *arg, int error_code);
+void			cd_current_dir_error(void);
 
 /*
  * Functions for searching command in path or current dir,
@@ -423,9 +431,17 @@ int				search_path_relative_in_path(t_data *msh_data, t_cmd **cmd);
 
 void    		ctrlc_handler(int signum);
 void			ctrlslash_handler(int signum);
-void 			sigint_read_handler(int *read_return);
+void 			sigint_read_handler(int *gnl_return);
 void 			sigint_exec_handler(int *end_of_command);
 void 			sigquit_exec_handler(void);
+
+/*
+ * Cpid list functions, added to deal with infinite process
+ */
+
+t_cpid			*new_cpid(pid_t cpid);
+t_list			*new_cpid_el(pid_t cpid);
+int 			add_cpid(t_list **begin_cpid, pid_t cpid);
 
 //test functions to be deleted
 void			print_token_list(t_list *begin);

@@ -50,12 +50,13 @@ int	check_token_list(t_list *tokens)
 	while (tokens)
 	{
 		value = get_token_value(tokens);
-		if (i++ == 0 && token_is_operator(tokens))
+		if (i++ == 0 && token_is_operator(tokens)
+			&& (ft_strcmp(value, "|") == 0 || ft_strcmp(value, ";") == 0))
 			return (error_operator_is_last_token());
 		if (token_is_operator(tokens) && (ft_strcmp(value, "|") == 0
-					|| ft_strcmp(value, ">") == 0
-					|| ft_strcmp(value, "<") == 0
-					|| ft_strcmp(value, ">>") == 0))
+			|| ft_strcmp(value, ">") == 0
+			|| ft_strcmp(value, "<") == 0
+			|| ft_strcmp(value, ">>") == 0))
 		{
 			if (!tokens->next)
 				return (error_operator_is_last_token());
