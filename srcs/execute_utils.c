@@ -12,108 +12,58 @@
 
 #include "minishell.h"
 
-int		execute_child_process_execve(t_data *msh_data,
-	t_cmd *cmd, int pipefd[2])
+int		execute_last_builtin(t_data *msh_data, t_cmd *cmd, int previous_fd)
 {
-	char	**envp;
-	int		execve_return;
-	char 	*fullname;
-
-	envp = serialize_env(msh_data->begin_env);
-	if (!envp)
-		return (-1);
-	fullname = ft_strjoin(cmd->path, cmd->args[0]);
-	if (!fullname)
-		return(free_double_tab_ret_int(envp));
-	execve_return = execve(fullname, cmd->args, envp);
-	ft_double_tab_free(envp);
-	close(pipefd[1]);
-	if (execve_return == -1)
+	if (cmd->redirections[IN]->fd != STDIN_FILENO)
 	{
-		execve_error(fullname, errno);
-		free(fullname);
-		exit(EXIT_FAILURE);
-	}
-	free(fullname);
-	return (execve_return);
-}
-
-int		child_file_handler(int redir_in_fd, int previous_fd, int pipefd_read)
-{
-	int error;
-
-	error = 0;
-	close(pipefd_read);
-	if (redir_in_fd != STDIN_FILENO)
-	{
-		close(STDIN_FILENO);
-		if (dup(redir_in_fd) == -1)
-			error = 1;
-		close(redir_in_fd);
-		if (previous_fd != -1)
-			close(previous_fd);
+		if (dup2(STDIN_FILENO, cmd->redirections[IN]->fd) == -1)
+			return (-1);
 	}
 	else if (previous_fd != -1)
 	{
-		close(STDIN_FILENO);
-		if (dup(previous_fd) == -1)
-			error = 1;
-		close(previous_fd);
-	}
-	if (error == 1)
-		return (-1);
-	return (0);
-}
-
-int		execute_child_process(t_data *msh_data,
-	t_cmd *cmd, int previous_fd, int pipefd[2])
-{
-	int	exit_status;
-
-	if (child_file_handler(cmd->redirections[IN]->fd,
-		previous_fd, pipefd[0]) == -1)
-		return (-1);
-	if (!cmd->is_last || cmd->redirections[OUT]->fd != STDOUT_FILENO)
-		if (dup2(pipefd[1], STDOUT_FILENO) == -1)
+		if (dup2(STDIN_FILENO, previous_fd) == -1)
 			return (-1);
-	if (search_builtin(cmd->args[0]))
-	{
-		exit_status = execute_builtin(msh_data, cmd);
-		close(pipefd[1]);
-		exit(exit_status);
 	}
-	else
-		return (execute_child_process_execve(msh_data, cmd, pipefd));
+	msh_data->last_return = execute_builtin(msh_data, cmd);
+	return (msh_data->last_return);
 }
 
-int		write_process_redirection(int read_fd, int out_fd)
+int		execute_pipe_cmd(t_data *msh_data, t_list **begin_cpid, t_cmd *cmd, int previous_fd)
 {
-	char	buf[BUFFER_SIZE];
-	int		read_return;
+	pid_t	cpid;
+	int		pipefd[2];
 
-	read_return = 1;
-	while (read_return > 0)
+	if (pipe(pipefd) == -1)
+		return (-1);
+	cpid = fork();
+	if (cpid == 0)
+		return (execute_child_process(msh_data, cmd, previous_fd, pipefd));
+	else if (cpid != -1)
 	{
-		read_return = read(read_fd, buf, BUFFER_SIZE);
-		if (read_return == -1)
+		if (!add_cpid(begin_cpid, cpid))
+			return (-1);
+		return (execute_parent_process(msh_data, cmd, pipefd));
+	}
+	return (-1);
+}
+
+int 	process_sub_system(t_data *msh_data, t_list **begin_cpid, t_list *pipes)
+{
+	t_cmd *cmd;
+
+	cmd = get_cmd(pipes);
+	if (!expand_vars(msh_data, cmd) || !cmd->args[0])
+		return (0);
+	if (!parse_path_and_name(&cmd))
+		return (0);
+	if (!open_redirections(&(cmd->redirections)))
+		return (0);
+	if (!search_path(msh_data, &cmd))
+	{
+		if (!add_cpid(begin_cpid, -1))
 			return (0);
-		write(out_fd, &buf, read_return);
+		msh_data->last_return = 127;
+		return (0);
 	}
 	return (1);
-}
-
-int		execute_parent_process(t_data *msh_data,
-	t_cmd *cmd, int pipefd[2])
-{
-	close(pipefd[1]);
-	if (cmd->redirections[OUT]->fd != STDOUT_FILENO)
-		if (!write_process_redirection(pipefd[0], cmd->redirections[OUT]->fd))
-			return (-1);
-	if (cmd->is_last)
-	{
-		close(pipefd[0]);
-		return (EXIT_SUCCESS);
-	}
-	else
-		return (pipefd[0]);
 }
