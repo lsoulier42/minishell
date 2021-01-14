@@ -36,16 +36,16 @@ static int	msh_second_loop(t_data *msh_data,
 		else
 		{
 			if (!execute_all_cmds(msh_data))
-				msh_data->last_return = EXIT_FAILURE;
+				exit(EXIT_FAILURE);
 		}
 		del_user_input(msh_data->parsed_input);
 	}
 	else
-		msh_data->last_return = 2;
-	return (msh_data->last_return == 0);
+		msh_data->last_return = PARSING_ERROR;
+	return (EXIT_SUCCESS);
 }
 
-static void	msh_first_loop(t_data *msh_data,
+static int	msh_first_loop(t_data *msh_data,
 	int argc, char **argv, int *gnl_return)
 {
 	int			end_of_command;
@@ -59,16 +59,17 @@ static void	msh_first_loop(t_data *msh_data,
 	while (!end_of_command)
 	{
 		*gnl_return = get_next_line(STDIN_FILENO, &line);
-		sigint_read_handler(gnl_return);
+		sigint_read_handler(msh_data, gnl_return);
 		if (*gnl_return == -1 || g_signal_value == SIGINT)
 			break ;
-		if (!msh_second_loop(msh_data, line, argc, argv))
+		if (msh_second_loop(msh_data, line, argc, argv) == EXIT_FAILURE)
 			error = 1;
 		free(line);
-		sigint_exec_handler(&end_of_command);
+		sigint_exec_handler(msh_data, &end_of_command);
 		if (*gnl_return == 1 || error == 1)
 			end_of_command = 1;
 	}
+	return (error == 0);
 }
 
 int			main(int argc, char *argv[], char *envp[])
@@ -84,8 +85,9 @@ int			main(int argc, char *argv[], char *envp[])
 	if (signal(SIGQUIT, ctrlslash_handler) == SIG_ERR)
 		exit(EXIT_FAILURE);
 	while (!msh_data.exit_msh && gnl_return > 0)
-		msh_first_loop(&msh_data, argc, argv, &gnl_return);
-	if (gnl_return == 0)
+		if (!msh_first_loop(&msh_data, argc, argv, &gnl_return))
+			break ;
+	if (msh_data.exit_msh != 1)
 		exec_exit(&msh_data, NULL);
 	ft_lstclear(&(msh_data.begin_env), &del_var);
 	return (msh_data.exit_value);

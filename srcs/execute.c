@@ -17,7 +17,7 @@ int		execute_cmd(t_data *msh_data, t_list **begin_cpid, t_list *pipes, int previ
 	t_cmd *cmd;
 
 	cmd = get_cmd(pipes);
-	cmd->is_last = !pipes->next;
+	cmd->is_last = !(pipes->next);
 	cmd->is_piped = previous_fd != -1;
 	if (cmd->is_last && search_builtin(cmd->args[0]))
 		previous_fd = execute_last_builtin(msh_data, cmd, previous_fd);
@@ -56,7 +56,6 @@ static int 	execute_all_cmds_loop(t_data *msh_data, t_list *instructions)
 {
 	t_list	*pipes;
 	t_list	**begin_cpid;
-
 	int		previous_fd;
 
 	previous_fd = -1;
@@ -79,16 +78,19 @@ static int 	execute_all_cmds_loop(t_data *msh_data, t_list *instructions)
 int		execute_all_cmds(t_data *msh_data)
 {
 	t_list	*instructions;
+	int error;
 
-
+	error = 0;
 	instructions = msh_data->parsed_input->begin_instructions;
 	while (instructions && g_signal_value != SIGINT)
 	{
-		if(!execute_all_cmds_loop(msh_data, instructions))
-			return(0);
+		if (!execute_all_cmds_loop(msh_data, instructions))
+			error = 1;
 		execute_all_cmds_cpid(msh_data, instructions);
-		sigquit_exec_handler();
+		sigquit_exec_handler(msh_data);
+		if (error == 1)
+			break ;
 		instructions = instructions->next;
 	}
-	return (1);
+	return (error == 0);
 }

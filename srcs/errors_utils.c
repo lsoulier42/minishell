@@ -40,3 +40,10 @@ void cd_current_dir_error(void)
 	ft_putstr_fd("getcwd: cannot access parent directories: ", STDERR_FILENO);
 	ft_putendl_fd(strerror(errno), STDERR_FILENO);
 }
+
+void fork_error(void)
+{
+	ft_putstr_fd("minishell: ", STDERR_FILENO);
+	ft_putstr_fd("fork: ", STDERR_FILENO);
+	ft_putendl_fd(strerror(errno), STDERR_FILENO);
+}

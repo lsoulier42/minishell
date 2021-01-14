@@ -12,11 +12,14 @@
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
+# define SIGNAL_ERROR 128
+# define PARSING_ERROR 2
+# define COMMAND_NOT_FOUND 127
 # ifdef __linux__
-# 	define BASH_BUILTIN_EXIT_STATUS 2
+#  define BASH_BUILTIN_EXIT_STATUS 2
 # endif
 # ifdef __APPLE__
-# 	define BASH_BUILTIN_EXIT_STATUS 255
+#  define BASH_BUILTIN_EXIT_STATUS 255
 # endif
 # include "libft.h"
 # include <unistd.h>
@@ -415,6 +418,7 @@ void			open_file_error(char *filename);
 void			execve_error(char *cmd_name, int errno_value);
 int				exit_error(char *arg, int error_code);
 void			cd_current_dir_error(void);
+void			fork_error(void);
 
 /*
  * Functions for searching command in path or current dir,
@@ -435,9 +439,9 @@ int				search_path_relative_in_path(t_data *msh_data, t_cmd **cmd);
 
 void    		ctrlc_handler(int signum);
 void			ctrlslash_handler(int signum);
-void 			sigint_read_handler(int *gnl_return);
-void 			sigint_exec_handler(int *end_of_command);
-void 			sigquit_exec_handler(void);
+void 			sigint_read_handler(t_data *msh_data, int *gnl_return);
+void 			sigint_exec_handler(t_data *msh_data, int *end_of_command);
+void 			sigquit_exec_handler(t_data *msh_data);
 
 /*
  * Cpid list functions, added to deal with infinite process

@@ -34,16 +34,23 @@ int		execute_pipe_cmd(t_data *msh_data, t_list **begin_cpid, t_cmd *cmd, int pre
 	int		pipefd[2];
 
 	if (pipe(pipefd) == -1)
+	{
+		format_error(cmd->args[0], cmd->args[1], errno, NULL);
 		return (-1);
+	}
 	cpid = fork();
 	if (cpid == 0)
 		return (execute_child_process(msh_data, cmd, previous_fd, pipefd));
 	else if (cpid != -1)
 	{
+		if (previous_fd != -1)
+			close(previous_fd);
 		if (!add_cpid(begin_cpid, cpid))
 			return (-1);
 		return (execute_parent_process(cmd, pipefd));
 	}
+	fork_error();
+	exit(SIGNAL_ERROR);
 	return (-1);
 }
 
@@ -62,7 +69,7 @@ int 	process_sub_system(t_data *msh_data, t_list **begin_cpid, t_list *pipes)
 	{
 		if (!add_cpid(begin_cpid, -1))
 			return (0);
-		msh_data->last_return = 127;
+		msh_data->last_return = COMMAND_NOT_FOUND;
 		return (0);
 	}
 	return (1);
