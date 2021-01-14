@@ -67,7 +67,7 @@ int		change_env_shlvl(t_list *begin_env)
 		itoa_value = ft_strdup("1");
 		if (!itoa_value)
 			return (0);
-		if (!set_env_var(&begin_env, "SHLVL", itoa_value))
+		if (!set_env_var(&begin_env, ft_strdup("SHLVL"), itoa_value))
 			return (free_return_int(itoa_value));
 	}
 	else
@@ -79,4 +79,9 @@ int		change_env_shlvl(t_list *begin_env)
 			return (free_return_int(itoa_value));
 	}
 	return (1);
+}
+
+int create_basic_env(t_list **begin)
+{
+
 }

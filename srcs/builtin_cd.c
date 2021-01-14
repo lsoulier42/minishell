@@ -21,7 +21,7 @@ int 	exec_cd_change_dir(t_data *msh_data, t_cmd *cmd, char *new_dir)
 	if(!cmd->is_piped)
 		chdir_return = chdir(new_dir);
 	if (chdir_return == -1)
-		format_error(cmd->args[0], new_dir, errno, NULL);
+		cd_dir_not_found(new_dir);
 	new_current = getcwd(NULL, 0);
 	if (!new_current)
 		return (0);
@@ -40,9 +40,13 @@ int		exec_cd_home(t_data *msh_data, t_cmd *cmd)
 
 	home = get_env_var(msh_data->begin_env, "HOME");
 	if (!home)
+	{
+		cd_home_unset();
 		return (0);
-	if (!exec_cd_change_dir(msh_data, cmd, home->value))
-		return (0);
+	}
+	if (home->value && ft_strcmp(home->value, "") != 0)
+		if (!exec_cd_change_dir(msh_data, cmd, home->value))
+			return (0);
 	return (1);
 }
 
@@ -60,7 +64,7 @@ int		exec_cd_oldpwd(t_data *msh_data, t_cmd *cmd)
 
 int		exec_cd(t_data *msh_data, t_cmd *cmd)
 {
-	char *new_dir;
+	char	*new_dir;
 
 	new_dir = cmd->args[1];
 	if (!new_dir || (new_dir != NULL && ft_strcmp(new_dir, "~") == 0))

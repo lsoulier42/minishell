@@ -21,6 +21,8 @@ t_list	*set_env(char *envp[])
 
 	i = -1;
 	begin_env = NULL;
+	if (!envp || !envp[0])
+		create_basic_env(&begin_env);
 	while (envp && envp[++i])
 	{
 		if (!parse_var(envp[i], &key, &value))

@@ -35,7 +35,8 @@ int		execute_pipe_cmd(t_data *msh_data, t_list **begin_cpid, t_cmd *cmd, int pre
 
 	if (pipe(pipefd) == -1)
 	{
-		format_error(cmd->args[0], cmd->args[1], errno, NULL);
+		pipe_error();
+		msh_data->last_return = SIGNAL_ERROR;
 		return (-1);
 	}
 	cpid = fork();

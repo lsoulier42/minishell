@@ -28,7 +28,7 @@ int		execute_child_process_execve(t_data *msh_data,
 	execve_return = execve(fullname, cmd->args, envp);
 	ft_double_tab_free(envp);
 	close(pipefd[1]);
-	close_redirections(cmd->redirections);
+	//close_redirections(cmd->redirections);
 	if (execve_return == -1)
 	{
 		execve_error(fullname, errno);

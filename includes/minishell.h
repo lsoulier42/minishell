@@ -17,9 +17,11 @@
 # define COMMAND_NOT_FOUND 127
 # ifdef __linux__
 #  define BASH_BUILTIN_EXIT_STATUS 2
+#  define HOME_DIR "/home"
 # endif
 # ifdef __APPLE__
 #  define BASH_BUILTIN_EXIT_STATUS 255
+#  define HOME_DIR "/Users"
 # endif
 # include "libft.h"
 # include <unistd.h>
@@ -410,7 +412,6 @@ int 			process_sub_system(t_data *msh_data,
  * Functions for general errors management and messages
  */
 
-void			format_error(char *cmd_name, char *arg, int ev, char *str);
 void			invalid_identifier(char *cmd_name, char *arg);
 void			command_not_found(char *cmd_name);
 void			directory_not_found(char *cmd_name);
@@ -419,6 +420,9 @@ void			execve_error(char *cmd_name, int errno_value);
 int				exit_error(char *arg, int error_code);
 void			cd_current_dir_error(void);
 void			fork_error(void);
+void			cd_home_unset(void);
+void			cd_dir_not_found(char *arg);
+void			pipe_error(void);
 
 /*
  * Functions for searching command in path or current dir,

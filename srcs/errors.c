@@ -12,17 +12,11 @@
 
 #include "minishell.h"
 
-void	format_error(char *cmd_name, char *arg, int errno_value, char *str)
+void	pipe_error(void)
 {
 	ft_putstr_fd("minishell: ", STDERR_FILENO);
-	ft_putstr_fd(cmd_name, STDERR_FILENO);
-	ft_putstr_fd(": ", STDERR_FILENO);
-	if (!str)
-		ft_putstr_fd(strerror(errno_value), STDERR_FILENO);
-	else
-		ft_putstr_fd(str, STDERR_FILENO);
-	ft_putstr_fd(": ", STDERR_FILENO);
-	ft_putendl_fd(arg, STDERR_FILENO);
+	ft_putstr_fd("pipe: ", STDERR_FILENO);
+	ft_putendl_fd(strerror(errno), STDERR_FILENO);
 }
 
 void	invalid_identifier(char *cmd_name, char *arg)
