@@ -12,7 +12,7 @@
 
 #include "libft.h"
 
-char **ft_double_tab_merge(char **tab1, char **tab2)
+char	**ft_double_tab_merge(char **tab1, char **tab2)
 {
 	char	**new;
 	int		len;
@@ -20,8 +20,7 @@ char **ft_double_tab_merge(char **tab1, char **tab2)
 	int		j;
 
 	len = ft_double_tab_len(tab1) + ft_double_tab_len(tab2);
-	new = (char**)malloc(sizeof(char*) * (len + 1));
-	if (!new)
+	if (!(new = (char**)malloc(sizeof(char*) * (len + 1))))
 		return (NULL);
 	i = -1;
 	j = 0;

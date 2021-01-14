@@ -42,7 +42,7 @@ int		execute_pipe_cmd(t_data *msh_data, t_list **begin_cpid, t_cmd *cmd, int pre
 	{
 		if (!add_cpid(begin_cpid, cpid))
 			return (-1);
-		return (execute_parent_process(msh_data, cmd, pipefd));
+		return (execute_parent_process(cmd, pipefd));
 	}
 	return (-1);
 }

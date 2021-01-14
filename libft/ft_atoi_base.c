@@ -26,7 +26,7 @@ static int	base_index(char *base, char c)
 	return (-1);
 }
 
-int	ft_atoi_base(char *str, char *base)
+int			ft_atoi_base(char *str, char *base)
 {
 	long	r_nb;
 	int		sign;

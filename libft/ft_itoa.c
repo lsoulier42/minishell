@@ -12,7 +12,7 @@
 
 #include "libft.h"
 
-int	itoa_count_char(int n)
+int		itoa_count_char(int n)
 {
 	int		nb_char;
 	long	nb;
@@ -22,7 +22,7 @@ int	itoa_count_char(int n)
 		nb_char = 2;
 	nb = n;
 	if (n < 0)
-		nb = - (long) n;
+		nb = -(long)n;
 	while (nb / 10 != 0)
 	{
 		nb_char++;
@@ -40,7 +40,7 @@ char	*ft_itoa(int n)
 	nb_char = itoa_count_char(n);
 	abs_n = n;
 	if (n < 0)
-		abs_n = - (long) n;
+		abs_n = -(long)n;
 	str = (char*)malloc(sizeof(char) * (nb_char + 1));
 	if (!str)
 		return (NULL);

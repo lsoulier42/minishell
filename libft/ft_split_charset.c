@@ -74,7 +74,7 @@ static char	*set_new_word(char *str, char *charset, int word_len)
 	return (word);
 }
 
-char	**ft_split_charset(char *str, char *charset)
+char		**ft_split_charset(char *str, char *charset)
 {
 	int		p_char;
 	char	**words_tab;

@@ -12,11 +12,11 @@
 
 #include "libft.h"
 
-char *ft_lstjoin(t_list *begin)
+char	*ft_lstjoin(t_list *begin)
 {
 	int		len;
 	t_list	*track;
-	char 	*new;
+	char	*new;
 
 	len = 0;
 	track = begin;

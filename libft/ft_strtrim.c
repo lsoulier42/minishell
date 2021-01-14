@@ -51,7 +51,7 @@ static int	char_to_rmv(const char *s1, const char *set, size_t len)
 	return (nb);
 }
 
-char	*ft_strtrim(const char *s1, const char *set)
+char		*ft_strtrim(const char *s1, const char *set)
 {
 	char	*new;
 	size_t	i;

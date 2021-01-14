@@ -20,7 +20,7 @@
 #  define BUFFER_SIZE 100
 # endif
 
-typedef struct s_list
+typedef struct	s_list
 {
 	void			*content;
 	struct s_list	*next;
@@ -118,11 +118,11 @@ int				get_next_line(int fd, char **line);
 int				begin_line(char **line, char *buffer, int *offset);
 int				fill_line(char **line, char *buffer, int *offset);
 int				ft_strcmp(const char *s1, const char *s2);
-char 			*ft_trim_charset(char *str, char *charset);
+char			*ft_trim_charset(char *str, char *charset);
 int				ft_ischarset(char c, char *charset);
 int				ft_isnum(char *str);
 char			*ft_strndup(char *str, int n);
-char 			*ft_lstjoin(t_list *begin);
+char			*ft_lstjoin(t_list *begin);
 int				ft_double_tab_len(char **tab);
 char			**ft_double_tab_merge(char **tab1, char **tab2);
 void			*ft_double_tab_free(char **tab);

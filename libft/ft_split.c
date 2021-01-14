@@ -50,7 +50,7 @@ static char	*set_wd(const char *s, char c, int start_index)
 	return (wd);
 }
 
-char	**ft_split(const char *s, char c)
+char		**ft_split(const char *s, char c)
 {
 	char	**wd_tab;
 	char	p_char;

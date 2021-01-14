@@ -20,7 +20,7 @@ static int	get_len(char *str)
 		return (0);
 }
 
-int	fill_line(char **line, char *buffer, int *offset)
+int			fill_line(char **line, char *buffer, int *offset)
 {
 	int		to_endl;
 	char	*new_line;
@@ -49,7 +49,7 @@ int	fill_line(char **line, char *buffer, int *offset)
 	return (0);
 }
 
-int	begin_line(char **line, char *buffer, int *offset)
+int			begin_line(char **line, char *buffer, int *offset)
 {
 	int	to_endl;
 
@@ -69,7 +69,7 @@ int	begin_line(char **line, char *buffer, int *offset)
 	return (0);
 }
 
-int	get_next_line(int fd, char **line)
+int			get_next_line(int fd, char **line)
 {
 	static char	buffer[BUFFER_SIZE + 1] = "";
 	static int	offset = 0;

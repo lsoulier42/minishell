@@ -12,7 +12,12 @@
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
-# define BASH_BUILTIN_EXIT_STATUS 2
+# ifdef __linux__
+# 	define BASH_BUILTIN_EXIT_STATUS 2
+# endif
+# ifdef __APPLE__
+# 	define BASH_BUILTIN_EXIT_STATUS 255
+# endif
 # include "libft.h"
 # include <unistd.h>
 # include <stdlib.h>
@@ -387,8 +392,7 @@ int             execute_last_builtin(t_data *msh_data,
 					t_cmd *cmd, int previous_fd);
 int				execute_pipe_cmd(t_data *msh_data, t_list **begin_cpid,
 					t_cmd *cmd, int previous_fd);
-int				execute_parent_process(t_data *msh_data,
-					t_cmd *cmd, int pipefd[2]);
+int				execute_parent_process(t_cmd *cmd, int pipefd[2]);
 int             execute_child_process(t_data *msh_data,
 					t_cmd *cmd, int previous_fd, int pipefd[2]);
 int             execute_child_process_execve(t_data *msh_data,

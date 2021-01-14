@@ -19,13 +19,16 @@ char	*serialize_one_env_var(t_list *env_el)
 	t_var	*var;
 
 	var = (t_var*)env_el->content;
-	len = ft_strlen(var->key) + ft_strlen(var->value) + 1;
+	len = ft_strlen(var->key) + 1;
+	if (var->value)
+		len += ft_strlen(var->value);
 	str = (char*)ft_calloc(len + 1, sizeof(char));
 	if (!str)
 		return (NULL);
 	ft_strcat(str, var->key);
 	ft_strcat(str, "=");
-	ft_strcat(str, var->value);
+	if (var->value)
+		ft_strcat(str, var->value);
 	return (str);
 }
 

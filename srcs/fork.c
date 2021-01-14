@@ -102,8 +102,7 @@ int		write_process_redirection(int read_fd, int out_fd)
 	return (1);
 }
 
-int		execute_parent_process(t_data *msh_data,
-								  t_cmd *cmd, int pipefd[2])
+int		execute_parent_process(t_cmd *cmd, int pipefd[2])
 {
 	close(pipefd[1]);
 	if (cmd->redirections[OUT]->fd != STDOUT_FILENO)

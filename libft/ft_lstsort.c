@@ -21,7 +21,7 @@ static void	ft_swap_content(t_list *a, t_list *b)
 	b->content = tmp;
 }
 
-void	ft_lstsort(t_list **begin, int (*cmp)())
+void		ft_lstsort(t_list **begin, int (*cmp)())
 {
 	t_list	*current;
 	t_list	*next;

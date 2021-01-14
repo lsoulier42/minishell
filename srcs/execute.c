@@ -67,7 +67,7 @@ static int 	execute_all_cmds_loop(t_data *msh_data, t_list *instructions)
 		if (process_sub_system(msh_data, begin_cpid, pipes))
 		{
 			previous_fd = execute_cmd(msh_data,
-									  begin_cpid, pipes, previous_fd);
+				begin_cpid, pipes, previous_fd);
 			if (previous_fd == -1)
 				return (0);
 		}
