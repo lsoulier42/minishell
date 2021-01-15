@@ -89,6 +89,8 @@ int		exec_cd(t_data *msh_data, t_cmd *cmd)
 {
 	char	*new_dir;
 
+	if (cmd->args[1] && cmd->args[2])
+		return (cd_too_many_args());
 	new_dir = cmd->args[1];
 	if (!new_dir || (new_dir != NULL && ft_strcmp(new_dir, "~") == 0))
 	{

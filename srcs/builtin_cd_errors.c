@@ -35,3 +35,10 @@ void cd_dir_not_found(char *arg)
 	ft_putstr_fd(": ", STDERR_FILENO);
 	ft_putendl_fd(strerror(errno), STDERR_FILENO);
 }
+
+int cd_too_many_args(void)
+{
+	ft_putstr_fd("minishell: ", STDERR_FILENO);
+	ft_putendl_fd("cd: too many arguments", STDERR_FILENO);
+	return (EXIT_FAILURE);
+}

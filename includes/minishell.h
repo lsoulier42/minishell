@@ -38,6 +38,7 @@
 # include <string.h>
 # include <errno.h>
 # include <limits.h>
+# include <stdio.h>
 
 /*
  * Enum declaration
@@ -272,6 +273,7 @@ int				token_len_operator(char *input);
 int				token_is_pipe(t_list *el);
 int				token_is_semicolon(t_list *el);
 void			*free_token_struct(t_list **begin, char *tmp);
+t_list			*double_tab_to_tokens(char **tab);
 
 /*
  * Functions for instructions management.
@@ -384,7 +386,11 @@ int				expand_one_var(t_data *msh_data, t_list **begin,
 					char *arg, int *i);
 int 			no_quote_arg(char *str);
 int				trail_null_args(t_cmd *cmd);
-
+char			**insert_new_args(char *var_value, char **args, int *arg_index, int *argc);
+int				expand_one_var_alone(t_data *msh_data, char ***args, int *arg_index, int *argc);
+void 			insert_tokens(t_list *token_before, t_list *list_to_insert);
+int 			arg_is_var_alone(char *arg);
+void			rm_token_replaced(t_list **args, int index);
 /*
  * Execute functions. One function, if found, will be executed depending
  * if it's a builtin or not.
@@ -427,6 +433,7 @@ int				exit_error(char *arg, int error_code);
 void			cd_current_dir_error(void);
 void 			cd_var_unset(char *var_value);
 void			cd_dir_not_found(char *arg);
+int				cd_too_many_args(void);
 int				ressource_error(t_data *msh_data, char *function_name,
 					int exit_status_wanted, int return_wanted);
 
@@ -464,4 +471,5 @@ int 			add_cpid(t_list **begin_cpid, pid_t cpid);
 //test functions to be deleted
 void			print_token_list(t_list *begin);
 void			print_instructions_list(t_list *instructions);
+void 			print_double_tab(char **tab);
 #endif

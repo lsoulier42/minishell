@@ -49,3 +49,24 @@ void	print_color(char *str, char color)
 	ft_putstr_fd(str, STDERR_FILENO);
 	ft_putstr_fd("\x1b[0m", STDERR_FILENO);
 }
+
+int	ft_isoperator(char c)
+{
+	return (c == '|' || c == ';' || c == '>' || c == '<');
+}
+
+int	ft_isseparator(char c)
+{
+	return (ft_isspace(c) || ft_isoperator(c));
+}
+
+int	str_has_ws(char *str)
+{
+	int i;
+
+	i = -1;
+	while(str[++i])
+		if (ft_isspace(str[i]))
+			return (1);
+	return (0);
+}

@@ -19,9 +19,9 @@ int		expand_vars(t_data *msh_data, t_cmd *cmd)
 	i = -1;
 	while (cmd->args[++i])
 	{
-		if (cmd->args[i][0] == '$' && !str_has_ws(cmd->args[i]))
+		if (arg_is_var_alone(cmd->args[i]))
 		{
-			if (!expand_one_var_alone(msh_data, &(cmd->args), &i))
+			if (!expand_one_var_alone(msh_data, &(cmd->args), &i, &(cmd->argc)))
 				return (0);
 		}
 		else

@@ -1,5 +1,13 @@
 #include "minishell.h"
-#include <stdio.h>
+
+void 	print_double_tab(char **tab)
+{
+	int i;
+
+	i = -1;
+	while(tab[++i])
+		printf("|%s|\n", tab[i]);
+}
 
 void 		print_token_list(t_list *begin)
 {

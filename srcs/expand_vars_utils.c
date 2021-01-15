@@ -12,6 +12,17 @@
 
 #include "minishell.h"
 
+void delete_old_tab(char **args, int argc)
+{
+	int i;
+
+	i = -1;
+	while (++i < argc)
+		if (args[i])
+			free(args[i]);
+	free(args);
+}
+
 int	trail_null_args(t_cmd *cmd)
 {
 	int i;
@@ -37,7 +48,7 @@ int	trail_null_args(t_cmd *cmd)
 				return (free_double_tab_ret_int(new));
 		}
 	new[j] = NULL;
-	ft_double_tab_free(cmd->args);
+	delete_old_tab(cmd->args, cmd->argc);
 	cmd->args = new;
 	cmd->argc = nb;
 	return (1);

@@ -12,14 +12,29 @@
 
 #include "minishell.h"
 
-int	ft_isoperator(char c)
+t_list *double_tab_to_tokens(char **tab)
 {
-	return (c == '|' || c == ';' || c == '>' || c == '<');
-}
+	int		i;
+	t_list	*begin;
+	t_list	*token;
+	char	*value;
 
-int	ft_isseparator(char c)
-{
-	return (ft_isspace(c) || ft_isoperator(c));
+	i = -1;
+	begin = NULL;
+	while (tab[++i])
+	{
+		value = ft_strdup(tab[i]);
+		if (!value)
+			return (NULL);
+		token = new_token_el(value, 0);
+		if (begin && !token)
+		{
+			ft_lstclear(&begin, &del_token);
+			return (free_return_null(value));
+		}
+		ft_lstadd_back(&begin, token);
+	}
+	return (begin);
 }
 
 int	token_is_operator(t_list *el)
