@@ -45,8 +45,17 @@ int	divide_arg(char ***args, char *arg_to_divide, int *arg_index)
 {
 	char **arg_split;
 	char **new;
+	char **next_temp;
 
-	arg_split =
+	arg_split = ft_split_charset(arg_to_divide, " \t\r\f\v\n");
+	if (!arg_split)
+		return (0);
+	next_temp = (*args) + *arg_index + 1;
+	(*args)[*arg_index] = NULL;
+	new = ft_double_tab_merge(*args, arg_split);
+	if (!new)
+		return(free_double_tab_ret_int(arg_split));
+	new = ft_double_tab_merge()
 	/*char 	**first_split;
 	char	**new;
 
