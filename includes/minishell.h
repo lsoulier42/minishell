@@ -168,6 +168,7 @@ void			print_color(char *str, char color);
 int				free_return_int(void *ptr);
 void			*free_return_null(void *ptr);
 int 			free_double_tab_ret_int(char **tab);
+int				str_has_ws(char *str);
 
 /*
  * Functions for environment var management

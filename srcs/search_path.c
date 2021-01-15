@@ -65,6 +65,9 @@ int search_path_relative(t_data *msh_data, t_cmd **cmd)
 	char	*current_dir;
 	char 	*cmd_name;
 
+	if (ft_strcmp((*cmd)->args[0], "..") == 0
+		|| ft_strcmp((*cmd)->args[0], ".") == 0)
+		return (0);
 	current_dir = getcwd(NULL, 0);
 	if (!current_dir)
 		return (0);

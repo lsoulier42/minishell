@@ -46,28 +46,9 @@ int parse_path_and_name_relative(t_cmd **cmd)
 	(*cmd)->args[0] = cmd_name;
 	return (1);
 }
-int	divide_first_arg(char ***args)
-{
-	char 	**first_split;
-	char	**new;
-
-	first_split = ft_split_charset((*args)[0], " \t\r\f\v\n");
-	if (!first_split)
-		return (0);
-	new = ft_double_tab_merge(first_split, (*args + 1));
-	if (!new)
-		return (ft_double_tab_free(first_split) != NULL);
-	ft_double_tab_free(*args);
-	ft_double_tab_free(first_split);
-	*args = new;
-	return (1);
-}
 
 int parse_path_and_name(t_cmd **cmd)
 {
-	if (ft_strchr((*cmd)->args[0], ' '))
-		if (!divide_first_arg(&((*cmd)->args)))
-			return (0);
 	if ((*cmd)->args[0][0] == '/')
 	{
 		if (!parse_path_and_name_absolute(cmd))
