@@ -95,7 +95,7 @@ int search_path(t_data *msh_data, t_cmd **cmd)
 		{
 			if (!search_path_relative(msh_data, cmd))
 			{
-				directory_not_found((*cmd)->path);
+				command_not_found((*cmd)->args[0]);
 				return (0);
 			}
 		}
@@ -103,7 +103,7 @@ int search_path(t_data *msh_data, t_cmd **cmd)
 		{
 			if (!search_in_dir((*cmd)->path, (*cmd)->args[0]))
 			{
-				command_not_found((*cmd)->args[0]);
+				directory_not_found((*cmd)->args[0]);
 				return (0);
 			}
 		}

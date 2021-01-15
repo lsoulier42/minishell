@@ -18,7 +18,10 @@ int	var_has_equal(char *str)
 
 	i = -1;
 	if (str[0] == '=')
+	{
+		invalid_identifier("export", str);
 		return (-1);
+	}
 	while (str[++i])
 		if (str[i] == '=')
 			return (1);
@@ -31,7 +34,10 @@ int	var_has_plus(char *str)
 
 	i = 0;
 	if (str[0] == '+')
+	{
+		invalid_identifier("export", str);
 		return (-1);
+	}
 	while (str[i] && str[i] != '+')
 		i++;
 	if (str[i] == '\0')

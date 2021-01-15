@@ -117,9 +117,7 @@ t_list *create_basic_env(void)
 	if (!pwd)
 		return(free_return_null(cur_dir));
 	free(cur_dir);
-	fake_envp = (char*[]){"HOME=/Users/lsoulier", "USER=lsoulier", "SHLVL=2", pwd, "OLDPWD=/Users/lsoulier",
-		"PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin", "SHELL=/bin/zsh", "_=/usr/bin/env",
-		"LC_CTYPE=UTF-8", "PAGER=less", NULL};
+	fake_envp = (char*[]){"SHLVL=0", pwd, "_=/usr/bin/env", NULL};
 	begin = set_env_loop(fake_envp);
 	free(pwd);
 	return (begin);

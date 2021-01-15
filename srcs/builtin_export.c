@@ -69,21 +69,24 @@ char	*format_export_line(t_var *env_var)
 
 int		exec_export_print(t_list *begin_env, t_cmd *cmd)
 {
-	t_list	*env;
+	t_list	*tmp_env;
 	char	*line;
 
-	env = begin_env;
-	ft_lstsort(&env, &cmp_key_var);
-	while (env)
+	tmp_env = ft_lstdup(begin_env, del_var);
+	if (!tmp_env)
+		return (EXIT_FAILURE);
+	ft_lstsort(&tmp_env, &cmp_key_var);
+	while (tmp_env)
 	{
-		line = format_export_line((t_var*)env->content);
+		line = format_export_line((t_var*)tmp_env->content);
 		ft_putendl_fd(line, cmd->redirections[OUT]->fd);
 		free(line);
-		env = env->next;
+		tmp_env = tmp_env->next;
 	}
+	ft_lstclear(&tmp_env, &del_var);
 	return (EXIT_SUCCESS);
 }
-
+#include <stdio.h>
 int exec_export_parsing(t_list *begin_env, char *unparsed, t_export_var *var)
 {
 	int		equal_sign;

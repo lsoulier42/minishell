@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 
 #include "minishell.h"
-
+#include <stdio.h>
 int		execute_child_process_execve(t_data *msh_data,
 	t_cmd *cmd, int pipefd[2])
 {
@@ -32,10 +32,14 @@ int		execute_child_process_execve(t_data *msh_data,
 	{
 		execve_error(fullname);
 		free(fullname);
-		exit(EXIT_FAILURE);
+		if (errno == EACCES)
+			exit(ACCESS_EXIT_STATUS);
+		else
+			exit(EXIT_FAILURE);
+
 	}
 	free(fullname);
-	return (execve_return);
+	return (EXIT_SUCCESS);
 }
 
 int		child_file_handler(t_data *msh_data, int redir_in_fd, int previous_fd, int pipefd_read)

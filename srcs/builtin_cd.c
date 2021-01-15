@@ -25,7 +25,7 @@ int 	exec_cd_change_dir(t_data *msh_data, t_cmd *cmd, char *new_dir)
 	new_current = getcwd(NULL, 0);
 	if (!new_current)
 		return (0);
-	if(!exec_cd_change_env_var(msh_data,new_current) || chdir_return == -1)
+	if(!exec_cd_change_env_var(msh_data, new_current) || chdir_return == -1)
 	{
 		free(new_current);
 		return (0);
@@ -67,6 +67,24 @@ int		exec_cd_oldpwd(t_data *msh_data, t_cmd *cmd)
 	return (1);
 }
 
+int 	exec_cd_std(t_data *msh_data, t_cmd *cmd, char *new_dir)
+{
+	char	*cur_dir;
+	t_var	*var;
+
+	cur_dir = getcwd(NULL, 0);
+	var = get_env_var(msh_data->begin_env, "PWD");
+	if (!cur_dir && ft_strcmp(new_dir, "..") == 0
+		&& var && ft_strrchr(var->value, '.') == NULL)
+	{
+		free(cur_dir);
+		return (exec_cd_error_retrieving_cwd(msh_data, new_dir));
+	}
+	else
+		return (exec_cd_change_dir(msh_data, cmd, new_dir));
+
+}
+
 int		exec_cd(t_data *msh_data, t_cmd *cmd)
 {
 	char	*new_dir;
@@ -79,7 +97,7 @@ int		exec_cd(t_data *msh_data, t_cmd *cmd)
 	}
 	else if (ft_strcmp(new_dir, ".") == 0)
 	{
-		if (!exec_cd_current_dir(msh_data, cmd))
+		if (!exec_cd_current_dir(msh_data, cmd, new_dir))
 			return (EXIT_FAILURE);
 	}
 	else if (ft_strcmp(new_dir, "-") == 0)
@@ -88,7 +106,7 @@ int		exec_cd(t_data *msh_data, t_cmd *cmd)
 			return (EXIT_FAILURE);
 	}
 	else
-		if (!exec_cd_change_dir(msh_data, cmd, new_dir))
+		if (!exec_cd_std(msh_data, cmd, new_dir))
 			return (EXIT_FAILURE);
 	return (EXIT_SUCCESS);
 }

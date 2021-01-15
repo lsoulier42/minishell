@@ -10,7 +10,8 @@ SRCS=   	ft_memset.c ft_memcpy.c ft_bzero.c ft_toupper.c ft_tolower.c ft_strchr.
 			ft_check_base.c ft_lstsort.c ft_strncpy.c ft_power.c ft_strrev.c ft_factorial.c \
 			ft_print_int_tab.c ft_strstr.c ft_fibonacci.c ft_putchar.c ft_swap_int.c ft_find_next_prime.c \
 			ft_putnbr.c ft_swap_ptr.c get_next_line.c ft_strcmp.c ft_double_tab_free.c ft_trim_charset.c \
-			ft_ischarset.c ft_isnum.c ft_strndup.c ft_lstjoin.c ft_double_tab_len.c ft_double_tab_merge.c
+			ft_ischarset.c ft_isnum.c ft_strndup.c ft_lstjoin.c ft_double_tab_len.c ft_double_tab_merge.c \
+			ft_lstdup.c
 OBJS=       ${SRCS:.c=.o}
 HEAD=		libft.h
 CC=			gcc

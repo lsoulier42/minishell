@@ -113,6 +113,7 @@ void			ft_lstrm_if(t_list **begin, void *content_ref,
 void			ft_lstsort(t_list **begin, int (*cmp)());
 t_list			*ft_lstat(t_list *begin, unsigned int nbr);
 t_list			*ft_lstadd_strs(int size, char **strs);
+t_list			*ft_lstdup(t_list *begin, void (*del)(void*));
 
 int				get_next_line(int fd, char **line);
 int				begin_line(char **line, char *buffer, int *offset);

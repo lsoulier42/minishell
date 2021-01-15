@@ -16,6 +16,7 @@
 # define RESSOURCE_ERROR 128
 # define PARSING_ERROR 2
 # define COMMAND_NOT_FOUND 127
+# define ACCESS_EXIT_STATUS 126
 # ifdef __linux__
 #  define BASH_BUILTIN_EXIT_STATUS 2
 #  define HOME_DIR "/home"
@@ -221,12 +222,13 @@ int				exec_export_one_var(t_list *begin_env, t_export_var *var);
  * Specific functions for cd
  */
 int				exec_cd(t_data *msh_data, t_cmd *cmd);
-int				exec_cd_current_dir(t_data *msh_data, t_cmd *cmd);
+int				exec_cd_current_dir(t_data *msh_data, t_cmd *cmd, char *new_dir);
 int 			exec_cd_change_env_var(t_data *msh_data, char *new_dir);
 int 			exec_cd_change_dir(t_data *msh_data, t_cmd *cmd, char *new_dir);
 int				exec_cd_home(t_data *msh_data, t_cmd *cmd);
 int				exec_cd_oldpwd(t_data *msh_data, t_cmd *cmd);
-
+int 			exec_cd_std(t_data *msh_data, t_cmd *cmd, char *new_dir);
+int				exec_cd_error_retrieving_cwd(t_data *msh_data, char *new_dir);
 /*
  * Specific functions for echo
  */
