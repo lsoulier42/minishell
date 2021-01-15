@@ -28,10 +28,9 @@ int		execute_child_process_execve(t_data *msh_data,
 	execve_return = execve(fullname, cmd->args, envp);
 	ft_double_tab_free(envp);
 	close(pipefd[1]);
-	//close_redirections(cmd->redirections);
 	if (execve_return == -1)
 	{
-		execve_error(fullname, errno);
+		execve_error(fullname);
 		free(fullname);
 		exit(EXIT_FAILURE);
 	}
@@ -39,7 +38,7 @@ int		execute_child_process_execve(t_data *msh_data,
 	return (execve_return);
 }
 
-int		child_file_handler(int redir_in_fd, int previous_fd, int pipefd_read)
+int		child_file_handler(t_data *msh_data, int redir_in_fd, int previous_fd, int pipefd_read)
 {
 	int error;
 
@@ -62,7 +61,7 @@ int		child_file_handler(int redir_in_fd, int previous_fd, int pipefd_read)
 		close(previous_fd);
 	}
 	if (error == 1)
-		return (-1);
+		return (ressource_error(msh_data, "dup", RESSOURCE_ERROR, -1));
 	return (0);
 }
 
@@ -71,12 +70,12 @@ int		execute_child_process(t_data *msh_data,
 {
 	int	exit_status;
 
-	if (child_file_handler(cmd->redirections[IN]->fd,
+	if (child_file_handler(msh_data, cmd->redirections[IN]->fd,
 		previous_fd, pipefd[0]) == -1)
 		return (-1);
 	if (!cmd->is_last || cmd->redirections[OUT]->fd != STDOUT_FILENO)
 		if (dup2(pipefd[1], STDOUT_FILENO) == -1)
-			return (-1);
+			return (ressource_error(msh_data, "dup2", RESSOURCE_ERROR, -1));
 	if (search_builtin(cmd->args[0]))
 	{
 		exit_status = execute_builtin(msh_data, cmd);

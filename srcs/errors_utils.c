@@ -12,12 +12,12 @@
 
 #include "minishell.h"
 
-void	execve_error(char *cmd_name, int errno_value)
+void	execve_error(char *cmd_name)
 {
 	ft_putstr_fd("minishell: ", STDERR_FILENO);
 	ft_putstr_fd(cmd_name, STDERR_FILENO);
 	ft_putstr_fd(": ", STDERR_FILENO);
-	ft_putendl_fd(strerror(errno_value), STDERR_FILENO);
+	ft_putendl_fd(strerror(errno), STDERR_FILENO);
 }
 
 int exit_error(char *arg, int error_code)
@@ -32,11 +32,4 @@ int exit_error(char *arg, int error_code)
 	if (error_code == WRONG_NB_ARGS)
 		ft_putendl_fd("too many arguments", STDERR_FILENO);
 	return (BASH_BUILTIN_EXIT_STATUS);
-}
-
-void fork_error(void)
-{
-	ft_putstr_fd("minishell: ", STDERR_FILENO);
-	ft_putstr_fd("fork: ", STDERR_FILENO);
-	ft_putendl_fd(strerror(errno), STDERR_FILENO);
 }

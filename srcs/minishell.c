@@ -28,6 +28,9 @@ static int	init_data(t_data *msh_data, char *envp[])
 static int	msh_second_loop(t_data *msh_data,
 	char *line, int argc, char **argv)
 {
+	int error;
+
+	error = 0;
 	msh_data->parsed_input = parse_input(line);
 	if (msh_data->parsed_input)
 	{
@@ -36,13 +39,13 @@ static int	msh_second_loop(t_data *msh_data,
 		else
 		{
 			if (!execute_all_cmds(msh_data))
-				exit(EXIT_FAILURE);
+				error = 1;
 		}
 		del_user_input(msh_data->parsed_input);
 	}
 	else
 		msh_data->last_return = PARSING_ERROR;
-	return (EXIT_SUCCESS);
+	return (error == 0);
 }
 
 static int	msh_first_loop(t_data *msh_data,
@@ -60,9 +63,9 @@ static int	msh_first_loop(t_data *msh_data,
 	{
 		*gnl_return = get_next_line(STDIN_FILENO, &line);
 		sigint_read_handler(msh_data, gnl_return);
-		if (*gnl_return == -1 || g_signal_value == SIGINT)
+		if (*gnl_return <= 0 || g_signal_value == SIGINT)
 			break ;
-		if (msh_second_loop(msh_data, line, argc, argv) == EXIT_FAILURE)
+		if (!msh_second_loop(msh_data, line, argc, argv))
 			error = 1;
 		free(line);
 		sigint_exec_handler(msh_data, &end_of_command);

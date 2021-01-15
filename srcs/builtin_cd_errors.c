@@ -19,10 +19,12 @@ void cd_current_dir_error(void)
 	ft_putendl_fd(strerror(errno), STDERR_FILENO);
 }
 
-void cd_home_unset(void)
+void cd_var_unset(char *var_value)
 {
 	ft_putstr_fd("minishell: ", STDERR_FILENO);
-	ft_putendl_fd("cd: HOME not set", STDERR_FILENO);
+	ft_putstr_fd("cd: ", STDERR_FILENO);
+	ft_putstr_fd(var_value, STDERR_FILENO);
+	ft_putendl_fd(" not set", STDERR_FILENO);
 }
 
 void cd_dir_not_found(char *arg)

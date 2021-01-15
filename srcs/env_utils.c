@@ -81,7 +81,46 @@ int		change_env_shlvl(t_list *begin_env)
 	return (1);
 }
 
-int create_basic_env(t_list **begin)
+void	print_env_fd(t_list *begin_env, int fd)
 {
+	t_var	*cast;
+	t_list	*env;
 
+	env = begin_env;
+	while (env)
+	{
+		cast = (t_var*)env->content;
+		if (cast)
+		{
+			if (cast->key)
+				ft_putstr_fd(cast->key, fd);
+			ft_putstr_fd("=", fd);
+			if (cast->value)
+				ft_putstr_fd(cast->value, fd);
+			ft_putstr_fd("\n", fd);
+		}
+		env = env->next;
+	}
+}
+
+t_list *create_basic_env(void)
+{
+	char **fake_envp;
+	char *cur_dir;
+	char *pwd;
+	t_list *begin;
+
+	cur_dir = getcwd(NULL, 0);
+	if (!cur_dir)
+		return (NULL);
+	pwd = ft_strjoin("PWD=", cur_dir);
+	if (!pwd)
+		return(free_return_null(cur_dir));
+	free(cur_dir);
+	fake_envp = (char*[]){"HOME=/Users/lsoulier", "USER=lsoulier", "SHLVL=2", pwd, "OLDPWD=/Users/lsoulier",
+		"PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin", "SHELL=/bin/zsh", "_=/usr/bin/env",
+		"LC_CTYPE=UTF-8", "PAGER=less", NULL};
+	begin = set_env_loop(fake_envp);
+	free(pwd);
+	return (begin);
 }

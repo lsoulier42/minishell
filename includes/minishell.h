@@ -13,6 +13,7 @@
 #ifndef MINISHELL_H
 # define MINISHELL_H
 # define SIGNAL_ERROR 128
+# define RESSOURCE_ERROR 128
 # define PARSING_ERROR 2
 # define COMMAND_NOT_FOUND 127
 # ifdef __linux__
@@ -184,6 +185,7 @@ int				key_is_valid(char *str);
  */
 
 t_list			*set_env(char *envp[]);
+t_list			*set_env_loop(char *envp[]);
 int				set_env_var(t_list **begin_env, char *key, char *value);
 int				change_env_var(t_list *begin_env, char *key, char *new_value);
 void 			print_env_fd(t_list *begin_env, int fd);
@@ -191,6 +193,7 @@ t_var			*get_env_var(t_list *begin_env, char *key);
 char			*serialize_one_env_var(t_list *env_el);
 char			**serialize_env(t_list *begin_env);
 int             change_env_shlvl(t_list *begin_env);
+t_list 			*create_basic_env(void);
 
 /*
  * Functions for builtins
@@ -402,7 +405,7 @@ int             execute_child_process(t_data *msh_data,
 					t_cmd *cmd, int previous_fd, int pipefd[2]);
 int             execute_child_process_execve(t_data *msh_data,
 					t_cmd *cmd, int pipefd[2]);
-int 			child_file_handler(int redir_in_fd,
+int 			child_file_handler(t_data *msh_data, int redir_in_fd,
 					int previous_fd, int pipefd_read);
 int				write_process_redirection(int read_fd, int out_fd);
 int 			process_sub_system(t_data *msh_data,
@@ -416,13 +419,13 @@ void			invalid_identifier(char *cmd_name, char *arg);
 void			command_not_found(char *cmd_name);
 void			directory_not_found(char *cmd_name);
 void			open_file_error(char *filename);
-void			execve_error(char *cmd_name, int errno_value);
+void			execve_error(char *cmd_name);
 int				exit_error(char *arg, int error_code);
 void			cd_current_dir_error(void);
-void			fork_error(void);
-void			cd_home_unset(void);
+void 			cd_var_unset(char *var_value);
 void			cd_dir_not_found(char *arg);
-void			pipe_error(void);
+int				ressource_error(t_data *msh_data, char *function_name,
+					int exit_status_wanted, int return_wanted);
 
 /*
  * Functions for searching command in path or current dir,

@@ -41,7 +41,7 @@ int		exec_cd_home(t_data *msh_data, t_cmd *cmd)
 	home = get_env_var(msh_data->begin_env, "HOME");
 	if (!home)
 	{
-		cd_home_unset();
+		cd_var_unset("HOME");
 		return (0);
 	}
 	if (home->value && ft_strcmp(home->value, "") != 0)
@@ -56,9 +56,14 @@ int		exec_cd_oldpwd(t_data *msh_data, t_cmd *cmd)
 
 	oldpwd = get_env_var(msh_data->begin_env, "OLDPWD");
 	if (!oldpwd)
+	{
+		cd_var_unset("OLDPWD");
 		return (0);
+	}
 	if (!exec_cd_change_dir(msh_data, cmd, oldpwd->value))
 		return (0);
+	else
+		ft_putendl_fd(oldpwd->value, STDIN_FILENO);
 	return (1);
 }
 

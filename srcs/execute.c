@@ -45,7 +45,7 @@ static void execute_all_cmds_cpid(t_data *msh_data, t_list *instructions)
 			cpid = cpid->next;
 			while (cpid)
 			{
-				kill(((t_cpid *) cpid->content)->child_pid, SIGTERM);
+				waitpid(((t_cpid *) cpid->content)->child_pid, &stat_loc, 0);
 				cpid = cpid->next;
 			}
 		}
@@ -85,11 +85,12 @@ int		execute_all_cmds(t_data *msh_data)
 	while (instructions && g_signal_value != SIGINT)
 	{
 		if (!execute_all_cmds_loop(msh_data, instructions))
+		{
 			error = 1;
+			break ;
+		}
 		execute_all_cmds_cpid(msh_data, instructions);
 		sigquit_exec_handler(msh_data);
-		if (error == 1)
-			break ;
 		instructions = instructions->next;
 	}
 	return (error == 0);

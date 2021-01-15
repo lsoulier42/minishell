@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-t_list	*set_env(char *envp[])
+t_list *set_env_loop(char *envp[])
 {
 	int		i;
 	t_list	*begin_env;
@@ -21,8 +21,6 @@ t_list	*set_env(char *envp[])
 
 	i = -1;
 	begin_env = NULL;
-	if (!envp || !envp[0])
-		create_basic_env(&begin_env);
 	while (envp && envp[++i])
 	{
 		if (!parse_var(envp[i], &key, &value))
@@ -36,6 +34,14 @@ t_list	*set_env(char *envp[])
 	if (!change_env_shlvl(begin_env))
 		return (NULL);
 	return (begin_env);
+}
+
+t_list	*set_env(char *envp[])
+{
+	if (!envp || (envp != NULL && !envp[0]))
+		return (create_basic_env());
+	else
+		return (set_env_loop(envp));
 }
 
 t_var	*get_env_var(t_list *begin_env, char *key)
@@ -98,24 +104,4 @@ int		set_env_var(t_list **begin_env, char *key, char *value)
 	return (1);
 }
 
-void	print_env_fd(t_list *begin_env, int fd)
-{
-	t_var	*cast;
-	t_list	*env;
 
-	env = begin_env;
-	while (env)
-	{
-		cast = (t_var*)env->content;
-		if (cast)
-		{
-			if (cast->key)
-				ft_putstr_fd(cast->key, fd);
-			ft_putstr_fd("=", fd);
-			if (cast->value)
-				ft_putstr_fd(cast->value, fd);
-			ft_putstr_fd("\n", fd);
-		}
-		env = env->next;
-	}
-}

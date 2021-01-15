@@ -115,16 +115,19 @@ int		exec_export(t_data *msh_data, t_cmd *cmd)
 {
 	int				i;
 	t_export_var	var;
+	int 			error;
 
 	i = 0;
+	error = 0;
 	if (!(cmd->args[1]))
 		return (exec_export_print(msh_data->begin_env, cmd));
 	while (cmd->args[++i])
 	{
 		if(!exec_export_parsing(msh_data->begin_env, cmd->args[i], &var))
-			return (EXIT_FAILURE);
-		if (!exec_export_one_var(msh_data->begin_env, &var))
-			return (del_export_var(&var) + EXIT_FAILURE);
+			error = 1;
+		else
+			if (!exec_export_one_var(msh_data->begin_env, &var))
+				return (del_export_var(&var) + EXIT_FAILURE);
 	}
-	return (EXIT_SUCCESS);
+	return (error);
 }

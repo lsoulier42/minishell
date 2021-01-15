@@ -12,11 +12,14 @@
 
 #include "minishell.h"
 
-void	pipe_error(void)
+int		ressource_error(t_data *msh_data, char *function_name, int exit_status_wanted, int return_wanted)
 {
 	ft_putstr_fd("minishell: ", STDERR_FILENO);
-	ft_putstr_fd("pipe: ", STDERR_FILENO);
+	ft_putstr_fd(function_name, STDERR_FILENO);
+	ft_putstr_fd(": ", STDERR_FILENO);
 	ft_putendl_fd(strerror(errno), STDERR_FILENO);
+	msh_data->last_return = exit_status_wanted;
+	return (return_wanted);
 }
 
 void	invalid_identifier(char *cmd_name, char *arg)
