@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include <stdio.h>
 
 int			add_pipe(t_list **begin_pipes, t_list *begin_cmds)
 {

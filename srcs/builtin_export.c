@@ -86,7 +86,7 @@ int		exec_export_print(t_list *begin_env, t_cmd *cmd)
 	ft_lstclear(&tmp_env, &del_var);
 	return (EXIT_SUCCESS);
 }
-#include <stdio.h>
+
 int exec_export_parsing(t_list *begin_env, char *unparsed, t_export_var *var)
 {
 	int		equal_sign;

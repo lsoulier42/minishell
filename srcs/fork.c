@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include <stdio.h>
+
 int		execute_child_process_execve(t_data *msh_data,
 	t_cmd *cmd, int pipefd[2])
 {

@@ -85,5 +85,6 @@ int		exec_echo(t_data *msh_data, t_cmd *cmd)
 	else
 		ft_putendl_fd(str, cmd->redirections[OUT]->fd);
 	free(str);
+	msh_data->exit_msh = msh_data->exit_msh;
 	return (EXIT_SUCCESS);
 }

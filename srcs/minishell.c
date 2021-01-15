@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include <stdio.h>
 
 static int	init_data(t_data *msh_data, char *envp[])
 {
@@ -25,8 +24,7 @@ static int	init_data(t_data *msh_data, char *envp[])
 	return (1);
 }
 
-static int	msh_second_loop(t_data *msh_data,
-	char *line, int argc, char **argv)
+static int	msh_second_loop(t_data *msh_data, char *line)
 {
 	int error;
 
@@ -34,13 +32,8 @@ static int	msh_second_loop(t_data *msh_data,
 	msh_data->parsed_input = parse_input(line);
 	if (msh_data->parsed_input)
 	{
-		if (argc == 2 && ft_strcmp(argv[1], "debug") == 0)
-			print_instructions_list(msh_data->parsed_input->begin_instructions);
-		else
-		{
-			if (!execute_all_cmds(msh_data))
-				error = 1;
-		}
+		if (!execute_all_cmds(msh_data))
+			error = 1;
 		del_user_input(msh_data->parsed_input);
 	}
 	else
@@ -48,8 +41,7 @@ static int	msh_second_loop(t_data *msh_data,
 	return (error == 0);
 }
 
-static int	msh_first_loop(t_data *msh_data,
-	int argc, char **argv, int *gnl_return)
+static int	msh_first_loop(t_data *msh_data, int *gnl_return)
 {
 	int			end_of_command;
 	int			error;
@@ -65,7 +57,7 @@ static int	msh_first_loop(t_data *msh_data,
 		sigint_read_handler(msh_data, gnl_return);
 		if (*gnl_return <= 0 || g_signal_value == SIGINT)
 			break ;
-		if (!msh_second_loop(msh_data, line, argc, argv))
+		if (!msh_second_loop(msh_data, line))
 			error = 1;
 		free(line);
 		sigint_exec_handler(msh_data, &end_of_command);
@@ -80,6 +72,9 @@ int			main(int argc, char *argv[], char *envp[])
 	t_data		msh_data;
 	int			gnl_return;
 
+	(void)argc;
+	if (ft_strcmp(argv[0], "./minishell") == 0)
+		argv[1] = "fake";
 	if (!init_data(&msh_data, envp))
 		return (EXIT_FAILURE);
 	gnl_return = 1;
@@ -88,7 +83,7 @@ int			main(int argc, char *argv[], char *envp[])
 	if (signal(SIGQUIT, ctrlslash_handler) == SIG_ERR)
 		exit(EXIT_FAILURE);
 	while (!msh_data.exit_msh && gnl_return > 0)
-		if (!msh_first_loop(&msh_data, argc, argv, &gnl_return))
+		if (!msh_first_loop(&msh_data, &gnl_return))
 			break ;
 	if (msh_data.exit_msh != 1)
 		exec_exit(&msh_data, NULL);
