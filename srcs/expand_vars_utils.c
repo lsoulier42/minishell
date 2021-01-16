@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-void delete_old_tab(char **args, int argc)
+void	delete_old_tab(char **args, int argc)
 {
 	int i;
 
@@ -23,12 +23,12 @@ void delete_old_tab(char **args, int argc)
 	free(args);
 }
 
-int	trail_null_args(t_cmd *cmd)
+int		trail_null_args(t_cmd *cmd)
 {
-	int i;
-	int j;
-	int nb;
-	char **new;
+	int		i;
+	int		j;
+	int		nb;
+	char	**new;
 
 	i = -1;
 	nb = 0;
@@ -36,15 +36,13 @@ int	trail_null_args(t_cmd *cmd)
 	while (++i < cmd->argc)
 		if (cmd->args[i])
 			nb++;
-	new = (char**)malloc(sizeof(char*) * (nb + 1));
-	if (!new)
+	if (!(new = (char**)malloc(sizeof(char*) * (nb + 1))))
 		return (0);
 	i = -1;
 	while (++i < cmd->argc)
 		if (cmd->args[i])
 		{
-			new[j] = ft_strdup(cmd->args[i]);
-			if (!new[j++])
+			if (!(new[j++] = ft_strdup(cmd->args[i])))
 				return (free_double_tab_ret_int(new));
 		}
 	new[j] = NULL;
@@ -54,7 +52,7 @@ int	trail_null_args(t_cmd *cmd)
 	return (1);
 }
 
-int no_quote_arg(char *str)
+int		no_quote_arg(char *str)
 {
 	int i;
 
@@ -65,14 +63,15 @@ int no_quote_arg(char *str)
 	return (1);
 }
 
-int expand_one_arg_finish(char **arg_ptr, t_list **begin, char buffer[BUFFER_SIZE + 1], int *j)
+int		expand_one_arg_finish(char **arg_ptr, t_list **begin,
+	char buffer[BUFFER_SIZE + 1], int *j)
 {
 	char *result;
 
 	if (!flush_buffer(begin, buffer, j))
 		return (0);
 	result = ft_lstjoin(*begin);
-	if(no_quote_arg(*arg_ptr) && ft_strcmp(result, "\0") == 0)
+	if (no_quote_arg(*arg_ptr) && ft_strcmp(result, "\0") == 0)
 		result = NULL;
 	free(*arg_ptr);
 	*arg_ptr = result;
@@ -80,19 +79,19 @@ int expand_one_arg_finish(char **arg_ptr, t_list **begin, char buffer[BUFFER_SIZ
 	return (1);
 }
 
-int	expand_one_arg(t_data *msh_data, char **arg_ptr)
+int		expand_one_arg(t_data *msh_data, char **arg_ptr)
 {
 	char	quote_char;
 	char	buffer[BUFFER_SIZE + 1];
 	int		i;
-	int 	j;
+	int		j;
 	t_list	*begin;
 
 	expand_init_var(&i, &j, &quote_char, &begin);
 	while ((*arg_ptr)[++i])
 	{
 		if (expand_is_flushable_buffer(*arg_ptr, i, j, quote_char))
-			if(!flush_buffer(&begin, buffer, &j))
+			if (!flush_buffer(&begin, buffer, &j))
 				return (0);
 		if (expand_is_printable(*arg_ptr, i, quote_char))
 			buffer[j++] = (*arg_ptr)[i];

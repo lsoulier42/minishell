@@ -17,6 +17,8 @@ t_user_input	*parse_input(char *buffer)
 	t_user_input	*new;
 	t_list			*begin_tokens;
 
+	if (!buffer)
+		return (0);
 	new = (t_user_input*)malloc(sizeof(t_user_input));
 	if (!new)
 		return (NULL);
@@ -36,7 +38,7 @@ t_user_input	*parse_input(char *buffer)
 	return (new);
 }
 
-void	del_user_input(t_user_input *input)
+void			del_user_input(t_user_input *input)
 {
 	ft_lstclear(&(input->begin_instructions), &del_instruction);
 	free(input->input);

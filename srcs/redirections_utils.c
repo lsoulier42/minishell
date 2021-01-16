@@ -56,5 +56,3 @@ int				redirection_is_not_last(t_list *token_el)
 	}
 	return (0);
 }
-
-

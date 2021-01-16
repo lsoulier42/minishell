@@ -19,7 +19,7 @@ int		exec_cd_current_dir(t_data *msh_data, t_cmd *cmd, char *new_dir)
 	current = getcwd(NULL, 0);
 	if (!current)
 		exec_cd_error_retrieving_cwd(msh_data, new_dir);
-	if(!exec_cd_change_dir(msh_data, cmd, current))
+	if (!exec_cd_change_dir(msh_data, cmd, current))
 	{
 		free(current);
 		return (0);
@@ -28,29 +28,26 @@ int		exec_cd_current_dir(t_data *msh_data, t_cmd *cmd, char *new_dir)
 	return (1);
 }
 
-int 	exec_cd_change_env_var(t_data *msh_data, char *new_dir)
+int		exec_cd_change_env_var(t_data *msh_data, char *new_dir)
 {
 	char	*new_pwd;
 	char	*pwd_value;
-	char 	*oldpwd;
+	char	*oldpwd;
 	t_var	*pwd;
 
 	pwd_value = "";
-	pwd = get_env_var(msh_data->begin_env, "PWD");
-	if (pwd)
+	if ((pwd = get_env_var(msh_data->begin_env, "PWD")) != NULL)
 		pwd_value = pwd->value;
-	new_pwd = ft_strdup(new_dir);
-	if (!new_pwd)
+	if (!(new_pwd = ft_strdup(new_dir)))
 		return (0);
-	oldpwd = ft_strdup(pwd_value);
-	if (!oldpwd)
+	if (!(oldpwd = ft_strdup(pwd_value)))
 		return (free_return_int(new_pwd));
-	if(!change_env_var(msh_data->begin_env, "PWD", new_pwd))
+	if (!change_env_var(msh_data->begin_env, "PWD", new_pwd))
 	{
 		free(new_pwd);
 		return (free_return_int(oldpwd));
 	}
-	if(!change_env_var(msh_data->begin_env, "OLDPWD", oldpwd))
+	if (!change_env_var(msh_data->begin_env, "OLDPWD", oldpwd))
 	{
 		free(new_pwd);
 		return (free_return_int(oldpwd));
@@ -58,18 +55,18 @@ int 	exec_cd_change_env_var(t_data *msh_data, char *new_dir)
 	return (1);
 }
 
-int exec_cd_error_retrieving_cwd(t_data *msh_data, char *new_dir)
+int		exec_cd_error_retrieving_cwd(t_data *msh_data, char *new_dir)
 {
 	t_var	*pwd;
 	char	*pwd_value;
-	char 	*join;
+	char	*join;
 
 	cd_current_dir_error();
 	pwd = get_env_var(msh_data->begin_env, "PWD");
 	pwd_value = "";
 	if (pwd)
 		pwd_value = pwd->value;
-	if(!(join = ft_strcmp(new_dir, ".") == 0 ?
+	if (!(join = ft_strcmp(new_dir, ".") == 0 ?
 		ft_strjoin(pwd_value, "/.") : ft_strjoin(pwd_value, "/..")))
 		return (0);
 	exec_cd_change_env_var(msh_data, join);

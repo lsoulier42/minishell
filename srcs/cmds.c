@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-char **create_args_tab(t_list *tokens)
+char	**create_args_tab(t_list *tokens)
 {
 	int		i;
 	char	**args;

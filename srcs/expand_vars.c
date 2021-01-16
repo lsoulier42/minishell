@@ -25,15 +25,17 @@ int		expand_vars(t_data *msh_data, t_cmd *cmd)
 				return (0);
 		}
 		else
+		{
 			if (!expand_one_arg(msh_data, &cmd->args[i]))
 				return (0);
+		}
 	}
 	if (!trail_null_args(cmd))
 		return (0);
 	return (1);
 }
 
-char *expand_get_var_key(char *unparsed)
+char	*expand_get_var_key(char *unparsed)
 {
 	int		i;
 	char	*key;
@@ -46,7 +48,7 @@ char *expand_get_var_key(char *unparsed)
 	return (key);
 }
 
-int flush_buffer(t_list **begin, char buffer[BUFFER_SIZE + 1], int *nb_read)
+int		flush_buffer(t_list **begin, char buffer[BUFFER_SIZE + 1], int *nb_read)
 {
 	char	*cpy_buffer;
 	t_list	*el;
@@ -69,10 +71,10 @@ int flush_buffer(t_list **begin, char buffer[BUFFER_SIZE + 1], int *nb_read)
 	return (1);
 }
 
-int expand_last_return(t_data *msh_data, t_list **begin, int *i)
+int		expand_last_return(t_data *msh_data, t_list **begin, int *i)
 {
 	char	*value;
-	t_list 	*el;
+	t_list	*el;
 
 	value = ft_itoa(msh_data->last_return);
 	if (!value)
@@ -84,11 +86,11 @@ int expand_last_return(t_data *msh_data, t_list **begin, int *i)
 	if (!el)
 		return (free_return_int(value));
 	*i += 1;
-	ft_lstadd_back(begin, ft_lstnew(value));
+	ft_lstadd_back(begin, el);
 	return (1);
 }
 
-int expand_one_var(t_data *msh_data, t_list **begin, char *arg, int *i)
+int		expand_one_var(t_data *msh_data, t_list **begin, char *arg, int *i)
 {
 	char	*key;
 	char	*value;

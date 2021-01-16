@@ -20,7 +20,7 @@ void	execve_error(char *cmd_name)
 	ft_putendl_fd(strerror(errno), STDERR_FILENO);
 }
 
-int exit_error(char *arg, int error_code)
+int		exit_error(char *arg, int error_code)
 {
 	ft_putstr_fd("minishell: ", STDERR_FILENO);
 	ft_putstr_fd("exit: ", STDERR_FILENO);

@@ -32,7 +32,7 @@ int		open_redirection_out(t_redirection **redirection)
 	if ((*redirection)->type == APPEND)
 		type = O_APPEND;
 	fd = open((*redirection)->filename,
-			  O_RDWR | O_CREAT | type, 0664);
+			O_RDWR | O_CREAT | type, 0664);
 	if (fd == -1)
 	{
 		open_file_error((*redirection)->filename);
@@ -42,7 +42,7 @@ int		open_redirection_out(t_redirection **redirection)
 	return (1);
 }
 
-int 	open_redirection_in(t_redirection **redirection)
+int		open_redirection_in(t_redirection **redirection)
 {
 	int fd;
 
@@ -70,7 +70,7 @@ int		open_redirections(t_redirection ***redirections)
 	return (error == 0);
 }
 
-int				create_empty_file_redirection(char *filename, int type)
+int		create_empty_file_redirection(char *filename, int type)
 {
 	int	fd;
 

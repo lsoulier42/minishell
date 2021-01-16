@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-t_list *set_env_loop(char *envp[])
+t_list	*set_env_loop(char *envp[])
 {
 	int		i;
 	t_list	*begin_env;
@@ -103,5 +103,3 @@ int		set_env_var(t_list **begin_env, char *key, char *value)
 	ft_lstadd_back(begin_env, el);
 	return (1);
 }
-
-

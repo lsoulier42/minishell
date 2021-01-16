@@ -36,7 +36,7 @@ t_var	*new_var(char *key, char *value)
 	return (new);
 }
 
-int parse_var(char *unparsed, char **key, char **value)
+int		parse_var(char *unparsed, char **key, char **value)
 {
 	*key = parse_var_key(unparsed);
 	if (!(*key))
@@ -47,7 +47,7 @@ int parse_var(char *unparsed, char **key, char **value)
 	return (1);
 }
 
-int	cmp_key_var(void *var1_void, void *var2_void)
+int		cmp_key_var(void *var1_void, void *var2_void)
 {
 	t_var	*var1;
 	t_var	*var2;
@@ -57,12 +57,12 @@ int	cmp_key_var(void *var1_void, void *var2_void)
 	return (ft_strcmp(var1->key, var2->key));
 }
 
-int key_is_valid(char *str)
+int		key_is_valid(char *str)
 {
 	int i;
 
 	i = -1;
-	if (ft_isdigit(str[0]))
+	if (ft_isdigit(str[0]) || !(str[0]))
 		return (0);
 	while (str[++i])
 		if (str[i] != '_' && !ft_isalnum(str[i]))

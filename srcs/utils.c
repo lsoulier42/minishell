@@ -12,13 +12,13 @@
 
 #include "minishell.h"
 
-void format_prompt(t_data *msh_data)
+void	format_prompt(t_data *msh_data)
 {
-	char 	*prompt;
-	char 	*name;
-	int 	len;
+	char	*prompt;
+	char	*name;
+	int		len;
 	t_var	*pwd;
-	char 	*pwd_value;
+	char	*pwd_value;
 
 	pwd_value = "";
 	name = "minishell@";
@@ -50,22 +50,22 @@ void	print_color(char *str, char color)
 	ft_putstr_fd("\x1b[0m", STDERR_FILENO);
 }
 
-int	ft_isoperator(char c)
+int		ft_isoperator(char c)
 {
 	return (c == '|' || c == ';' || c == '>' || c == '<');
 }
 
-int	ft_isseparator(char c)
+int		ft_isseparator(char c)
 {
 	return (ft_isspace(c) || ft_isoperator(c));
 }
 
-int	str_has_ws(char *str)
+int		str_has_ws(char *str)
 {
 	int i;
 
 	i = -1;
-	while(str[++i])
+	while (str[++i])
 		if (ft_isspace(str[i]))
 			return (1);
 	return (0);

@@ -12,19 +12,20 @@
 
 #include "minishell.h"
 
-int     g_signal_value = 0;
+int		g_signal_value = 0;
 
-void    ctrlc_handler(int signum)
+void	ctrlc_handler(int signum)
 {
 	g_signal_value = signum;
 	close(STDIN_FILENO);
 }
+
 void	ctrlslash_handler(int signum)
 {
 	g_signal_value = signum;
 }
 
-void 	sigint_read_handler(t_data *msh_data, int *gnl_return)
+void	sigint_read_handler(t_data *msh_data, int *gnl_return)
 {
 	if (g_signal_value == SIGINT)
 	{
@@ -36,7 +37,7 @@ void 	sigint_read_handler(t_data *msh_data, int *gnl_return)
 	}
 }
 
-void 	sigint_exec_handler(t_data *msh_data, int *end_of_command)
+void	sigint_exec_handler(t_data *msh_data, int *end_of_command)
 {
 	if (g_signal_value == SIGINT)
 	{
@@ -48,7 +49,7 @@ void 	sigint_exec_handler(t_data *msh_data, int *end_of_command)
 	}
 }
 
-void sigquit_exec_handler(t_data *msh_data)
+void	sigquit_exec_handler(t_data *msh_data)
 {
 	if (g_signal_value == SIGQUIT)
 	{

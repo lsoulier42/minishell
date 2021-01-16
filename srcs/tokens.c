@@ -28,7 +28,7 @@ void	del_token(void *token_void)
 {
 	t_token	*token;
 
-	token = (t_token *) token_void;
+	token = (t_token *)token_void;
 	free(token->value);
 	free(token_void);
 }

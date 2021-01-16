@@ -45,7 +45,7 @@ static int	msh_first_loop(t_data *msh_data, int *gnl_return)
 {
 	int			end_of_command;
 	int			error;
-	char 		*line;
+	char		*line;
 
 	format_prompt(msh_data);
 	end_of_command = 0;
@@ -60,10 +60,13 @@ static int	msh_first_loop(t_data *msh_data, int *gnl_return)
 		if (!msh_second_loop(msh_data, line))
 			error = 1;
 		free(line);
+		line = NULL;
 		sigint_exec_handler(msh_data, &end_of_command);
 		if (*gnl_return == 1 || error == 1)
 			end_of_command = 1;
 	}
+	if (line)
+		free(line);
 	return (error == 0);
 }
 

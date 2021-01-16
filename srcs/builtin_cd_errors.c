@@ -12,14 +12,14 @@
 
 #include "minishell.h"
 
-void cd_current_dir_error(void)
+void	cd_current_dir_error(void)
 {
 	ft_putstr_fd("cd: error retrieving current directory: ", STDERR_FILENO);
 	ft_putstr_fd("getcwd: cannot access parent directories: ", STDERR_FILENO);
 	ft_putendl_fd(strerror(errno), STDERR_FILENO);
 }
 
-void cd_var_unset(char *var_value)
+void	cd_var_unset(char *var_value)
 {
 	ft_putstr_fd("minishell: ", STDERR_FILENO);
 	ft_putstr_fd("cd: ", STDERR_FILENO);
@@ -27,7 +27,7 @@ void cd_var_unset(char *var_value)
 	ft_putendl_fd(" not set", STDERR_FILENO);
 }
 
-void cd_dir_not_found(char *arg)
+void	cd_dir_not_found(char *arg)
 {
 	ft_putstr_fd("minishell: ", STDERR_FILENO);
 	ft_putstr_fd("cd: ", STDERR_FILENO);
@@ -36,7 +36,7 @@ void cd_dir_not_found(char *arg)
 	ft_putendl_fd(strerror(errno), STDERR_FILENO);
 }
 
-int cd_too_many_args(void)
+int		cd_too_many_args(void)
 {
 	ft_putstr_fd("minishell: ", STDERR_FILENO);
 	ft_putendl_fd("cd: too many arguments", STDERR_FILENO);

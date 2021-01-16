@@ -15,7 +15,8 @@
 int	error_operator_is_last_token(void)
 {
 	ft_putstr_fd("minishell: ", STDERR_FILENO);
-	ft_putendl_fd("syntax error near unexpected token `newline'", STDERR_FILENO);
+	ft_putendl_fd("syntax error near unexpected token `newline'",
+		STDERR_FILENO);
 	return (0);
 }
 

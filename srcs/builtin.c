@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-int	search_builtin(char *cmd_name)
+int							search_builtin(char *cmd_name)
 {
 	int		i;
 	char	**builtins;
@@ -26,7 +26,7 @@ int	search_builtin(char *cmd_name)
 	return (0);
 }
 
-int	execute_builtin(t_data *msh_data, t_cmd *cmd)
+int							execute_builtin(t_data *msh_data, t_cmd *cmd)
 {
 	char	**builtins;
 	int		i;
@@ -55,8 +55,8 @@ int	execute_builtin(t_data *msh_data, t_cmd *cmd)
 
 static unsigned long long	exec_exit_atoi_unsigned(char *str)
 {
-	unsigned long long result;
-	int i;
+	unsigned long long	result;
+	int					i;
 
 	i = 0;
 	result = 0;
@@ -82,10 +82,11 @@ int							exec_exit(t_data *msh_data, t_cmd *cmd)
 		if (!cmd->args[2])
 		{
 			msh_data->exit_msh = 1;
-			if ((exec_exit_atoi_unsigned(cmd->args[1]) >= LLONG_MAX
-				 && ft_strcmp(cmd->args[1], "-9223372036854775808") != 0)
+			if ((exec_exit_atoi_unsigned(cmd->args[1]) > EXIT_LIMIT
+				&& ft_strcmp(cmd->args[1], "-9223372036854775808") != 0)
 				|| !ft_isnum(cmd->args[1]))
-				msh_data->exit_value = exit_error(cmd->args[1], NON_NUMERIC_ARG);
+				msh_data->exit_value = exit_error(cmd->args[1],
+					NON_NUMERIC_ARG);
 			else
 				msh_data->exit_value = ft_atoi(cmd->args[1]) % 256;
 		}

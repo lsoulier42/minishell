@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-t_list *double_tab_to_tokens(char **tab)
+t_list	*double_tab_to_tokens(char **tab)
 {
 	int		i;
 	t_list	*begin;
@@ -37,7 +37,7 @@ t_list *double_tab_to_tokens(char **tab)
 	return (begin);
 }
 
-int	token_is_operator(t_list *el)
+int		token_is_operator(t_list *el)
 {
 	t_token	*token;
 
@@ -45,7 +45,7 @@ int	token_is_operator(t_list *el)
 	return (token->is_operator);
 }
 
-int	token_is_pipe(t_list *el)
+int		token_is_pipe(t_list *el)
 {
 	t_token	*token;
 
@@ -53,7 +53,7 @@ int	token_is_pipe(t_list *el)
 	return (token->is_operator && ft_strcmp("|", token->value) == 0);
 }
 
-int	token_is_semicolon(t_list *el)
+int		token_is_semicolon(t_list *el)
 {
 	t_token	*token;
 

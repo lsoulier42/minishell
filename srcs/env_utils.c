@@ -75,7 +75,7 @@ int		change_env_shlvl(t_list *begin_env)
 		itoa_value = ft_itoa(ft_atoi(shlvl->value) + 1);
 		if (!itoa_value)
 			return (0);
-		if(!change_env_var(begin_env, "SHLVL", itoa_value))
+		if (!change_env_var(begin_env, "SHLVL", itoa_value))
 			return (free_return_int(itoa_value));
 	}
 	return (1);
@@ -103,19 +103,19 @@ void	print_env_fd(t_list *begin_env, int fd)
 	}
 }
 
-t_list *create_basic_env(void)
+t_list	*create_basic_env(void)
 {
-	char **fake_envp;
-	char *cur_dir;
-	char *pwd;
-	t_list *begin;
+	char	**fake_envp;
+	char	*cur_dir;
+	char	*pwd;
+	t_list	*begin;
 
 	cur_dir = getcwd(NULL, 0);
 	if (!cur_dir)
 		return (NULL);
 	pwd = ft_strjoin("PWD=", cur_dir);
 	if (!pwd)
-		return(free_return_null(cur_dir));
+		return (free_return_null(cur_dir));
 	free(cur_dir);
 	fake_envp = (char*[]){"SHLVL=0", pwd, "_=/usr/bin/env", NULL};
 	begin = set_env_loop(fake_envp);

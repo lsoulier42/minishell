@@ -28,7 +28,8 @@ int		execute_last_builtin(t_data *msh_data, t_cmd *cmd, int previous_fd)
 	return (msh_data->last_return);
 }
 
-int		execute_pipe_cmd(t_data *msh_data, t_list **begin_cpid, t_cmd *cmd, int previous_fd)
+int		execute_pipe_cmd(t_data *msh_data, t_list **begin_cpid,
+	t_cmd *cmd, int previous_fd)
 {
 	pid_t	cpid;
 	int		pipefd[2];
@@ -49,7 +50,7 @@ int		execute_pipe_cmd(t_data *msh_data, t_list **begin_cpid, t_cmd *cmd, int pre
 	return (ressource_error(msh_data, "fork", RESSOURCE_ERROR, -1));
 }
 
-int 	process_sub_system(t_data *msh_data, t_list **begin_cpid, t_list *pipes)
+int		process_sub_system(t_data *msh_data, t_list **begin_cpid, t_list *pipes)
 {
 	t_cmd *cmd;
 

@@ -12,11 +12,11 @@
 
 #include "minishell.h"
 
-int		search_in_dir(char *dirname, char *cmd_name)
+int	search_in_dir(char *dirname, char *cmd_name)
 {
 	DIR				*cur_dir;
 	struct dirent	*cur_dirent;
-	int 			finish;
+	int				finish;
 
 	cur_dir = opendir(dirname);
 	finish = 0;
@@ -37,7 +37,7 @@ int		search_in_dir(char *dirname, char *cmd_name)
 	return (0);
 }
 
-int search_path_relative_in_path(t_data *msh_data, t_cmd **cmd)
+int	search_path_relative_in_path(t_data *msh_data, t_cmd **cmd)
 {
 	t_var	*path;
 	char	**pathnames;
@@ -60,26 +60,17 @@ int search_path_relative_in_path(t_data *msh_data, t_cmd **cmd)
 	return (free_double_tab_ret_int(pathnames));
 }
 
-int search_path_relative(t_data *msh_data, t_cmd **cmd)
+int	search_in_current_dir(t_cmd **cmd)
 {
 	char	*current_dir;
-	char 	*cmd_name;
+	char	*cmd_name;
 
-	if (ft_strcmp((*cmd)->args[0], "..") == 0
-		|| ft_strcmp((*cmd)->args[0], ".") == 0)
-		return (0);
-	current_dir = getcwd(NULL, 0);
-	if (!current_dir)
+	if (!(current_dir = getcwd(NULL, 0)))
 		return (0);
 	cmd_name = (*cmd)->args[0];
 	if (ft_strncmp(cmd_name, "./", 2) == 0)
 		cmd_name = ft_strchr(cmd_name, '/') + 1;
-	if (!search_in_dir(current_dir, cmd_name))
-	{
-		free(current_dir);
-		return (search_path_relative_in_path(msh_data, cmd));
-	}
-	else
+	if (search_in_dir(current_dir, cmd_name))
 	{
 		if (ft_strncmp((*cmd)->args[0], "./", 2) != 0)
 		{
@@ -88,9 +79,22 @@ int search_path_relative(t_data *msh_data, t_cmd **cmd)
 		}
 		return (free_return_int(current_dir) + 1);
 	}
+	free(current_dir);
+	return (0);
 }
 
-int search_path(t_data *msh_data, t_cmd **cmd)
+int	search_path_relative(t_data *msh_data, t_cmd **cmd)
+{
+	if (ft_strcmp((*cmd)->args[0], "..") == 0
+		|| ft_strcmp((*cmd)->args[0], ".") == 0)
+		return (0);
+	if (!search_path_relative_in_path(msh_data, cmd))
+		if (!search_in_current_dir(cmd))
+			return (0);
+	return (1);
+}
+
+int	search_path(t_data *msh_data, t_cmd **cmd)
 {
 	if (!search_builtin((*cmd)->args[0]))
 	{

@@ -12,10 +12,10 @@
 
 #include "minishell.h"
 
-int parse_path_and_name_absolute(t_cmd **cmd)
+int	parse_path_and_name_absolute(t_cmd **cmd)
 {
-	char *path;
-	char *cmd_name;
+	char	*path;
+	char	*cmd_name;
 
 	cmd_name = ft_strdup(ft_strrchr((*cmd)->args[0], '/') + 1);
 	if (!cmd_name)
@@ -30,10 +30,10 @@ int parse_path_and_name_absolute(t_cmd **cmd)
 	return (1);
 }
 
-int parse_path_and_name_relative(t_cmd **cmd)
+int	parse_path_and_name_relative(t_cmd **cmd)
 {
-	char *path;
-	char *cmd_name;
+	char	*path;
+	char	*cmd_name;
 
 	path = ft_strdup("");
 	if (!path)
@@ -47,7 +47,7 @@ int parse_path_and_name_relative(t_cmd **cmd)
 	return (1);
 }
 
-int parse_path_and_name(t_cmd **cmd)
+int	parse_path_and_name(t_cmd **cmd)
 {
 	if ((*cmd)->args[0][0] == '/')
 	{

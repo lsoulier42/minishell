@@ -12,9 +12,10 @@
 
 #include "minishell.h"
 
-int		execute_cmd(t_data *msh_data, t_list **begin_cpid, t_list *pipes, int previous_fd)
+int			execute_cmd(t_data *msh_data, t_list **begin_cpid,
+	t_list *pipes, int previous_fd)
 {
-	t_cmd *cmd;
+	t_cmd	*cmd;
 
 	cmd = get_cmd(pipes);
 	cmd->is_last = !(pipes->next);
@@ -27,15 +28,15 @@ int		execute_cmd(t_data *msh_data, t_list **begin_cpid, t_list *pipes, int previ
 	return (previous_fd);
 }
 
-static void execute_all_cmds_cpid(t_data *msh_data, t_list *instructions)
+static void	execute_all_cmds_cpid(t_data *msh_data, t_list *instructions)
 {
-	t_list 	*cpid;
+	t_list	*cpid;
 	pid_t	child_pid;
 	int		stat_loc;
 
 	cpid = ((t_instruction*)instructions->content)->begin_cpid;
 	if (cpid)
-		child_pid = ((t_cpid *)cpid->content)->child_pid;
+		child_pid = ((t_cpid *)(cpid->content))->child_pid;
 	if (cpid && child_pid != -1)
 	{
 		waitpid(child_pid, &stat_loc, 0);
@@ -45,14 +46,14 @@ static void execute_all_cmds_cpid(t_data *msh_data, t_list *instructions)
 			cpid = cpid->next;
 			while (cpid)
 			{
-				waitpid(((t_cpid *) cpid->content)->child_pid, &stat_loc, 0);
+				waitpid(((t_cpid *)cpid->content)->child_pid, &stat_loc, 0);
 				cpid = cpid->next;
 			}
 		}
 	}
 }
 
-static int 	execute_all_cmds_loop(t_data *msh_data, t_list *instructions)
+static int	execute_all_cmds_loop(t_data *msh_data, t_list *instructions)
 {
 	t_list	*pipes;
 	t_list	**begin_cpid;
@@ -75,10 +76,10 @@ static int 	execute_all_cmds_loop(t_data *msh_data, t_list *instructions)
 	return (1);
 }
 
-int		execute_all_cmds(t_data *msh_data)
+int			execute_all_cmds(t_data *msh_data)
 {
 	t_list	*instructions;
-	int error;
+	int		error;
 
 	error = 0;
 	instructions = msh_data->parsed_input->begin_instructions;

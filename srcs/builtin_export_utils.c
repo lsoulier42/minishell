@@ -12,9 +12,9 @@
 
 #include "minishell.h"
 
-int	var_has_equal(char *str)
+int		var_has_equal(char *str)
 {
-	int i;
+	int	i;
 
 	i = -1;
 	if (str[0] == '=')
@@ -28,9 +28,9 @@ int	var_has_equal(char *str)
 	return (0);
 }
 
-int	var_has_plus(char *str)
+int		var_has_plus(char *str)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	if (str[0] == '+')
@@ -48,9 +48,9 @@ int	var_has_plus(char *str)
 		return (1);
 }
 
-char *get_export_key(char *unparsed)
+char	*get_export_key(char *unparsed)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	if (ft_isdigit(unparsed[0]) || unparsed[0] == '+' || unparsed[0] == '=')
@@ -68,10 +68,10 @@ char *get_export_key(char *unparsed)
 	return (ft_strndup(unparsed, i));
 }
 
-int get_export_value(char *unparsed, int has_equal, char **value)
+int		get_export_value(char *unparsed, int has_equal, char **value)
 {
-	int i;
-	char *new;
+	int		i;
+	char	*new;
 
 	i = 0;
 	if (!has_equal)
@@ -85,7 +85,7 @@ int get_export_value(char *unparsed, int has_equal, char **value)
 	return (1);
 }
 
-int 	del_export_var(t_export_var *var)
+int		del_export_var(t_export_var *var)
 {
 	if (var->key)
 		free(var->key);

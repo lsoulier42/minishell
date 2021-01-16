@@ -12,17 +12,12 @@
 
 #include "minishell.h"
 
-int 	arg_is_var_alone(char *arg)
-{
-	return (arg[0] == '$' && !str_has_ws(arg) && key_is_valid(arg + 1));
-}
-
 char	**token_to_double_tab(t_list *begin)
 {
 	char	**new;
-	int 	i;
-	char 	*value;
-	int 	len;
+	int		i;
+	char	*value;
+	int		len;
 
 	i = 0;
 	len = ft_lstsize(begin);
@@ -70,7 +65,7 @@ void	rm_token_replaced(t_list **args, int index)
 	}
 }
 
-void 	insert_tokens(t_list *token_before, t_list *list_to_insert)
+void	insert_tokens(t_list *token_before, t_list *list_to_insert)
 {
 	t_list *tmp;
 
@@ -81,11 +76,12 @@ void 	insert_tokens(t_list *token_before, t_list *list_to_insert)
 	list_to_insert->next = tmp;
 }
 
-char	**insert_new_args(char *var_value, char **args, int *arg_index, int *argc)
+char	**insert_new_args(char *var_value, char **args,
+	int *arg_index, int *argc)
 {
 	t_list	*token_args;
 	t_list	*token_parsed;
-	int 	index_to_jump;
+	int		index_to_jump;
 	char	**new;
 
 	token_parsed = lexer(var_value);
@@ -107,7 +103,8 @@ char	**insert_new_args(char *var_value, char **args, int *arg_index, int *argc)
 	return (new);
 }
 
-int		expand_one_var_alone(t_data *msh_data, char ***args, int *arg_index, int *argc)
+int		expand_one_var_alone(t_data *msh_data, char ***args,
+	int *arg_index, int *argc)
 {
 	t_var	*var;
 	char	**new_args;
@@ -127,6 +124,9 @@ int		expand_one_var_alone(t_data *msh_data, char ***args, int *arg_index, int *a
 		*args = new_args;
 	}
 	else
+	{
+		free((*args)[*arg_index]);
 		(*args)[*arg_index] = NULL;
+	}
 	return (1);
 }

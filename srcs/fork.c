@@ -17,14 +17,14 @@ int		execute_child_process_execve(t_data *msh_data,
 {
 	char	**envp;
 	int		execve_return;
-	char 	*fullname;
+	char	*fullname;
 
 	envp = serialize_env(msh_data->begin_env);
 	if (!envp)
 		return (-1);
 	fullname = ft_strjoin(cmd->path, cmd->args[0]);
 	if (!fullname)
-		return(free_double_tab_ret_int(envp));
+		return (free_double_tab_ret_int(envp));
 	execve_return = execve(fullname, cmd->args, envp);
 	ft_double_tab_free(envp);
 	close(pipefd[1]);
@@ -36,13 +36,13 @@ int		execute_child_process_execve(t_data *msh_data,
 			exit(ACCESS_EXIT_STATUS);
 		else
 			exit(EXIT_FAILURE);
-
 	}
 	free(fullname);
 	return (EXIT_SUCCESS);
 }
 
-int		child_file_handler(t_data *msh_data, int redir_in_fd, int previous_fd, int pipefd_read)
+int		child_file_handler(t_data *msh_data, int redir_in_fd,
+	int previous_fd, int pipefd_read)
 {
 	int error;
 

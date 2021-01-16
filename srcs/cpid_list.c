@@ -37,7 +37,7 @@ t_list	*new_cpid_el(pid_t cpid)
 	return (el);
 }
 
-int 	add_cpid(t_list **begin_cpid, pid_t cpid)
+int		add_cpid(t_list **begin_cpid, pid_t cpid)
 {
 	t_list	*el;
 

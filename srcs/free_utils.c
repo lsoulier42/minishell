@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-int	free_return_int(void *ptr)
+int		free_return_int(void *ptr)
 {
 	free(ptr);
 	return (0);
@@ -24,12 +24,12 @@ void	*free_return_null(void *ptr)
 	return (NULL);
 }
 
-int 	free_double_tab_ret_int(char **tab)
+int		free_double_tab_ret_int(char **tab)
 {
 	int i;
 
 	i = -1;
-	while(tab[++i])
+	while (tab[++i])
 		free(tab[i]);
 	free(tab);
 	return (0);

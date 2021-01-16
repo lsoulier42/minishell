@@ -27,19 +27,19 @@ int		is_weakquote_specchar(char c)
 		|| c == '"' || c == '\n' || c == '\\');
 }
 
-int 	is_specchar(char c)
+int		is_specchar(char c)
 {
 	return (ft_isseparator(c) || ft_isquote(c) || c == '`'
 		|| c == '#' || c == '$' || c == '\\');
 }
 
-int expand_is_flushable_buffer(char *arg, int i, int j, char quote_char)
+int		expand_is_flushable_buffer(char *arg, int i, int j, char quote_char)
 {
 	return (j == BUFFER_SIZE || expand_is_expandable_var(arg, i, quote_char)
 			|| expand_is_last_return_var(arg, i, quote_char));
 }
 
-void expand_init_var(int *i, int *j, char *quote_char, t_list **begin)
+void	expand_init_var(int *i, int *j, char *quote_char, t_list **begin)
 {
 	*quote_char = '\0';
 	*i = -1;

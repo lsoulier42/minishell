@@ -59,7 +59,8 @@ int		token_len(char *input)
 
 	open = 0;
 	len = 0;
-	while (input[len] && (!ft_isseparator(input[len]) || is_escaped(input, len) || open))
+	while (input[len] && (!ft_isseparator(input[len])
+		|| is_escaped(input, len) || open))
 	{
 		if (!open && ft_isquote(input[len]) && !is_escaped(input, len))
 		{

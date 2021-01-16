@@ -44,3 +44,9 @@ char	*parse_var_value(char *unparsed)
 	ft_strlcpy(value, unparsed + i + 1, len + 1);
 	return (value);
 }
+
+int		arg_is_var_alone(char *arg)
+{
+	return (arg[0] == '$' && arg[1] != '\0'
+		&& !str_has_ws(arg) && key_is_valid(arg + 1));
+}

@@ -12,7 +12,8 @@
 
 #include "minishell.h"
 
-int		ressource_error(t_data *msh_data, char *function_name, int exit_status_wanted, int return_wanted)
+int		ressource_error(t_data *msh_data, char *function_name,
+	int exit_status_wanted, int return_wanted)
 {
 	ft_putstr_fd("minishell: ", STDERR_FILENO);
 	ft_putstr_fd(function_name, STDERR_FILENO);
@@ -22,7 +23,7 @@ int		ressource_error(t_data *msh_data, char *function_name, int exit_status_want
 	return (return_wanted);
 }
 
-void	invalid_identifier(char *cmd_name, char *arg)
+int		invalid_identifier(char *cmd_name, char *arg)
 {
 	ft_putstr_fd("minishell: ", STDERR_FILENO);
 	ft_putstr_fd(cmd_name, STDERR_FILENO);
@@ -30,11 +31,11 @@ void	invalid_identifier(char *cmd_name, char *arg)
 	ft_putstr_fd(arg, STDERR_FILENO);
 	ft_putstr_fd("': ", STDERR_FILENO);
 	ft_putendl_fd("not a valid identifier", STDERR_FILENO);
+	return (0);
 }
 
 void	command_not_found(char *cmd_name)
 {
-	ft_putstr_fd("minishell: ", STDERR_FILENO);
 	ft_putstr_fd(cmd_name, STDERR_FILENO);
 	ft_putendl_fd(": command not found", STDERR_FILENO);
 }

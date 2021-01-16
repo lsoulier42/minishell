@@ -20,10 +20,12 @@
 # ifdef __linux__
 #  define BASH_BUILTIN_EXIT_STATUS 2
 #  define HOME_DIR "/home"
+#  define EXIT_LIMIT LLONG_MAX
 # endif
 # ifdef __APPLE__
 #  define BASH_BUILTIN_EXIT_STATUS 255
 #  define HOME_DIR "/Users"
+#  define EXIT_LIMIT 9223372036854775806
 # endif
 # include "libft.h"
 # include <unistd.h>
@@ -329,7 +331,7 @@ int				write_process_redirection(int read_fd, int out_fd);
 int				process_sub_system(t_data *msh_data,
 					t_list **begin_cpid, t_list *pipes);
 
-void			invalid_identifier(char *cmd_name, char *arg);
+int				invalid_identifier(char *cmd_name, char *arg);
 void			command_not_found(char *cmd_name);
 void			directory_not_found(char *cmd_name);
 void			open_file_error(char *filename);
@@ -349,6 +351,7 @@ int				parse_path_and_name_absolute(t_cmd **cmd);
 int				parse_path_and_name_relative(t_cmd **cmd);
 int				search_path_relative(t_data *msh_data, t_cmd **cmd);
 int				search_path_relative_in_path(t_data *msh_data, t_cmd **cmd);
+int				search_in_current_dir(t_cmd **cmd);
 
 void			ctrlc_handler(int signum);
 void			ctrlslash_handler(int signum);

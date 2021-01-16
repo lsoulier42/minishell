@@ -70,6 +70,7 @@ char	*format_export_line(t_var *env_var)
 int		exec_export_print(t_list *begin_env, t_cmd *cmd)
 {
 	t_list	*tmp_env;
+	t_list	*tmp_clear;
 	char	*line;
 
 	tmp_env = ft_lstdup(begin_env, del_var);
@@ -81,23 +82,25 @@ int		exec_export_print(t_list *begin_env, t_cmd *cmd)
 		line = format_export_line((t_var*)tmp_env->content);
 		ft_putendl_fd(line, cmd->redirections[OUT]->fd);
 		free(line);
+		tmp_clear = tmp_env;
 		tmp_env = tmp_env->next;
+		free(tmp_clear);
 	}
-	ft_lstclear(&tmp_env, &del_var);
 	return (EXIT_SUCCESS);
 }
 
-int exec_export_parsing(t_list *begin_env, char *unparsed, t_export_var *var)
+int		exec_export_parsing(t_list *begin_env, char *unparsed,
+	t_export_var *var)
 {
 	int		equal_sign;
 	int		plus_sign;
 	t_var	*env_var;
 
-	if (!unparsed || (unparsed != NULL && !(*unparsed)))
-		return (0);
+	if (!(*unparsed))
+		return (invalid_identifier("export", unparsed));
 	equal_sign = var_has_equal(unparsed);
 	plus_sign = var_has_plus(unparsed);
-	if(equal_sign == -1 || plus_sign == -1)
+	if (equal_sign == -1 || plus_sign == -1)
 		return (0);
 	var->key = get_export_key(unparsed);
 	if (!var->key)
@@ -118,7 +121,7 @@ int		exec_export(t_data *msh_data, t_cmd *cmd)
 {
 	int				i;
 	t_export_var	var;
-	int 			error;
+	int				error;
 
 	i = 0;
 	error = 0;
@@ -126,11 +129,13 @@ int		exec_export(t_data *msh_data, t_cmd *cmd)
 		return (exec_export_print(msh_data->begin_env, cmd));
 	while (cmd->args[++i])
 	{
-		if(!exec_export_parsing(msh_data->begin_env, cmd->args[i], &var))
+		if (!exec_export_parsing(msh_data->begin_env, cmd->args[i], &var))
 			error = 1;
 		else
+		{
 			if (!exec_export_one_var(msh_data->begin_env, &var))
 				return (del_export_var(&var) + EXIT_FAILURE);
+		}
 	}
 	return (error);
 }
