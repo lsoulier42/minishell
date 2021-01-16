@@ -84,7 +84,7 @@ char	**insert_new_args(char *var_value, char **args,
 	int		index_to_jump;
 	char	**new;
 
-	token_parsed = lexer(var_value);
+	token_parsed = lexer(var_value, 1);
 	if (!token_parsed)
 		return (NULL);
 	index_to_jump = ft_lstsize(token_parsed);

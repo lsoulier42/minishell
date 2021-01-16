@@ -56,3 +56,17 @@ int				redirection_is_not_last(t_list *token_el)
 	}
 	return (0);
 }
+
+int				check_open_redirection_in(char *filename)
+{
+	int fd;
+
+	fd = open(filename, O_RDONLY);
+	if (fd == -1)
+	{
+		open_file_error(filename);
+		return (0);
+	}
+	close(fd);
+	return (1);
+}

@@ -42,13 +42,13 @@ int	error_lexer(char c)
 		return (error_quote_is_not_closed());
 }
 
-int	check_token_list(t_list *tokens)
+int	check_token_list(t_list *tokens, int bypass)
 {
 	char	*value;
 	int		i;
 
 	i = 0;
-	while (tokens)
+	while (!bypass && tokens)
 	{
 		value = get_token_value(tokens);
 		if (i++ == 0 && token_is_operator(tokens)

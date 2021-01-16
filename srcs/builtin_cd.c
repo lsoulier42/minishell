@@ -18,7 +18,7 @@ int		exec_cd_change_dir(t_data *msh_data, t_cmd *cmd, char *new_dir)
 	char	*new_current;
 
 	chdir_return = 0;
-	if (!cmd->is_piped)
+	if (!cmd->is_piped || cmd->is_last)
 		chdir_return = chdir(new_dir);
 	if (chdir_return == -1)
 	{

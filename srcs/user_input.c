@@ -25,16 +25,16 @@ t_user_input	*parse_input(char *buffer)
 	new->input = ft_strdup(buffer);
 	if (!new->input)
 		return (free_return_null(new));
-	begin_tokens = lexer(new->input);
+	begin_tokens = lexer(new->input, 0);
 	if (!begin_tokens)
 		return (error_tokens(new));
 	new->begin_instructions = parse_instructions(begin_tokens);
 	if (!new->begin_instructions)
-		return (error_instructions(new, &begin_tokens));
+		return (error_cmds(new, new->begin_instructions));
 	if (!parse_pipes(new->begin_instructions))
-		return (error_pipes(new, &begin_tokens));
+		return (error_cmds(new, new->begin_instructions));
 	if (!parse_cmds(new->begin_instructions))
-		return (error_cmds(new, &begin_tokens));
+		return (error_cmds(new, new->begin_instructions));
 	return (new);
 }
 

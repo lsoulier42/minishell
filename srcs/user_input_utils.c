@@ -19,29 +19,54 @@ void	*error_tokens(t_user_input *new)
 	return (NULL);
 }
 
-void	*error_instructions(t_user_input *new, t_list **tokens)
+void	delete_token_list(t_list *pipes)
 {
-	ft_lstclear(tokens, &del_token);
-	return (error_tokens(new));
+	t_list	*tokens;
+	t_list	*tmp_tokens;
+
+	if (pipes->content)
+	{
+		tokens = ((t_pipe *)(pipes->content))->begin_cmds;
+		while (tokens)
+		{
+			tmp_tokens = tokens;
+			free(get_token_value(tokens));
+			free(tokens->content);
+			tokens = tokens->next;
+			free(tmp_tokens);
+		}
+	}
 }
 
-void	*error_pipes(t_user_input *new, t_list **tokens)
+void	delete_pipes(t_list *instructions)
 {
-	del_instruction_list(&(new->begin_instructions));
-	return (error_instructions(new, tokens));
-}
-
-void	*error_cmds(t_user_input *new, t_list **tokens)
-{
-	t_list	*el;
+	t_list	*tmp_pipes;
 	t_list	*pipes;
 
-	el = new->begin_instructions;
-	while (el)
+	pipes = get_instruction_pipes(instructions);
+	while (pipes)
 	{
-		pipes = get_instruction_pipes(el);
-		ft_lstclear(&pipes, &del_pipe);
-		el = el->next;
+		tmp_pipes = pipes;
+		delete_token_list(pipes);
+		if (pipes->content)
+			free(pipes->content);
+		pipes = pipes->next;
+		free(tmp_pipes);
 	}
-	return (error_pipes(new, tokens));
+}
+
+void	*error_cmds(t_user_input *new, t_list *instructions)
+{
+	t_list	*tmp_instruction;
+
+	while (instructions)
+	{
+		tmp_instruction = instructions;
+		delete_pipes(instructions);
+		if (instructions->content)
+			free(instructions->content);
+		instructions = instructions->next;
+		free(tmp_instruction);
+	}
+	return (error_tokens(new));
 }

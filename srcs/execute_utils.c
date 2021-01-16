@@ -24,7 +24,8 @@ int		execute_last_builtin(t_data *msh_data, t_cmd *cmd, int previous_fd)
 		if (dup2(STDIN_FILENO, previous_fd) == -1)
 			return (ressource_error(msh_data, "dup2", RESSOURCE_ERROR, -1));
 	}
-	msh_data->last_return = execute_builtin(msh_data, cmd);
+	if (!cmd->is_piped || ft_strcmp(cmd->args[0], "exit") != 0)
+		msh_data->last_return = execute_builtin(msh_data, cmd);
 	return (msh_data->last_return);
 }
 

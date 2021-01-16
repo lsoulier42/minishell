@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-t_list	*lexer(char *user_input)
+t_list	*lexer(char *user_input, int bypass)
 {
 	t_list	*begin;
 	char	*input;
@@ -33,7 +33,7 @@ t_list	*lexer(char *user_input)
 		else
 			input += 1;
 	}
-	if (!check_token_list(begin))
+	if (!check_token_list(begin, bypass))
 		return (free_token_struct(&begin, tmp));
 	free(tmp);
 	return (begin);

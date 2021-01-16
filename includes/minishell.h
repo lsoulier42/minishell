@@ -213,9 +213,9 @@ int				is_legit_n_option(char *str);
 
 t_user_input	*parse_input(char *buffer);
 void			*error_tokens(t_user_input *new);
-void			*error_instructions(t_user_input *new, t_list **tokens);
-void			*error_pipes(t_user_input *new, t_list **tokens);
-void			*error_cmds(t_user_input *new, t_list **tokens);
+void			delete_token_list(t_list *pipes);
+void			delete_pipes(t_list *instructions);
+void			*error_cmds(t_user_input *new, t_list *instructions);
 void			del_user_input(t_user_input *input);
 
 t_token			*new_token(char *value, int is_operator);
@@ -224,7 +224,7 @@ t_list			*new_token_el(char *value, int is_operator);
 int				add_token(t_list **begin, char **input);
 int				ft_isseparator(char c);
 int				ft_isoperator(char c);
-t_list			*lexer(char *buffer);
+t_list			*lexer(char *buffer, int bypass);
 char			*get_token_value(t_list *el);
 int				token_is_operator(t_list *el);
 int				token_len(char *input);
@@ -251,7 +251,7 @@ t_list			*get_pipes_cmds(t_list *pipes_el);
 int				del_pipe_list(t_list **begin_pipes);
 
 int				error_operator_is_last_token(void);
-int				check_token_list(t_list *tokens);
+int				check_token_list(t_list *tokens, int bypass);
 int				error_quote_is_not_closed(void);
 int				error_operator_defined(void);
 int				error_lexer(char c);
@@ -280,6 +280,9 @@ int				open_redirections(t_redirection ***redirections);
 int				close_redirections(t_redirection **redirections);
 int				open_redirection_in(t_redirection **redirection);
 int				open_redirection_out(t_redirection **redirection);
+int				check_open_redirection_in(char *filename);
+int				process_not_last_redir(int direction, char *filename,
+					int type_open);
 
 int				expand_vars(t_data *msh_data, t_cmd *cmd);
 int				expand_one_arg(t_data *msh_data, char **arg);
