@@ -12,25 +12,14 @@
 
 #include "minishell.h"
 
-void			del_redirection(void *redirection_void)
-{
-	t_redirection	*redirection;
-
-	redirection = (t_redirection*)redirection_void;
-	free(redirection->filename);
-	free(redirection_void);
-}
-
-t_redirection	*new_redirection(char *filename, int fd, int type)
+t_redirection	*new_redirection(int fd)
 {
 	t_redirection	*new;
 
 	new = (t_redirection*)malloc(sizeof(t_redirection));
 	if (!new)
 		return (NULL);
-	new->filename = filename;
 	new->fd = fd;
-	new->type = type;
 	return (new);
 }
 
@@ -47,26 +36,33 @@ int				token_is_redirection(t_list *token_el)
 
 int				redirection_is_not_last(t_list *token_el)
 {
+	int direction;
+	int cur_direction;
+
+	direction = ft_strcmp(get_token_value(token_el), "<") == 0 ? IN : OUT;
 	token_el = token_el->next;
 	while (token_el)
 	{
 		if (token_is_redirection(token_el))
-			return (1);
+		{
+			cur_direction = OUT;
+			if (ft_strcmp(get_token_value(token_el), "<") == 0)
+				cur_direction = IN;
+			if (cur_direction == direction)
+				return (1);
+		}
 		token_el = token_el->next;
 	}
 	return (0);
 }
 
-int				check_open_redirection_in(char *filename)
+int				close_redirections(t_redirection **redirections)
 {
-	int fd;
+	int i;
 
-	fd = open(filename, O_RDONLY);
-	if (fd == -1)
-	{
-		open_file_error(filename);
-		return (0);
-	}
-	close(fd);
+	i = -1;
+	while (++i < 2)
+		if (redirections[i]->fd > 2)
+			close(redirections[i]->fd);
 	return (1);
 }

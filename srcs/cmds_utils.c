@@ -50,9 +50,9 @@ void	del_cmd(void *cmd_void)
 	if (cmd->args)
 		ft_double_tab_free(cmd->args);
 	if (cmd->redirections && cmd->redirections[IN])
-		del_redirection(cmd->redirections[IN]);
+		free(cmd->redirections[IN]);
 	if (cmd->redirections && cmd->redirections[OUT])
-		del_redirection(cmd->redirections[OUT]);
+		free(cmd->redirections[OUT]);
 	if (cmd->redirections)
 		free(cmd->redirections);
 	free(cmd_void);

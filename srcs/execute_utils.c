@@ -53,21 +53,22 @@ int		execute_pipe_cmd(t_data *msh_data, t_list **begin_cpid,
 
 int		process_sub_system(t_data *msh_data, t_list **begin_cpid, t_list *pipes)
 {
-	t_cmd *cmd;
+	t_cmd	*cmd;
+	int		error;
 
 	cmd = get_cmd(pipes);
+	error = 0;
 	if (!expand_vars(msh_data, cmd) || !cmd->args[0])
-		return (0);
-	if (!parse_path_and_name(&cmd))
-		return (0);
-	if (!open_redirections(&(cmd->redirections)))
-		return (0);
-	if (!search_path(msh_data, &cmd))
+		error = 1;
+	if (!error && !parse_path_and_name(&cmd))
+		error = 1;
+	if (!error && !search_path(msh_data, &cmd))
 	{
-		if (!add_cpid(begin_cpid, -1))
-			return (0);
+		error = 1;
+		add_cpid(begin_cpid, -1);
 		msh_data->last_return = COMMAND_NOT_FOUND;
-		return (0);
 	}
-	return (1);
+	if (error)
+		close_redirections(cmd->redirections);
+	return (error == 0);
 }

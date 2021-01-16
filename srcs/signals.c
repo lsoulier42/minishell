@@ -53,8 +53,7 @@ void	sigquit_exec_handler(t_data *msh_data)
 {
 	if (g_signal_value == SIGQUIT)
 	{
-		ft_putstr_fd("Quit: ", STDERR_FILENO);
-		ft_putnbr_fd(g_signal_value, STDERR_FILENO);
+		ft_putstr_fd("Quit: (core dumped)", STDERR_FILENO);
 		ft_putendl_fd("", STDERR_FILENO);
 		msh_data->last_return = SIGNAL_ERROR + g_signal_value;
 		g_signal_value = 0;

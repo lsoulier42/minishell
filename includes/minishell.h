@@ -99,9 +99,7 @@ typedef struct	s_export_var
 
 typedef struct	s_redirection
 {
-	char	*filename;
 	int		fd;
-	int		type;
 }				t_redirection;
 
 typedef struct	s_cmd
@@ -224,14 +222,13 @@ t_list			*new_token_el(char *value, int is_operator);
 int				add_token(t_list **begin, char **input);
 int				ft_isseparator(char c);
 int				ft_isoperator(char c);
-t_list			*lexer(char *buffer, int bypass);
+t_list			*lexer(char *input, int bypass);
 char			*get_token_value(t_list *el);
 int				token_is_operator(t_list *el);
 int				token_len(char *input);
 int				token_len_operator(char *input);
 int				token_is_pipe(t_list *el);
 int				token_is_semicolon(t_list *el);
-void			*free_token_struct(t_list **begin, char *tmp);
 t_list			*double_tab_to_tokens(char **tab);
 
 void			del_instruction(void *instruction_void);
@@ -267,22 +264,15 @@ int				parse_one_pipe_cmds(t_list **tokens,
 					t_redirection **redirections);
 t_cmd			*get_cmd(t_list *pipe_el);
 
-void			del_redirection(void *redirection_void);
-t_redirection	*new_redirection(char *filename, int fd, int type);
+t_redirection	*new_redirection(int fd);
 int				token_is_redirection(t_list *token_el);
 t_redirection	**parse_redirections(t_list **begin_cmds);
-int				create_empty_file_redirection(char *filename, int append);
+int				open_files(int direction, char *filename, int type_open);
 int				redirection_is_not_last(t_list *token_el);
 int				parse_one_redirection(t_list *tokens,
 					t_redirection ***redirections);
 void			delete_redirection_tokens(t_list **begins_cmds, t_list *token);
-int				open_redirections(t_redirection ***redirections);
 int				close_redirections(t_redirection **redirections);
-int				open_redirection_in(t_redirection **redirection);
-int				open_redirection_out(t_redirection **redirection);
-int				check_open_redirection_in(char *filename);
-int				process_not_last_redir(int direction, char *filename,
-					int type_open);
 
 int				expand_vars(t_data *msh_data, t_cmd *cmd);
 int				expand_one_arg(t_data *msh_data, char **arg);

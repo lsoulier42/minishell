@@ -12,30 +12,29 @@
 
 #include "minishell.h"
 
-t_list	*lexer(char *user_input, int bypass)
+t_list	*lexer(char *input, int bypass)
 {
 	t_list	*begin;
-	char	*input;
-	char	*tmp;
 
 	begin = NULL;
-	input = ft_strdup(user_input);
-	if (!input)
-		return (NULL);
-	tmp = input;
 	while (*input && *input != '#')
 	{
 		if (!ft_isspace(*input))
 		{
 			if (!add_token(&begin, &input))
-				return (free_token_struct(&begin, tmp));
+			{
+				ft_lstclear(&begin, &del_token);
+				return (NULL);
+			}
 		}
 		else
-			input += 1;
+			input++;
 	}
 	if (!check_token_list(begin, bypass))
-		return (free_token_struct(&begin, tmp));
-	free(tmp);
+	{
+		ft_lstclear(&begin, &del_token);
+		return (NULL);
+	}
 	return (begin);
 }
 
@@ -59,8 +58,7 @@ int		token_len(char *input)
 
 	open = 0;
 	len = 0;
-	while (input[len] && (!ft_isseparator(input[len])
-		|| is_escaped(input, len) || open))
+	while (input[len] && (!ft_isseparator(input[len]) || open))
 	{
 		if (!open && ft_isquote(input[len]) && !is_escaped(input, len))
 		{
@@ -72,18 +70,12 @@ int		token_len(char *input)
 			open = 0;
 		if (!open && (input[len] == '\\' && !is_escaped(input, len)))
 			len++;
-		len++;
+		if (input[len])
+			len++;
 	}
 	if (open)
 		return (-1);
 	return (len);
-}
-
-void	*free_token_struct(t_list **begin, char *tmp)
-{
-	ft_lstclear(begin, &del_token);
-	free(tmp);
-	return (NULL);
 }
 
 int		add_token(t_list **begin, char **input)

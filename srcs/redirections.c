@@ -12,45 +12,49 @@
 
 #include "minishell.h"
 
-int				process_not_last_redir(int direction, char *filename,
-	int type_open)
+int				open_files(int direction, char *filename, int type_open)
 {
+	int fd;
+
 	if (direction == OUT)
 	{
-		if (!create_empty_file_redirection(filename, type_open))
-			return (free_return_int(filename));
+		fd = open(filename, O_RDWR | O_CREAT | type_open, 0664);
+		if (fd == -1)
+			open_file_error(filename);
 	}
 	else
 	{
-		if (!check_open_redirection_in(filename))
-			return (free_return_int(filename));
+		fd = open(filename, O_RDONLY);
+		if (fd == -1)
+			open_file_error(filename);
 	}
-	free(filename);
-	return (1);
+	return (fd);
 }
 
 int				parse_one_redirection(t_list *tokens,
 	t_redirection ***redirections)
 {
 	char	*value;
-	char	*filename;
 	int		type_open;
 	int		direction;
+	int		fd;
+	int		is_not_last;
 
 	value = get_token_value(tokens);
-	filename = ft_strdup(get_token_value(tokens->next));
-	if (!filename)
-		return (0);
-	direction = IN;
-	if (ft_strcmp(value, ">>") == 0 || ft_strcmp(value, ">") == 0)
-		direction = OUT;
-	type_open = TRUNCATE;
+	is_not_last = redirection_is_not_last(tokens);
+	direction = OUT;
+	if (ft_strcmp(value, "<") == 0)
+		direction = IN;
+	type_open = O_TRUNC;
 	if (ft_strcmp(value, ">>") == 0)
-		type_open = APPEND;
-	if (redirection_is_not_last(tokens))
-		return (process_not_last_redir(direction, filename, type_open));
-	(*redirections)[direction]->filename = filename;
-	(*redirections)[direction]->type = type_open;
+		type_open = O_APPEND;
+	fd = open_files(direction, get_token_value(tokens->next), type_open);
+	if (fd == -1)
+		return (0);
+	if (!is_not_last)
+		(*redirections)[direction]->fd = fd;
+	else
+		close(fd);
 	return (1);
 }
 
@@ -110,10 +114,10 @@ t_redirection	**parse_redirections(t_list **begin_cmds)
 	redirections = (t_redirection**)malloc(sizeof(t_redirection*) * 2);
 	if (!redirections)
 		return (NULL);
-	redirections[IN] = new_redirection(NULL, 0, APPEND);
+	redirections[IN] = new_redirection(STDIN_FILENO);
 	if (!redirections[IN])
 		return (free_return_null(redirections));
-	redirections[OUT] = new_redirection(NULL, 1, APPEND);
+	redirections[OUT] = new_redirection(STDOUT_FILENO);
 	if (!redirections[OUT])
 	{
 		free(redirections[IN]);
