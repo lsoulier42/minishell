@@ -27,6 +27,7 @@
 #  define HOME_DIR "/Users"
 #  define EXIT_LIMIT 9223372036854775806
 # endif
+# include <stdio.h>
 # include "libft.h"
 # include <unistd.h>
 # include <stdlib.h>

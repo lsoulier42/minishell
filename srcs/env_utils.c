@@ -90,7 +90,7 @@ void	print_env_fd(t_list *begin_env, int fd)
 	while (env)
 	{
 		cast = (t_var*)env->content;
-		if (cast)
+		if (cast && cast->value)
 		{
 			if (cast->key)
 				ft_putstr_fd(cast->key, fd);

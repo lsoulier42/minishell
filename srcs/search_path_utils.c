@@ -49,7 +49,7 @@ int	parse_path_and_name_relative(t_cmd **cmd)
 
 int	parse_path_and_name(t_cmd **cmd)
 {
-	if ((*cmd)->args[0][0] == '/')
+	if ((*cmd)->args[0][0] == '/' || (*cmd)->args[0][0] == '.')
 	{
 		if (!parse_path_and_name_absolute(cmd))
 			return (0);

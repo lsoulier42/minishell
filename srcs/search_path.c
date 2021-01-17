@@ -72,11 +72,8 @@ int	search_in_current_dir(t_cmd **cmd)
 		cmd_name = ft_strchr(cmd_name, '/') + 1;
 	if (search_in_dir(current_dir, cmd_name))
 	{
-		if (ft_strncmp((*cmd)->args[0], "./", 2) != 0)
-		{
-			free((*cmd)->path);
-			(*cmd)->path = ft_strjoin(current_dir, "/");
-		}
+		free((*cmd)->path);
+		(*cmd)->path = ft_strjoin(current_dir, "/");
 		return (free_return_int(current_dir) + 1);
 	}
 	free(current_dir);

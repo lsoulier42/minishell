@@ -22,7 +22,7 @@ void	ft_lstclear(t_list **lst, void (*del)(void*))
 	{
 		next = track->next;
 		track->next = NULL;
-		if (track->content)
+		if (track->content && (*del))
 			(*del)(track->content);
 		free(track);
 		track = next;

@@ -81,8 +81,6 @@ int			get_next_line(int fd, char **line)
 		return (-1);
 	end_file = 0;
 	end_line = 0;
-	read_return = 0;
-	*line = NULL;
 	if (offset)
 		end_line = begin_line(line, buffer, &offset);
 	while (end_line != 1 && !end_file)

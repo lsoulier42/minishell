@@ -17,14 +17,14 @@ static int	init_data(t_data *msh_data, char *envp[])
 	msh_data->exit_msh = 0;
 	msh_data->last_return = EXIT_SUCCESS;
 	msh_data->parsed_input = NULL;
+	msh_data->exit_value = EXIT_SUCCESS;
 	msh_data->begin_env = set_env(envp);
 	if (!msh_data->begin_env)
 		return (0);
-	msh_data->exit_value = EXIT_SUCCESS;
 	return (1);
 }
 
-static int	msh_second_loop(t_data *msh_data, char *line)
+static int	msh_third_loop(t_data *msh_data, char *line)
 {
 	int error;
 
@@ -41,29 +41,49 @@ static int	msh_second_loop(t_data *msh_data, char *line)
 	return (error == 0);
 }
 
+static int	msh_second_loop(t_data *msh_data, int *gnl_return,
+	char **line, int *end_of_command)
+{
+	*gnl_return = get_next_line(STDIN_FILENO, line);
+	sigint_read_handler(msh_data, gnl_return);
+	if (*gnl_return == -1
+		|| (*gnl_return == 0 && *line && ft_strcmp(*line, "") == 0)
+		|| g_signal_value == SIGINT)
+		return (-1);
+	if (*gnl_return == 1)
+	{
+		if (!msh_third_loop(msh_data, *line))
+			return (0);
+		sigint_exec_handler(msh_data, end_of_command);
+		if (*gnl_return == 1)
+			*end_of_command = 1;
+	}
+	return (1);
+}
+
 static int	msh_first_loop(t_data *msh_data, int *gnl_return)
 {
 	int			end_of_command;
 	int			error;
 	char		*line;
+	int			loop_return;
 
 	format_prompt(msh_data);
 	end_of_command = 0;
 	g_signal_value = 0;
 	error = 0;
+	line = NULL;
 	while (!end_of_command)
 	{
-		*gnl_return = get_next_line(STDIN_FILENO, &line);
-		sigint_read_handler(msh_data, gnl_return);
-		if (*gnl_return <= 0 || g_signal_value == SIGINT)
+		loop_return = msh_second_loop(msh_data,
+			gnl_return, &line, &end_of_command);
+		if (loop_return == -1)
 			break ;
-		if (!msh_second_loop(msh_data, line))
+		if (loop_return == 0)
+		{
 			error = 1;
-		free(line);
-		line = NULL;
-		sigint_exec_handler(msh_data, &end_of_command);
-		if (*gnl_return == 1 || error == 1)
-			end_of_command = 1;
+			break ;
+		}
 	}
 	if (line)
 		free(line);
