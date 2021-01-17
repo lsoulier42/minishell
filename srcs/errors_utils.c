@@ -33,3 +33,11 @@ int		exit_error(char *arg, int error_code)
 		ft_putendl_fd("too many arguments", STDERR_FILENO);
 	return (BASH_BUILTIN_EXIT_STATUS);
 }
+
+int		search_is_directory(char *pathname)
+{
+	ft_putstr_fd("minishell: ", STDERR_FILENO);
+	ft_putstr_fd(pathname, STDERR_FILENO);
+	ft_putendl_fd(": Is directory", STDERR_FILENO);
+	return (0);
+}

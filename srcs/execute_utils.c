@@ -14,9 +14,9 @@
 
 int		execute_last_builtin(t_data *msh_data, t_cmd *cmd, int previous_fd)
 {
-	if (cmd->redirections[IN]->fd != STDIN_FILENO)
+	if (cmd->redirections[IN] != STDIN_FILENO)
 	{
-		if (dup2(STDIN_FILENO, cmd->redirections[IN]->fd) == -1)
+		if (dup2(STDIN_FILENO, cmd->redirections[IN]) == -1)
 			return (ressource_error(msh_data, "dup2", RESSOURCE_ERROR, -1));
 	}
 	else if (previous_fd != -1)

@@ -95,7 +95,9 @@ int	search_path(t_data *msh_data, t_cmd **cmd)
 {
 	if (!search_builtin((*cmd)->args[0]))
 	{
-		if (ft_strcmp((*cmd)->path, "") == 0)
+		if ((*cmd)->args[0] && ft_strcmp((*cmd)->args[0], "") == 0)
+			return (search_is_directory((*cmd)->path));
+		else if (ft_strcmp((*cmd)->path, "") == 0)
 		{
 			if (!search_path_relative(msh_data, cmd))
 			{

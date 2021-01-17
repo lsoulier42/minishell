@@ -33,7 +33,7 @@ char	**create_args_tab(t_list *tokens)
 	return (args);
 }
 
-int		parse_one_pipe_cmds(t_list **tokens, t_redirection **redirections)
+int		parse_one_pipe_cmds(t_list **tokens, int redirections[2])
 {
 	t_list	*cmd_el;
 	char	**args;
@@ -53,7 +53,7 @@ int		parse_cmds(t_data *msh_data, t_list *instructions)
 {
 	t_list			*pipes;
 	t_list			**begin_cmds;
-	t_redirection	**redirections;
+	int				redirections[2];
 
 	while (instructions)
 	{
@@ -61,8 +61,9 @@ int		parse_cmds(t_data *msh_data, t_list *instructions)
 		while (pipes)
 		{
 			begin_cmds = &(((t_pipe*)(pipes->content))->begin_cmds);
-			redirections = parse_redirections(msh_data, begin_cmds);
-			if (!redirections)
+			redirections[IN] = STDIN_FILENO;
+			redirections[OUT] = STDOUT_FILENO;
+			if (!parse_redirections(msh_data, begin_cmds, &redirections))
 				return (0);
 			if (!parse_one_pipe_cmds(begin_cmds, redirections))
 				return (0);

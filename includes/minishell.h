@@ -98,11 +98,6 @@ typedef struct	s_export_var
 	int		type;
 }				t_export_var;
 
-typedef struct	s_redirection
-{
-	int		fd;
-}				t_redirection;
-
 typedef struct	s_cmd
 {
 	char			*path;
@@ -110,7 +105,7 @@ typedef struct	s_cmd
 	char			**args;
 	int				is_last;
 	int				is_piped;
-	t_redirection	**redirections;
+	int				redirections[2];
 }				t_cmd;
 
 typedef struct	s_pipe
@@ -254,27 +249,24 @@ int				error_quote_is_not_closed(void);
 int				error_operator_defined(void);
 int				error_lexer(char c);
 
-t_cmd			*new_cmd(int argc, char **args,
-					t_redirection **redirections);
-t_list			*new_cmd_el(int argc, char **args,
-					t_redirection **redirections);
+t_cmd			*new_cmd(int argc, char **args, int redirections[2]);
+t_list			*new_cmd_el(int argc, char **args, int redirections[2]);
 void			del_cmd(void *cmd_void);
 int				parse_cmds(t_data *msh_data, t_list *instructions);
 char			**create_args_tab(t_list *tokens);
-int				parse_one_pipe_cmds(t_list **tokens,
-					t_redirection **redirections);
+int				parse_one_pipe_cmds(t_list **tokens, int redirections[2]);
 t_cmd			*get_cmd(t_list *pipe_el);
 
-t_redirection	*new_redirection(int fd);
 int				token_is_redirection(t_list *token_el);
-t_redirection	**parse_redirections(t_data *msh_data, t_list **begin_cmds);
+int				parse_redirections(t_data *msh_data,
+					t_list **begin_cmds, int redirections[][2]);
 int				open_files(t_data *msh_data, int direction,
 					char *filename, int type_open);
 int				redirection_is_not_last(t_list *token_el);
 int				parse_one_redirection(t_data *msh_data, t_list *tokens,
-					t_redirection ***redirections);
+					int redirections[][2]);
 void			delete_redirection_tokens(t_list **begins_cmds, t_list *token);
-int				close_redirections(t_redirection **redirections);
+int				close_redirections(int redirections[2]);
 
 int				expand_vars(t_data *msh_data, t_cmd *cmd);
 int				expand_one_arg(t_data *msh_data, char **arg);
@@ -338,6 +330,7 @@ void			cd_dir_not_found(char *arg);
 int				cd_too_many_args(void);
 int				ressource_error(t_data *msh_data, char *function_name,
 					int exit_status_wanted, int return_wanted);
+int				search_is_directory(char *pathname);
 
 int				search_path(t_data *msh_data, t_cmd **cmd);
 int				search_in_dir(char *dirname, char *cmd_name);

@@ -81,9 +81,9 @@ int		exec_echo(t_data *msh_data, t_cmd *cmd)
 	if (!str)
 		return (EXIT_FAILURE);
 	if (nb_options > 0)
-		ft_putstr_fd(str, cmd->redirections[OUT]->fd);
+		ft_putstr_fd(str, cmd->redirections[OUT]);
 	else
-		ft_putendl_fd(str, cmd->redirections[OUT]->fd);
+		ft_putendl_fd(str, cmd->redirections[OUT]);
 	free(str);
 	msh_data->exit_msh = msh_data->exit_msh;
 	return (EXIT_SUCCESS);

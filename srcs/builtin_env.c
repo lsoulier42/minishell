@@ -24,7 +24,7 @@ int	exec_pwd(t_data *msh_data, t_cmd *cmd)
 		current = ft_strdup(pwd->value);
 	if (!current)
 		return (EXIT_FAILURE);
-	ft_putendl_fd(current, cmd->redirections[OUT]->fd);
+	ft_putendl_fd(current, cmd->redirections[OUT]);
 	free(current);
 	msh_data->last_return = EXIT_SUCCESS;
 	return (msh_data->last_return);
@@ -32,7 +32,7 @@ int	exec_pwd(t_data *msh_data, t_cmd *cmd)
 
 int	exec_env(t_data *msh_data, t_cmd *cmd)
 {
-	print_env_fd(msh_data->begin_env, cmd->redirections[OUT]->fd);
+	print_env_fd(msh_data->begin_env, cmd->redirections[OUT]);
 	msh_data->last_return = EXIT_SUCCESS;
 	return (msh_data->last_return);
 }

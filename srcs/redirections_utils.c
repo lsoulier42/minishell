@@ -12,18 +12,7 @@
 
 #include "minishell.h"
 
-t_redirection	*new_redirection(int fd)
-{
-	t_redirection	*new;
-
-	new = (t_redirection*)malloc(sizeof(t_redirection));
-	if (!new)
-		return (NULL);
-	new->fd = fd;
-	return (new);
-}
-
-int				token_is_redirection(t_list *token_el)
+int	token_is_redirection(t_list *token_el)
 {
 	char	*value;
 
@@ -34,7 +23,7 @@ int				token_is_redirection(t_list *token_el)
 		|| ft_strcmp(value, "<") == 0 || ft_strcmp(value, ">>") == 0));
 }
 
-int				redirection_is_not_last(t_list *token_el)
+int	redirection_is_not_last(t_list *token_el)
 {
 	int direction;
 	int cur_direction;
@@ -56,13 +45,13 @@ int				redirection_is_not_last(t_list *token_el)
 	return (0);
 }
 
-int				close_redirections(t_redirection **redirections)
+int	close_redirections(int redirections[2])
 {
 	int i;
 
 	i = -1;
 	while (++i < 2)
-		if (redirections[i]->fd > 2)
-			close(redirections[i]->fd);
+		if (redirections[i] > 2)
+			close(redirections[i]);
 	return (1);
 }

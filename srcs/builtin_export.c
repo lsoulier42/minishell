@@ -80,7 +80,7 @@ int		exec_export_print(t_list *begin_env, t_cmd *cmd)
 	while (tmp_env)
 	{
 		line = format_export_line((t_var*)tmp_env->content);
-		ft_putendl_fd(line, cmd->redirections[OUT]->fd);
+		ft_putendl_fd(line, cmd->redirections[OUT]);
 		free(line);
 		tmp_clear = tmp_env;
 		tmp_env = tmp_env->next;

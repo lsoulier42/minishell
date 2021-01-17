@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-int				open_files(t_data *msh_data, int direction,
+int		open_files(t_data *msh_data, int direction,
 	char *filename, int type_open)
 {
 	int		fd;
@@ -34,8 +34,8 @@ int				open_files(t_data *msh_data, int direction,
 	return (fd);
 }
 
-int				parse_one_redirection(t_data *msh_data, t_list *tokens,
-	t_redirection ***redirections)
+int		parse_one_redirection(t_data *msh_data, t_list *tokens,
+	int redirections[][2])
 {
 	int		type_open;
 	int		direction;
@@ -55,13 +55,13 @@ int				parse_one_redirection(t_data *msh_data, t_list *tokens,
 	if (fd == -1)
 		return (0);
 	if (!is_not_last)
-		(*redirections)[direction]->fd = fd;
+		(*redirections)[direction] = fd;
 	else
 		close(fd);
 	return (1);
 }
 
-void			delete_redirection_tokens(t_list **begins_cmds, t_list *token)
+void	delete_redirection_tokens(t_list **begins_cmds, t_list *token)
 {
 	t_list *track;
 	t_list *previous;
@@ -87,13 +87,13 @@ void			delete_redirection_tokens(t_list **begins_cmds, t_list *token)
 	}
 }
 
-static int		parse_redirections_loop(t_data *msh_data, t_list **begins_cmds,
-	t_redirection ***redirections)
+int		parse_redirections(t_data *msh_data,
+	t_list **begin_cmds, int redirections[][2])
 {
 	t_list	*tokens;
 	t_list	*next;
 
-	tokens = *begins_cmds;
+	tokens = *begin_cmds;
 	while (tokens)
 	{
 		if (token_is_redirection(tokens))
@@ -101,36 +101,11 @@ static int		parse_redirections_loop(t_data *msh_data, t_list **begins_cmds,
 			if (!parse_one_redirection(msh_data, tokens, redirections))
 				return (0);
 			next = tokens->next->next;
-			delete_redirection_tokens(begins_cmds, tokens);
+			delete_redirection_tokens(begin_cmds, tokens);
 			tokens = next;
 		}
 		else
 			tokens = tokens->next;
 	}
 	return (1);
-}
-
-t_redirection	**parse_redirections(t_data *msh_data, t_list **begin_cmds)
-{
-	t_redirection	**redirections;
-
-	redirections = (t_redirection**)malloc(sizeof(t_redirection*) * 2);
-	if (!redirections)
-		return (NULL);
-	redirections[IN] = new_redirection(STDIN_FILENO);
-	if (!redirections[IN])
-		return (free_return_null(redirections));
-	redirections[OUT] = new_redirection(STDOUT_FILENO);
-	if (!redirections[OUT])
-	{
-		free(redirections[IN]);
-		return (free_return_null(redirections));
-	}
-	if (!parse_redirections_loop(msh_data, begin_cmds, &redirections))
-	{
-		free(redirections[IN]);
-		free(redirections[OUT]);
-		return (free_return_null(redirections));
-	}
-	return (redirections);
 }

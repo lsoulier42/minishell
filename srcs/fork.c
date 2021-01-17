@@ -74,10 +74,10 @@ int		execute_child_process(t_data *msh_data,
 {
 	int	exit_status;
 
-	if (child_file_handler(msh_data, cmd->redirections[IN]->fd,
+	if (child_file_handler(msh_data, cmd->redirections[IN],
 		previous_fd, pipefd[0]) == -1)
 		return (-1);
-	if (!cmd->is_last || cmd->redirections[OUT]->fd != STDOUT_FILENO)
+	if (!cmd->is_last || cmd->redirections[OUT] != STDOUT_FILENO)
 		if (dup2(pipefd[1], STDOUT_FILENO) == -1)
 			return (ressource_error(msh_data, "dup2", RESSOURCE_ERROR, -1));
 	if (search_builtin(cmd->args[0]))
@@ -109,8 +109,8 @@ int		write_process_redirection(int read_fd, int out_fd)
 int		execute_parent_process(t_cmd *cmd, int pipefd[2])
 {
 	close(pipefd[1]);
-	if (cmd->redirections[OUT]->fd != STDOUT_FILENO)
-		if (!write_process_redirection(pipefd[0], cmd->redirections[OUT]->fd))
+	if (cmd->redirections[OUT] != STDOUT_FILENO)
+		if (!write_process_redirection(pipefd[0], cmd->redirections[OUT]))
 			return (-1);
 	if (cmd->is_last)
 	{
