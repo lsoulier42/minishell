@@ -49,7 +49,7 @@ int		parse_one_pipe_cmds(t_list **tokens, t_redirection **redirections)
 	return (1);
 }
 
-int		parse_cmds(t_list *instructions)
+int		parse_cmds(t_data *msh_data, t_list *instructions)
 {
 	t_list			*pipes;
 	t_list			**begin_cmds;
@@ -61,7 +61,7 @@ int		parse_cmds(t_list *instructions)
 		while (pipes)
 		{
 			begin_cmds = &(((t_pipe*)(pipes->content))->begin_cmds);
-			redirections = parse_redirections(begin_cmds);
+			redirections = parse_redirections(msh_data, begin_cmds);
 			if (!redirections)
 				return (0);
 			if (!parse_one_pipe_cmds(begin_cmds, redirections))

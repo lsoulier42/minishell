@@ -12,10 +12,13 @@
 
 #include "minishell.h"
 
-int				open_files(int direction, char *filename, int type_open)
+int				open_files(t_data *msh_data, int direction,
+	char *filename, int type_open)
 {
-	int fd;
+	int		fd;
 
+	if (arg_is_var_alone(filename))
+		filename = get_env_var(msh_data->begin_env, filename + 1)->value;
 	if (direction == OUT)
 	{
 		fd = open(filename, O_RDWR | O_CREAT | type_open, 0664);
@@ -31,24 +34,24 @@ int				open_files(int direction, char *filename, int type_open)
 	return (fd);
 }
 
-int				parse_one_redirection(t_list *tokens,
+int				parse_one_redirection(t_data *msh_data, t_list *tokens,
 	t_redirection ***redirections)
 {
-	char	*value;
 	int		type_open;
 	int		direction;
 	int		fd;
 	int		is_not_last;
+	char	*filename;
 
-	value = get_token_value(tokens);
 	is_not_last = redirection_is_not_last(tokens);
 	direction = OUT;
-	if (ft_strcmp(value, "<") == 0)
+	if (ft_strcmp(get_token_value(tokens), "<") == 0)
 		direction = IN;
 	type_open = O_TRUNC;
-	if (ft_strcmp(value, ">>") == 0)
+	if (ft_strcmp(get_token_value(tokens), ">>") == 0)
 		type_open = O_APPEND;
-	fd = open_files(direction, get_token_value(tokens->next), type_open);
+	filename = get_token_value(tokens->next);
+	fd = open_files(msh_data, direction, filename, type_open);
 	if (fd == -1)
 		return (0);
 	if (!is_not_last)
@@ -84,7 +87,7 @@ void			delete_redirection_tokens(t_list **begins_cmds, t_list *token)
 	}
 }
 
-static int		parse_redirections_loop(t_list **begins_cmds,
+static int		parse_redirections_loop(t_data *msh_data, t_list **begins_cmds,
 	t_redirection ***redirections)
 {
 	t_list	*tokens;
@@ -95,7 +98,7 @@ static int		parse_redirections_loop(t_list **begins_cmds,
 	{
 		if (token_is_redirection(tokens))
 		{
-			if (!parse_one_redirection(tokens, redirections))
+			if (!parse_one_redirection(msh_data, tokens, redirections))
 				return (0);
 			next = tokens->next->next;
 			delete_redirection_tokens(begins_cmds, tokens);
@@ -107,7 +110,7 @@ static int		parse_redirections_loop(t_list **begins_cmds,
 	return (1);
 }
 
-t_redirection	**parse_redirections(t_list **begin_cmds)
+t_redirection	**parse_redirections(t_data *msh_data, t_list **begin_cmds)
 {
 	t_redirection	**redirections;
 
@@ -123,7 +126,7 @@ t_redirection	**parse_redirections(t_list **begin_cmds)
 		free(redirections[IN]);
 		return (free_return_null(redirections));
 	}
-	if (!parse_redirections_loop(begin_cmds, &redirections))
+	if (!parse_redirections_loop(msh_data, begin_cmds, &redirections))
 	{
 		free(redirections[IN]);
 		free(redirections[OUT]);

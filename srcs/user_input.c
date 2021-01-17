@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-t_user_input	*parse_input(char *buffer)
+t_user_input	*parse_input(t_data *msh_data, char *buffer)
 {
 	t_user_input	*new;
 	t_list			*begin_tokens;
@@ -33,7 +33,7 @@ t_user_input	*parse_input(char *buffer)
 		return (error_cmds(new, new->begin_instructions));
 	if (!parse_pipes(new->begin_instructions))
 		return (error_cmds(new, new->begin_instructions));
-	if (!parse_cmds(new->begin_instructions))
+	if (!parse_cmds(msh_data, new->begin_instructions))
 		return (error_cmds(new, new->begin_instructions));
 	return (new);
 }

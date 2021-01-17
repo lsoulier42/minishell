@@ -29,7 +29,7 @@ static int	msh_third_loop(t_data *msh_data, char *line)
 	int error;
 
 	error = 0;
-	msh_data->parsed_input = parse_input(line);
+	msh_data->parsed_input = parse_input(msh_data, line);
 	if (msh_data->parsed_input)
 	{
 		if (!execute_all_cmds(msh_data))

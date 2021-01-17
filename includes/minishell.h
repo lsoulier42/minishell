@@ -210,7 +210,7 @@ int				remove_n_options(char ***args, int nb_options);
 int				nb_n_options(char **args);
 int				is_legit_n_option(char *str);
 
-t_user_input	*parse_input(char *buffer);
+t_user_input	*parse_input(t_data *msh_data, char *buffer);
 void			*error_tokens(t_user_input *new);
 void			delete_token_list(t_list *pipes);
 void			delete_pipes(t_list *instructions);
@@ -259,7 +259,7 @@ t_cmd			*new_cmd(int argc, char **args,
 t_list			*new_cmd_el(int argc, char **args,
 					t_redirection **redirections);
 void			del_cmd(void *cmd_void);
-int				parse_cmds(t_list *instructions);
+int				parse_cmds(t_data *msh_data, t_list *instructions);
 char			**create_args_tab(t_list *tokens);
 int				parse_one_pipe_cmds(t_list **tokens,
 					t_redirection **redirections);
@@ -267,10 +267,11 @@ t_cmd			*get_cmd(t_list *pipe_el);
 
 t_redirection	*new_redirection(int fd);
 int				token_is_redirection(t_list *token_el);
-t_redirection	**parse_redirections(t_list **begin_cmds);
-int				open_files(int direction, char *filename, int type_open);
+t_redirection	**parse_redirections(t_data *msh_data, t_list **begin_cmds);
+int				open_files(t_data *msh_data, int direction,
+					char *filename, int type_open);
 int				redirection_is_not_last(t_list *token_el);
-int				parse_one_redirection(t_list *tokens,
+int				parse_one_redirection(t_data *msh_data, t_list *tokens,
 					t_redirection ***redirections);
 void			delete_redirection_tokens(t_list **begins_cmds, t_list *token);
 int				close_redirections(t_redirection **redirections);
