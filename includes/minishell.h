@@ -338,8 +338,6 @@ int				parse_path_and_name(t_cmd **cmd);
 int				parse_path_and_name_absolute(t_cmd **cmd);
 int				parse_path_and_name_relative(t_cmd **cmd);
 int				search_path_relative(t_data *msh_data, t_cmd **cmd);
-int				search_path_relative_in_path(t_data *msh_data, t_cmd **cmd);
-int				search_in_current_dir(t_cmd **cmd);
 
 void			ctrlc_handler(int signum);
 void			ctrlslash_handler(int signum);

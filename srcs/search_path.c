@@ -37,58 +37,30 @@ int	search_in_dir(char *dirname, char *cmd_name)
 	return (0);
 }
 
-int	search_path_relative_in_path(t_data *msh_data, t_cmd **cmd)
+int	search_path_relative(t_data *msh_data, t_cmd **cmd)
 {
 	t_var	*path;
 	char	**pathnames;
 	int		i;
 
-	path = get_env_var(msh_data->begin_env, "PATH");
-	if (!path)
+	if (!(path = get_env_var(msh_data->begin_env, "PATH")))
 		return (0);
-	pathnames = ft_split(path->value, ':');
-	if (!pathnames)
+	if (!(pathnames = ft_split(path->value, ':')))
 		return (0);
 	i = -1;
 	while (pathnames[++i])
+	{
 		if (search_in_dir(pathnames[i], (*cmd)->args[0]))
 		{
 			free((*cmd)->path);
 			(*cmd)->path = ft_strjoin(pathnames[i], "/");
-			return (free_double_tab_ret_int(pathnames) + 1);
+			free_double_tab_ret_int(pathnames);
+			if (!((*cmd)->path))
+				return (0);
+			return (1);
 		}
-	return (free_double_tab_ret_int(pathnames));
-}
-
-int	search_in_current_dir(t_cmd **cmd)
-{
-	char	*current_dir;
-	char	*cmd_name;
-
-	if (!(current_dir = getcwd(NULL, 0)))
-		return (0);
-	cmd_name = (*cmd)->args[0];
-	if (ft_strncmp(cmd_name, "./", 2) == 0)
-		cmd_name = ft_strchr(cmd_name, '/') + 1;
-	if (search_in_dir(current_dir, cmd_name))
-	{
-		free((*cmd)->path);
-		(*cmd)->path = ft_strjoin(current_dir, "/");
-		return (free_return_int(current_dir) + 1);
 	}
-	free(current_dir);
-	return (0);
-}
-
-int	search_path_relative(t_data *msh_data, t_cmd **cmd)
-{
-	if (ft_strcmp((*cmd)->args[0], "..") == 0
-		|| ft_strcmp((*cmd)->args[0], ".") == 0)
-		return (0);
-	if (!search_path_relative_in_path(msh_data, cmd))
-		if (!search_in_current_dir(cmd))
-			return (0);
-	return (1);
+	return (free_double_tab_ret_int(pathnames));
 }
 
 int	search_path(t_data *msh_data, t_cmd **cmd)
@@ -99,7 +71,9 @@ int	search_path(t_data *msh_data, t_cmd **cmd)
 			return (search_is_directory((*cmd)->path));
 		else if (ft_strcmp((*cmd)->path, "") == 0)
 		{
-			if (!search_path_relative(msh_data, cmd))
+			if (ft_strcmp((*cmd)->args[0], "..") == 0
+				|| ft_strcmp((*cmd)->args[0], ".") == 0
+				|| !search_path_relative(msh_data, cmd))
 			{
 				command_not_found((*cmd)->args[0]);
 				return (0);
