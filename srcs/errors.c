@@ -34,18 +34,20 @@ int		invalid_identifier(char *cmd_name, char *arg)
 	return (0);
 }
 
-void	command_not_found(char *cmd_name)
+int		command_not_found(char *cmd_name)
 {
 	ft_putstr_fd(cmd_name, STDERR_FILENO);
 	ft_putendl_fd(": command not found", STDERR_FILENO);
+	return (0);
 }
 
-void	directory_not_found(char *cmd_name)
+int		directory_not_found(char *cmd_name)
 {
 	ft_putstr_fd("minishell: ", STDERR_FILENO);
 	ft_putstr_fd(cmd_name, STDERR_FILENO);
 	ft_putstr_fd(": ", STDERR_FILENO);
 	ft_putendl_fd(strerror(ENOENT), STDERR_FILENO);
+	return (0);
 }
 
 void	open_file_error(char *filename)

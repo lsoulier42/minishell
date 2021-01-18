@@ -41,3 +41,10 @@ int		search_is_directory(char *pathname)
 	ft_putendl_fd(": Is directory", STDERR_FILENO);
 	return (0);
 }
+
+int		point_alone_error(void)
+{
+	ft_putstr_fd("minishell: .: filename argument required\n", STDERR_FILENO);
+	ft_putendl_fd(".: usage: . filename [arguments]", STDERR_FILENO);
+	return (0);
+}

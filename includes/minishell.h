@@ -319,8 +319,8 @@ int				process_sub_system(t_data *msh_data,
 					t_list **begin_cpid, t_list *pipes);
 
 int				invalid_identifier(char *cmd_name, char *arg);
-void			command_not_found(char *cmd_name);
-void			directory_not_found(char *cmd_name);
+int				command_not_found(char *cmd_name);
+int				directory_not_found(char *cmd_name);
 void			open_file_error(char *filename);
 void			execve_error(char *cmd_name);
 int				exit_error(char *arg, int error_code);
@@ -331,6 +331,7 @@ int				cd_too_many_args(void);
 int				ressource_error(t_data *msh_data, char *function_name,
 					int exit_status_wanted, int return_wanted);
 int				search_is_directory(char *pathname);
+int				point_alone_error(void);
 
 int				search_path(t_data *msh_data, t_cmd **cmd);
 int				search_in_dir(char *dirname, char *cmd_name);
